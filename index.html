@@ -3,838 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jermaine Barber's × MachineMind | La Revolución del Booking</title>
+    <title>Jermaine Barber's | La Mejor Barbería de Cartagena</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: '#D4AF37',
+                        'gold-light': '#F4E4BC',
+                        dark: '#0A0A0A',
+                        darker: '#141414',
+                    },
+                    fontFamily: {
+                        'display': ['Bebas Neue', 'sans-serif'],
+                        'body': ['Space Grotesk', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        :root {
-            --gold: #D4AF37;
-            --gold-light: #F4E4BC;
-            --black: #0A0A0A;
-            --dark: #141414;
-            --darker: #1A1A1A;
-            --white: #FAFAFA;
-            --gray: #888;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Space Grotesk', sans-serif;
-            background: var(--black);
-            color: var(--white);
-            overflow-x: hidden;
-        }
-
-        /* Grain Overlay */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-            opacity: 0.03;
-            pointer-events: none;
-            z-index: 1000;
-        }
-
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
-            background: linear-gradient(to bottom, rgba(10,10,10,0.95), transparent);
-        }
-
-        .logo {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.5rem;
-            letter-spacing: 3px;
-            color: var(--gold);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-        }
-
-        .nav-links a {
-            color: var(--white);
-            text-decoration: none;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-            opacity: 0.7;
-            transition: all 0.3s;
-        }
-
-        .nav-links a:hover {
-            opacity: 1;
-            color: var(--gold);
-        }
-
-        .lang-toggle {
-            background: transparent;
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            padding: 8px 16px;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 0.75rem;
-            letter-spacing: 2px;
-            transition: all 0.3s;
-        }
-
-        .lang-toggle:hover {
-            background: var(--gold);
-            color: var(--black);
-        }
-
-        /* Sections */
-        section {
-            min-height: 100vh;
-            padding: 120px 60px;
-            position: relative;
-        }
-
-        /* Hero */
-        .hero {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            background: radial-gradient(ellipse at center, rgba(212,175,55,0.08) 0%, transparent 70%);
-        }
-
-        .hero-badge {
-            display: inline-block;
-            border: 1px solid var(--gold);
-            padding: 8px 24px;
-            font-size: 0.7rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: var(--gold);
-            margin-bottom: 40px;
-            animation: fadeInUp 0.8s ease;
-        }
-
-        .hero h1 {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: clamp(4rem, 12vw, 10rem);
-            line-height: 0.9;
-            letter-spacing: -2px;
-            margin-bottom: 30px;
-            animation: fadeInUp 0.8s ease 0.2s both;
-        }
-
-        .hero h1 span {
-            color: var(--gold);
-        }
-
-        .hero-subtitle {
-            font-size: 1.2rem;
-            color: var(--gray);
-            max-width: 600px;
-            line-height: 1.8;
-            margin-bottom: 50px;
-            animation: fadeInUp 0.8s ease 0.4s both;
-        }
-
-        .hero-stats {
-            display: flex;
-            gap: 60px;
-            margin-top: 60px;
-            animation: fadeInUp 0.8s ease 0.6s both;
-        }
-
-        .stat {
-            text-align: center;
-        }
-
-        .stat-value {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 3.5rem;
-            color: var(--gold);
-            line-height: 1;
-        }
-
-        .stat-label {
-            font-size: 0.75rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--gray);
-            margin-top: 8px;
-        }
-
-        /* Problem Section */
-        .problem {
-            background: var(--dark);
-        }
-
-        .section-header {
-            margin-bottom: 80px;
-        }
-
-        .section-tag {
-            font-size: 0.7rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: var(--gold);
-            margin-bottom: 20px;
-        }
-
-        .section-title {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: clamp(2.5rem, 6vw, 5rem);
-            line-height: 1;
-        }
-
-        .problem-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-        }
-
-        .problem-card {
-            background: var(--black);
-            border: 1px solid rgba(212,175,55,0.2);
-            padding: 40px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s;
-        }
-
-        .problem-card:hover {
-            border-color: var(--gold);
-            transform: translateY(-5px);
-        }
-
-        .problem-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--gold);
-            transform: scaleY(0);
-            transition: transform 0.4s;
-        }
-
-        .problem-card:hover::before {
-            transform: scaleY(1);
-        }
-
-        .problem-icon {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-        }
-
-        .problem-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-
-        .problem-card p {
-            color: var(--gray);
-            line-height: 1.7;
-            font-size: 0.95rem;
-        }
-
-        .problem-stat {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 2.5rem;
-            color: #ff4444;
-            margin-top: 20px;
-        }
-
-        /* Solution Section */
-        .solution {
-            background: linear-gradient(135deg, var(--black) 0%, var(--darker) 100%);
-        }
-
-        .solution-intro {
-            max-width: 800px;
-            margin-bottom: 80px;
-        }
-
-        .solution-intro p {
-            font-size: 1.3rem;
-            line-height: 1.8;
-            color: var(--gray);
-        }
-
-        .solution-intro strong {
-            color: var(--gold);
-        }
-
-        /* WhatsApp Demo */
-        .whatsapp-demo {
-            background: var(--dark);
-            border-radius: 30px;
-            max-width: 400px;
-            margin: 60px auto;
-            overflow: hidden;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
-        }
-
-        .wa-header {
-            background: #075E54;
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .wa-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: var(--gold);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.2rem;
-            color: var(--black);
-        }
-
-        .wa-name {
-            flex: 1;
-        }
-
-        .wa-name h4 {
-            font-size: 1rem;
-            font-weight: 500;
-        }
-
-        .wa-name span {
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.7);
-        }
-
-        .wa-chat {
-            padding: 20px;
-            background: #0B141A;
-            min-height: 400px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .wa-message {
-            max-width: 85%;
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            animation: messageIn 0.4s ease;
-        }
-
-        .wa-message.user {
-            background: #005C4B;
-            align-self: flex-end;
-            border-bottom-right-radius: 0;
-        }
-
-        .wa-message.bot {
-            background: #1F2C34;
-            align-self: flex-start;
-            border-bottom-left-radius: 0;
-        }
-
-        .wa-time {
-            font-size: 0.65rem;
-            color: rgba(255,255,255,0.5);
-            text-align: right;
-            margin-top: 4px;
-        }
-
-        .wa-typing {
-            display: flex;
-            gap: 4px;
-            padding: 15px;
-            align-self: flex-start;
-        }
-
-        .wa-typing span {
-            width: 8px;
-            height: 8px;
-            background: #555;
-            border-radius: 50%;
-            animation: typing 1.4s infinite;
-        }
-
-        .wa-typing span:nth-child(2) { animation-delay: 0.2s; }
-        .wa-typing span:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes typing {
-            0%, 100% { transform: translateY(0); opacity: 0.4; }
-            50% { transform: translateY(-5px); opacity: 1; }
-        }
-
+        body { font-family: 'Space Grotesk', sans-serif; }
+        .font-display { font-family: 'Bebas Neue', sans-serif; }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #141414; }
+        ::-webkit-scrollbar-thumb { background: #D4AF37; border-radius: 4px; }
+        
+        /* Chat animations */
         @keyframes messageIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        /* Features Grid */
-        .features {
-            background: var(--black);
+        .message-in { animation: messageIn 0.3s ease; }
+        
+        @keyframes typing {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
         }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
+        .typing-dot { animation: typing 1.4s infinite; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        
+        /* Floating chat button */
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(212,175,55,0.4); }
+            50% { box-shadow: 0 0 0 15px rgba(212,175,55,0); }
         }
-
-        .feature-card {
-            background: linear-gradient(135deg, var(--dark) 0%, var(--darker) 100%);
-            border: 1px solid rgba(212,175,55,0.1);
-            padding: 50px 40px;
-            position: relative;
-            transition: all 0.4s;
-        }
-
-        .feature-card:hover {
-            border-color: var(--gold);
-            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
-        }
-
-        .feature-number {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 4rem;
-            color: rgba(212,175,55,0.2);
-            position: absolute;
-            top: 20px;
-            right: 30px;
-        }
-
-        .feature-icon {
-            font-size: 2rem;
-            margin-bottom: 25px;
-        }
-
-        .feature-card h3 {
-            font-size: 1.4rem;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-
-        .feature-card p {
-            color: var(--gray);
-            line-height: 1.7;
-            font-size: 0.95rem;
-        }
-
-        .feature-list {
-            list-style: none;
-            margin-top: 20px;
-        }
-
-        .feature-list li {
-            padding: 8px 0;
-            color: var(--gray);
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .feature-list li::before {
-            content: '✓';
-            color: var(--gold);
-            font-weight: bold;
-        }
-
-        /* Blue Ocean Section */
-        .blue-ocean {
-            background: linear-gradient(180deg, var(--dark) 0%, var(--black) 100%);
-        }
-
-        .ocean-visual {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
-            margin-top: 60px;
-        }
-
-        .ocean-before, .ocean-after {
-            padding: 40px;
-            border-radius: 20px;
-        }
-
-        .ocean-before {
-            background: rgba(255,68,68,0.1);
-            border: 1px solid rgba(255,68,68,0.3);
-        }
-
-        .ocean-after {
-            background: rgba(212,175,55,0.1);
-            border: 1px solid rgba(212,175,55,0.3);
-        }
-
-        .ocean-label {
-            font-size: 0.7rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-        }
-
-        .ocean-before .ocean-label {
-            color: #ff4444;
-        }
-
-        .ocean-after .ocean-label {
-            color: var(--gold);
-        }
-
-        .ocean-title {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 2rem;
-            margin-bottom: 25px;
-        }
-
-        .ocean-list {
-            list-style: none;
-        }
-
-        .ocean-list li {
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            color: var(--gray);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .ocean-before .ocean-list li::before {
-            content: '✗';
-            color: #ff4444;
-        }
-
-        .ocean-after .ocean-list li::before {
-            content: '✓';
-            color: var(--gold);
-        }
-
-        /* ROI Section */
-        .roi {
-            background: var(--black);
-            text-align: center;
-        }
-
-        .roi-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 40px;
-            margin-top: 60px;
-        }
-
-        .roi-item {
-            padding: 40px 30px;
-            background: var(--dark);
-            border: 1px solid rgba(212,175,55,0.2);
-            transition: all 0.4s;
-        }
-
-        .roi-item:hover {
-            border-color: var(--gold);
-            transform: translateY(-10px);
-        }
-
-        .roi-value {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 4rem;
-            color: var(--gold);
-            line-height: 1;
-        }
-
-        .roi-label {
-            font-size: 0.85rem;
-            color: var(--gray);
-            margin-top: 15px;
-            line-height: 1.5;
-        }
-
-        /* Pricing Section */
-        .pricing {
-            background: linear-gradient(135deg, var(--dark) 0%, var(--black) 100%);
-        }
-
-        .pricing-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 60px;
-        }
-
-        .pricing-card {
-            background: var(--black);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 50px 40px;
-            position: relative;
-            transition: all 0.4s;
-        }
-
-        .pricing-card.featured {
-            border-color: var(--gold);
-            transform: scale(1.05);
-        }
-
-        .pricing-card.featured::before {
-            content: 'RECOMENDADO';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--gold);
-            color: var(--black);
-            padding: 8px 20px;
-            font-size: 0.7rem;
-            letter-spacing: 2px;
-            font-weight: 600;
-        }
-
-        .pricing-name {
-            font-size: 0.8rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--gold);
-            margin-bottom: 15px;
-        }
-
-        .pricing-price {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 3.5rem;
-            line-height: 1;
-            margin-bottom: 10px;
-        }
-
-        .pricing-price span {
-            font-size: 1rem;
-            color: var(--gray);
-        }
-
-        .pricing-desc {
-            color: var(--gray);
-            font-size: 0.9rem;
-            margin-bottom: 30px;
-            padding-bottom: 30px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .pricing-features {
-            list-style: none;
-        }
-
-        .pricing-features li {
-            padding: 10px 0;
-            color: var(--gray);
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .pricing-features li::before {
-            content: '✓';
-            color: var(--gold);
-        }
-
-        /* Timeline Section */
-        .timeline {
-            background: var(--black);
-        }
-
-        .timeline-container {
-            position: relative;
-            max-width: 800px;
-            margin: 60px auto 0;
-        }
-
-        .timeline-container::before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: linear-gradient(to bottom, var(--gold), transparent);
-        }
-
-        .timeline-item {
-            display: flex;
-            gap: 60px;
-            margin-bottom: 60px;
-            position: relative;
-        }
-
-        .timeline-item:nth-child(even) {
-            flex-direction: row-reverse;
-        }
-
-        .timeline-content {
-            flex: 1;
-            background: var(--dark);
-            padding: 30px;
+        .chat-pulse { animation: pulse 2s infinite; }
+        
+        /* Glass effect */
+        .glass {
+            background: rgba(20,20,20,0.8);
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(212,175,55,0.2);
         }
-
-        .timeline-week {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 2rem;
-            color: var(--gold);
-            margin-bottom: 10px;
-        }
-
-        .timeline-title {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        .timeline-desc {
-            color: var(--gray);
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-
-        .timeline-dot {
-            position: absolute;
-            left: 50%;
-            top: 30px;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 20px;
-            background: var(--gold);
-            border-radius: 50%;
-            border: 4px solid var(--black);
-        }
-
-        /* CTA Section */
-        .cta {
-            background: linear-gradient(135deg, rgba(212,175,55,0.1) 0%, var(--black) 100%);
-            text-align: center;
-        }
-
-        .cta h2 {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: clamp(3rem, 8vw, 6rem);
-            line-height: 1;
-            margin-bottom: 30px;
-        }
-
-        .cta p {
-            font-size: 1.2rem;
-            color: var(--gray);
-            max-width: 600px;
-            margin: 0 auto 50px;
-            line-height: 1.7;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            padding: 18px 36px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-decoration: none;
-            transition: all 0.3s;
-            cursor: pointer;
-            border: none;
-            font-family: inherit;
-        }
-
-        .btn-primary {
-            background: var(--gold);
-            color: var(--black);
-        }
-
-        .btn-primary:hover {
-            background: var(--gold-light);
-            transform: translateY(-3px);
-            box-shadow: 0 20px 40px rgba(212,175,55,0.3);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--white);
-            border: 1px solid var(--white);
-        }
-
-        .btn-secondary:hover {
-            background: var(--white);
-            color: var(--black);
-        }
-
-        .btn-whatsapp {
-            background: #25D366;
-            color: white;
-        }
-
-        .btn-whatsapp:hover {
-            background: #20BD5A;
-            transform: translateY(-3px);
-            box-shadow: 0 20px 40px rgba(37,211,102,0.3);
-        }
-
-        /* Footer */
-        footer {
-            background: var(--dark);
-            padding: 60px;
-            text-align: center;
-        }
-
-        .footer-logo {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 2rem;
-            letter-spacing: 3px;
-            color: var(--gold);
-            margin-bottom: 20px;
-        }
-
-        .footer-text {
-            color: var(--gray);
-            font-size: 0.85rem;
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Language Toggle */
+        
+        /* Language toggle */
         .lang-es, .lang-en { display: none; }
         body.es .lang-es { display: block; }
         body.en .lang-en { display: block; }
@@ -842,812 +70,1233 @@
         body.en .lang-en-inline { display: inline; }
         body.es .lang-en-inline { display: none; }
         body.en .lang-es-inline { display: none; }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            section {
-                padding: 80px 30px;
-            }
-
-            nav {
-                padding: 15px 20px;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .hero-stats {
-                flex-direction: column;
-                gap: 30px;
-            }
-
-            .ocean-visual {
-                grid-template-columns: 1fr;
-            }
-
-            .roi-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .timeline-container::before {
-                left: 20px;
-            }
-
-            .timeline-item {
-                flex-direction: column !important;
-                padding-left: 50px;
-            }
-
-            .timeline-dot {
-                left: 20px;
-            }
-
-            .pricing-card.featured {
-                transform: none;
-            }
-        }
+        body.es .lang-es-flex { display: flex; }
+        body.en .lang-en-flex { display: flex; }
+        body.es .lang-en-flex { display: none; }
+        body.en .lang-es-flex { display: none; }
     </style>
 </head>
-<body class="es">
-    <nav>
-        <div class="logo">JERMAINE × MACHINEMIND</div>
-        <div class="nav-links">
-            <a href="#problema" class="lang-es-inline">El Problema</a>
-            <a href="#problema" class="lang-en-inline">The Problem</a>
-            <a href="#solucion" class="lang-es-inline">Solución</a>
-            <a href="#solucion" class="lang-en-inline">Solution</a>
-            <a href="#roi" class="lang-es-inline">ROI</a>
-            <a href="#roi" class="lang-en-inline">ROI</a>
-            <a href="#inversion" class="lang-es-inline">Inversión</a>
-            <a href="#inversion" class="lang-en-inline">Pricing</a>
+<body class="bg-dark text-white es">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-50 glass">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="#" class="font-display text-2xl tracking-wider text-gold">JERMAINE BARBER'S</a>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#services" class="text-sm hover:text-gold transition">
+                    <span class="lang-es-inline">Servicios</span>
+                    <span class="lang-en-inline">Services</span>
+                </a>
+                <a href="#booking" class="text-sm hover:text-gold transition">
+                    <span class="lang-es-inline">Reservar</span>
+                    <span class="lang-en-inline">Book</span>
+                </a>
+                <a href="#shop" class="text-sm hover:text-gold transition">
+                    <span class="lang-es-inline">Tienda</span>
+                    <span class="lang-en-inline">Shop</span>
+                </a>
+                <a href="#location" class="text-sm hover:text-gold transition">
+                    <span class="lang-es-inline">Ubicación</span>
+                    <span class="lang-en-inline">Location</span>
+                </a>
+                <button onclick="toggleLang()" class="px-4 py-2 border border-gold text-gold text-xs tracking-widest hover:bg-gold hover:text-dark transition">
+                    EN / ES
+                </button>
+            </div>
+            <button onclick="toggleMobileMenu()" class="md:hidden text-gold">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
         </div>
-        <button class="lang-toggle" onclick="toggleLang()">EN / ES</button>
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden px-4 pb-4">
+            <a href="#services" class="block py-2 text-sm hover:text-gold">
+                <span class="lang-es-inline">Servicios</span><span class="lang-en-inline">Services</span>
+            </a>
+            <a href="#booking" class="block py-2 text-sm hover:text-gold">
+                <span class="lang-es-inline">Reservar</span><span class="lang-en-inline">Book</span>
+            </a>
+            <a href="#shop" class="block py-2 text-sm hover:text-gold">
+                <span class="lang-es-inline">Tienda</span><span class="lang-en-inline">Shop</span>
+            </a>
+            <a href="#location" class="block py-2 text-sm hover:text-gold">
+                <span class="lang-es-inline">Ubicación</span><span class="lang-en-inline">Location</span>
+            </a>
+        </div>
     </nav>
 
-    <!-- HERO -->
-    <section class="hero">
-        <div class="hero-badge">
-            <span class="lang-es-inline">Propuesta Exclusiva 2026</span>
-            <span class="lang-en-inline">Exclusive Proposal 2026</span>
-        </div>
-        <h1>
-            <span class="lang-es-inline">LA BARBERÍA<br><span>#1</span> DE<br>COLOMBIA</span>
-            <span class="lang-en-inline">COLOMBIA'S<br><span>#1</span><br>BARBERSHOP</span>
-        </h1>
-        <p class="hero-subtitle">
-            <span class="lang-es">Sistema de reservas por WhatsApp con IA + Marketing automatizado + Fidelización inteligente. Todo lo que necesitas para dominar Cartagena y expandir a toda Colombia.</span>
-            <span class="lang-en">AI-powered WhatsApp booking system + Automated marketing + Smart loyalty program. Everything you need to dominate Cartagena and expand across Colombia.</span>
-        </p>
-        <div class="hero-stats">
-            <div class="stat">
-                <div class="stat-value">5.0★</div>
-                <div class="stat-label">
-                    <span class="lang-es-inline">Calificación Google</span>
-                    <span class="lang-en-inline">Google Rating</span>
-                </div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">591</div>
-                <div class="stat-label">
-                    <span class="lang-es-inline">Reviews</span>
-                    <span class="lang-en-inline">Reviews</span>
-                </div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">2.3K</div>
-                <div class="stat-label">
-                    <span class="lang-es-inline">Seguidores IG</span>
-                    <span class="lang-en-inline">IG Followers</span>
-                </div>
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
+        <div class="absolute inset-0 bg-gradient-to-br from-gold/10 via-transparent to-transparent"></div>
+        <div class="max-w-7xl mx-auto px-4 text-center relative z-10">
+            <p class="text-gold text-sm tracking-[0.3em] mb-6">
+                <span class="lang-es-inline">★★★★★ 5.0 EN GOOGLE • 591 REVIEWS</span>
+                <span class="lang-en-inline">★★★★★ 5.0 ON GOOGLE • 591 REVIEWS</span>
+            </p>
+            <h1 class="font-display text-6xl md:text-8xl lg:text-9xl leading-none mb-6">
+                <span class="lang-es-inline">LA MEJOR<br><span class="text-gold">BARBERÍA</span><br>DE CARTAGENA</span>
+                <span class="lang-en-inline">CARTAGENA'S<br><span class="text-gold">BEST</span><br>BARBERSHOP</span>
+            </h1>
+            <p class="text-gray-400 max-w-xl mx-auto mb-10 text-lg">
+                <span class="lang-es-inline">Cortes de precisión, afeitados clásicos, y ahora servicios completos de belleza. Reserva 24/7 con nuestra IA.</span>
+                <span class="lang-en-inline">Precision cuts, classic shaves, and now complete beauty services. Book 24/7 with our AI.</span>
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="openBooking()" class="px-8 py-4 bg-gold text-dark font-semibold hover:bg-gold-light transition">
+                    <span class="lang-es-inline">RESERVAR AHORA</span>
+                    <span class="lang-en-inline">BOOK NOW</span>
+                </button>
+                <button onclick="openChat()" class="px-8 py-4 border border-white hover:bg-white hover:text-dark transition">
+                    <span class="lang-es-inline">💬 HABLAR CON SOFIA</span>
+                    <span class="lang-en-inline">💬 CHAT WITH SOFIA</span>
+                </button>
             </div>
         </div>
     </section>
 
-    <!-- PROBLEM -->
-    <section class="problem" id="problema">
-        <div class="section-header">
-            <p class="section-tag">
-                <span class="lang-es-inline">El Problema</span>
-                <span class="lang-en-inline">The Problem</span>
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-darker">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="text-gold text-sm tracking-[0.3em] mb-4">
+                <span class="lang-es-inline">NUESTROS SERVICIOS</span>
+                <span class="lang-en-inline">OUR SERVICES</span>
             </p>
-            <h2 class="section-title">
-                <span class="lang-es-inline">POR QUÉ PIERDEN DINERO<br>TODAS LAS BARBERÍAS</span>
-                <span class="lang-en-inline">WHY EVERY BARBERSHOP<br>IS LOSING MONEY</span>
-            </h2>
-        </div>
-        <div class="problem-grid">
-            <div class="problem-card">
-                <div class="problem-icon">📞</div>
-                <h3>
-                    <span class="lang-es-inline">Llamadas Perdidas = Clientes Perdidos</span>
-                    <span class="lang-en-inline">Missed Calls = Lost Clients</span>
-                </h3>
-                <p>
-                    <span class="lang-es">Cada llamada que no contestas mientras estás cortando es un cliente que fue a la competencia. No puedes contestar el teléfono con tijeras en la mano.</span>
-                    <span class="lang-en">Every call you miss while cutting hair is a client who went to your competition. You can't answer the phone with scissors in your hand.</span>
-                </p>
-                <div class="problem-stat">-35%</div>
-                <p style="color: var(--gray); font-size: 0.8rem; margin-top: 5px;">
-                    <span class="lang-es-inline">Reservas perdidas por mes</span>
-                    <span class="lang-en-inline">Bookings lost per month</span>
-                </p>
-            </div>
-            <div class="problem-card">
-                <div class="problem-icon">❌</div>
-                <h3>
-                    <span class="lang-es-inline">No-Shows Destruyen Tu Día</span>
-                    <span class="lang-en-inline">No-Shows Destroy Your Day</span>
-                </h3>
-                <p>
-                    <span class="lang-es">Un cliente que no llega significa 45 minutos perdidos, dinero que no entra, y un barbero sentado sin hacer nada. Los recordatorios manuales son imposibles.</span>
-                    <span class="lang-en">A client who doesn't show means 45 wasted minutes, lost revenue, and a barber sitting idle. Manual reminders are impossible to maintain.</span>
-                </p>
-                <div class="problem-stat">23%</div>
-                <p style="color: var(--gray); font-size: 0.8rem; margin-top: 5px;">
-                    <span class="lang-es-inline">Tasa promedio de no-shows</span>
-                    <span class="lang-en-inline">Average no-show rate</span>
-                </p>
-            </div>
-            <div class="problem-card">
-                <div class="problem-icon">🔄</div>
-                <h3>
-                    <span class="lang-es-inline">Cero Recompra Automatizada</span>
-                    <span class="lang-en-inline">Zero Automated Rebooking</span>
-                </h3>
-                <p>
-                    <span class="lang-es">Un corte dura 3-4 semanas. Si no le recuerdas al cliente que vuelva, irá a otra barbería. El que manda el mensaje primero, gana.</span>
-                    <span class="lang-en">A haircut lasts 3-4 weeks. If you don't remind the client to come back, they'll go elsewhere. Whoever messages first, wins.</span>
-                </p>
-                <div class="problem-stat">67%</div>
-                <p style="color: var(--gray); font-size: 0.8rem; margin-top: 5px;">
-                    <span class="lang-es-inline">Clientes no vuelven sin recordatorio</span>
-                    <span class="lang-en-inline">Clients don't return without reminder</span>
-                </p>
-            </div>
-            <div class="problem-card">
-                <div class="problem-icon">🌙</div>
-                <h3>
-                    <span class="lang-es-inline">Cerrado = Sin Reservas</span>
-                    <span class="lang-en-inline">Closed = No Bookings</span>
-                </h3>
-                <p>
-                    <span class="lang-es">Tu barbería cierra a las 8 PM. Los turistas del hotel Almirante buscan corte a las 10 PM cuando planean su día siguiente. Reservas que nunca llegan.</span>
-                    <span class="lang-en">Your shop closes at 8 PM. Tourists from Hotel Almirante look for cuts at 10 PM while planning their next day. Bookings that never arrive.</span>
-                </p>
-                <div class="problem-stat">40%</div>
-                <p style="color: var(--gray); font-size: 0.8rem; margin-top: 5px;">
-                    <span class="lang-es-inline">Búsquedas fuera de horario</span>
-                    <span class="lang-en-inline">Off-hours searches</span>
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- SOLUTION -->
-    <section class="solution" id="solucion">
-        <div class="section-header">
-            <p class="section-tag">
-                <span class="lang-es-inline">La Solución</span>
-                <span class="lang-en-inline">The Solution</span>
-            </p>
-            <h2 class="section-title">
-                <span class="lang-es-inline">JERMAINE AI<br>TU BARBERO DIGITAL</span>
-                <span class="lang-en-inline">JERMAINE AI<br>YOUR DIGITAL BARBER</span>
-            </h2>
-        </div>
-        <div class="solution-intro">
-            <p>
-                <span class="lang-es">Imagina tener un recepcionista que <strong>nunca duerme</strong>, habla perfecto español e inglés, conoce todos tus servicios y precios, reserva citas 24/7, y manda recordatorios automáticos. <strong>Eso es Jermaine AI.</strong></span>
-                <span class="lang-en">Imagine having a receptionist who <strong>never sleeps</strong>, speaks perfect Spanish and English, knows all your services and prices, books appointments 24/7, and sends automatic reminders. <strong>That's Jermaine AI.</strong></span>
-            </p>
-        </div>
-
-        <!-- WhatsApp Demo -->
-        <div class="whatsapp-demo">
-            <div class="wa-header">
-                <div class="wa-avatar">JB</div>
-                <div class="wa-name">
-                    <h4>Jermaine Barber's AI</h4>
-                    <span>Online</span>
-                </div>
-            </div>
-            <div class="wa-chat" id="chat-demo">
-                <div class="wa-message user">
-                    <span class="lang-es">Hola, quiero reservar un corte para mañana</span>
-                    <span class="lang-en">Hi, I want to book a haircut for tomorrow</span>
-                    <div class="wa-time">10:32 PM ✓✓</div>
-                </div>
-                <div class="wa-message bot">
-                    <span class="lang-es">¡Hola! 👋 Bienvenido a Jermaine Barber's, la mejor barbería del centro histórico de Cartagena.<br><br>Para mañana tenemos estos horarios disponibles:<br><br>🕐 9:00 AM<br>🕐 11:30 AM<br>🕐 2:00 PM<br>🕐 4:30 PM<br><br>¿Cuál te funciona mejor?</span>
-                    <span class="lang-en">Hello! 👋 Welcome to Jermaine Barber's, the best barbershop in Cartagena's historic center.<br><br>For tomorrow we have these times available:<br><br>🕐 9:00 AM<br>🕐 11:30 AM<br>🕐 2:00 PM<br>🕐 4:30 PM<br><br>Which works best for you?</span>
-                    <div class="wa-time">10:32 PM</div>
-                </div>
-                <div class="wa-message user">
-                    <span class="lang-es">El de las 11:30. ¿Cuánto cuesta?</span>
-                    <span class="lang-en">The 11:30 one. How much is it?</span>
-                    <div class="wa-time">10:33 PM ✓✓</div>
-                </div>
-                <div class="wa-message bot">
-                    <span class="lang-es">Perfecto! 💈<br><br>📋 <strong>Tu reserva:</strong><br>• Corte clásico: $25.000 COP<br>• Fecha: Mañana 11:30 AM<br>• Barbero: El próximo disponible<br><br>¿Quieres agregar barba ($15.000) o cejas ($8.000)?<br><br>Responde "CONFIRMAR" para asegurar tu cita. 🪒</span>
-                    <span class="lang-en">Perfect! 💈<br><br>📋 <strong>Your booking:</strong><br>• Classic cut: $25,000 COP (~$6 USD)<br>• Date: Tomorrow 11:30 AM<br>• Barber: Next available<br><br>Want to add beard trim ($15,000) or eyebrows ($8,000)?<br><br>Reply "CONFIRM" to secure your appointment. 🪒</span>
-                    <div class="wa-time">10:33 PM</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FEATURES -->
-    <section class="features">
-        <div class="section-header">
-            <p class="section-tag">
-                <span class="lang-es-inline">Características</span>
-                <span class="lang-en-inline">Features</span>
-            </p>
-            <h2 class="section-title">
+            <h2 class="font-display text-5xl md:text-6xl mb-12">
                 <span class="lang-es-inline">TODO LO QUE<br>NECESITAS</span>
                 <span class="lang-en-inline">EVERYTHING<br>YOU NEED</span>
             </h2>
-        </div>
-        <div class="features-grid">
-            <div class="feature-card">
-                <span class="feature-number">01</span>
-                <div class="feature-icon">💬</div>
-                <h3>
-                    <span class="lang-es-inline">WhatsApp Booking 24/7</span>
-                    <span class="lang-en-inline">24/7 WhatsApp Booking</span>
-                </h3>
-                <p>
-                    <span class="lang-es">Clientes reservan por WhatsApp a cualquier hora. La IA entiende español, inglés y hasta "spanglish" de turistas.</span>
-                    <span class="lang-en">Clients book via WhatsApp anytime. The AI understands Spanish, English, and even tourist "Spanglish".</span>
-                </p>
-                <ul class="feature-list">
-                    <li>
-                        <span class="lang-es-inline">Reservas automáticas sin intervención</span>
-                        <span class="lang-en-inline">Automatic bookings without intervention</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Confirmaciones instantáneas</span>
-                        <span class="lang-en-inline">Instant confirmations</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Cambios y cancelaciones fáciles</span>
-                        <span class="lang-en-inline">Easy changes and cancellations</span>
-                    </li>
-                </ul>
+            
+            <!-- Service Categories -->
+            <div class="flex flex-wrap gap-4 mb-10">
+                <button onclick="filterServices('all')" class="service-filter active px-6 py-2 border border-gold text-gold hover:bg-gold hover:text-dark transition" data-filter="all">
+                    <span class="lang-es-inline">Todos</span>
+                    <span class="lang-en-inline">All</span>
+                </button>
+                <button onclick="filterServices('barber')" class="service-filter px-6 py-2 border border-gray-600 text-gray-400 hover:border-gold hover:text-gold transition" data-filter="barber">
+                    <span class="lang-es-inline">Barbería</span>
+                    <span class="lang-en-inline">Barber</span>
+                </button>
+                <button onclick="filterServices('hair')" class="service-filter px-6 py-2 border border-gray-600 text-gray-400 hover:border-gold hover:text-gold transition" data-filter="hair">
+                    <span class="lang-es-inline">Cabello</span>
+                    <span class="lang-en-inline">Hair</span>
+                </button>
+                <button onclick="filterServices('nails')" class="service-filter px-6 py-2 border border-gray-600 text-gray-400 hover:border-gold hover:text-gold transition" data-filter="nails">
+                    <span class="lang-es-inline">Uñas</span>
+                    <span class="lang-en-inline">Nails</span>
+                </button>
+                <button onclick="filterServices('spa')" class="service-filter px-6 py-2 border border-gray-600 text-gray-400 hover:border-gold hover:text-gold transition" data-filter="spa">
+                    <span class="lang-es-inline">Spa</span>
+                    <span class="lang-en-inline">Spa</span>
+                </button>
             </div>
-            <div class="feature-card">
-                <span class="feature-number">02</span>
-                <div class="feature-icon">🔔</div>
-                <h3>
-                    <span class="lang-es-inline">Recordatorios Anti No-Show</span>
-                    <span class="lang-en-inline">Anti No-Show Reminders</span>
-                </h3>
-                <p>
-                    <span class="lang-es">Sistema automático de recordatorios 24h y 2h antes de la cita. Reduce no-shows hasta un 80%.</span>
-                    <span class="lang-en">Automatic reminder system 24h and 2h before appointment. Reduces no-shows by up to 80%.</span>
-                </p>
-                <ul class="feature-list">
-                    <li>
-                        <span class="lang-es-inline">Recordatorio 24 horas antes</span>
-                        <span class="lang-en-inline">24-hour reminder</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Recordatorio 2 horas antes</span>
-                        <span class="lang-en-inline">2-hour reminder</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Confirmación de asistencia</span>
-                        <span class="lang-en-inline">Attendance confirmation</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="feature-card">
-                <span class="feature-number">03</span>
-                <div class="feature-icon">🔄</div>
-                <h3>
-                    <span class="lang-es-inline">Recompra Automatizada</span>
-                    <span class="lang-en-inline">Automated Rebooking</span>
-                </h3>
-                <p>
-                    <span class="lang-es">A los 21 días del último corte, el sistema contacta al cliente automáticamente para su próxima cita.</span>
-                    <span class="lang-en">21 days after the last cut, the system automatically contacts the client for their next appointment.</span>
-                </p>
-                <ul class="feature-list">
-                    <li>
-                        <span class="lang-es-inline">Ciclo de 3 semanas personalizable</span>
-                        <span class="lang-en-inline">Customizable 3-week cycle</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Mensaje personalizado por cliente</span>
-                        <span class="lang-en-inline">Personalized message per client</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Aumento de frecuencia de visita</span>
-                        <span class="lang-en-inline">Increased visit frequency</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="feature-card">
-                <span class="feature-number">04</span>
-                <div class="feature-icon">⭐</div>
-                <h3>
-                    <span class="lang-es-inline">Programa de Fidelidad</span>
-                    <span class="lang-en-inline">Loyalty Program</span>
-                </h3>
-                <p>
-                    <span class="lang-es">"5 cortes = 1 gratis". El sistema trackea automáticamente y notifica cuando llegan al premio.</span>
-                    <span class="lang-en">"5 cuts = 1 free". The system automatically tracks and notifies when they reach the reward.</span>
-                </p>
-                <ul class="feature-list">
-                    <li>
-                        <span class="lang-es-inline">Puntos por cada visita</span>
-                        <span class="lang-en-inline">Points per visit</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Notificación de recompensa</span>
-                        <span class="lang-en-inline">Reward notification</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Niveles VIP para clientes frecuentes</span>
-                        <span class="lang-en-inline">VIP levels for frequent clients</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="feature-card">
-                <span class="feature-number">05</span>
-                <div class="feature-icon">📱</div>
-                <h3>
-                    <span class="lang-es-inline">Marketing de Captación</span>
-                    <span class="lang-en-inline">Client Acquisition Marketing</span>
-                </h3>
-                <p>
-                    <span class="lang-es">Campañas automatizadas para turistas. QR codes en hoteles cercanos. Link en bio de Instagram que reserva directo.</span>
-                    <span class="lang-en">Automated campaigns for tourists. QR codes in nearby hotels. Instagram bio link that books directly.</span>
-                </p>
-                <ul class="feature-list">
-                    <li>
-                        <span class="lang-es-inline">QR para Hotel Almirante y cercanos</span>
-                        <span class="lang-en-inline">QR for Hotel Almirante and nearby</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Campañas para eventos especiales</span>
-                        <span class="lang-en-inline">Special event campaigns</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Instagram Link in Bio optimizado</span>
-                        <span class="lang-en-inline">Optimized Instagram Link in Bio</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="feature-card">
-                <span class="feature-number">06</span>
-                <div class="feature-icon">📊</div>
-                <h3>
-                    <span class="lang-es-inline">Dashboard de Control</span>
-                    <span class="lang-en-inline">Control Dashboard</span>
-                </h3>
-                <p>
-                    <span class="lang-es">Visualiza reservas, ingresos, clientes nuevos vs recurrentes, y rendimiento de barberos en tiempo real.</span>
-                    <span class="lang-en">View bookings, revenue, new vs returning clients, and barber performance in real-time.</span>
-                </p>
-                <ul class="feature-list">
-                    <li>
-                        <span class="lang-es-inline">Métricas en tiempo real</span>
-                        <span class="lang-en-inline">Real-time metrics</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Reportes semanales automáticos</span>
-                        <span class="lang-en-inline">Automatic weekly reports</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Predicción de ingresos</span>
-                        <span class="lang-en-inline">Revenue forecasting</span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </section>
 
-    <!-- BLUE OCEAN -->
-    <section class="blue-ocean">
-        <div class="section-header">
-            <p class="section-tag">
-                <span class="lang-es-inline">Ventaja Competitiva</span>
-                <span class="lang-en-inline">Competitive Advantage</span>
-            </p>
-            <h2 class="section-title">
-                <span class="lang-es-inline">OCÉANO AZUL<br>DONDE NADIE MÁS ESTÁ</span>
-                <span class="lang-en-inline">BLUE OCEAN<br>WHERE NO ONE ELSE IS</span>
-            </h2>
-        </div>
-        <div class="ocean-visual">
-            <div class="ocean-before">
-                <p class="ocean-label">
-                    <span class="lang-es-inline">Todas las barberías de Cartagena</span>
-                    <span class="lang-en-inline">Every barbershop in Cartagena</span>
-                </p>
-                <h3 class="ocean-title">
-                    <span class="lang-es-inline">OCÉANO ROJO</span>
-                    <span class="lang-en-inline">RED OCEAN</span>
-                </h3>
-                <ul class="ocean-list">
-                    <li>
-                        <span class="lang-es-inline">Reservas por llamada o presencial</span>
-                        <span class="lang-en-inline">Phone or walk-in bookings only</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Sin recordatorios automáticos</span>
-                        <span class="lang-en-inline">No automatic reminders</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Cerrado después de las 8 PM</span>
-                        <span class="lang-en-inline">Closed after 8 PM</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Solo hablan español</span>
-                        <span class="lang-en-inline">Spanish only</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Sin programa de fidelidad</span>
-                        <span class="lang-en-inline">No loyalty program</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Marketing básico en Instagram</span>
-                        <span class="lang-en-inline">Basic Instagram marketing</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="ocean-after">
-                <p class="ocean-label">Jermaine Barber's 2026</p>
-                <h3 class="ocean-title">
-                    <span class="lang-es-inline">OCÉANO AZUL</span>
-                    <span class="lang-en-inline">BLUE OCEAN</span>
-                </h3>
-                <ul class="ocean-list">
-                    <li>
-                        <span class="lang-es-inline">WhatsApp booking 24/7 con IA</span>
-                        <span class="lang-en-inline">24/7 AI WhatsApp booking</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Recordatorios que eliminan no-shows</span>
-                        <span class="lang-en-inline">No-show eliminating reminders</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Reservas a medianoche? Sin problema</span>
-                        <span class="lang-en-inline">Midnight bookings? No problem</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Bilingüe: español + inglés perfecto</span>
-                        <span class="lang-en-inline">Bilingual: perfect Spanish + English</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Fidelidad automatizada con premios</span>
-                        <span class="lang-en-inline">Automated loyalty with rewards</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Marketing inteligente de turistas</span>
-                        <span class="lang-en-inline">Smart tourist marketing</span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <!-- ROI -->
-    <section class="roi" id="roi">
-        <div class="section-header">
-            <p class="section-tag">
-                <span class="lang-es-inline">Retorno de Inversión</span>
-                <span class="lang-en-inline">Return on Investment</span>
-            </p>
-            <h2 class="section-title">
-                <span class="lang-es-inline">LOS NÚMEROS<br>NO MIENTEN</span>
-                <span class="lang-en-inline">THE NUMBERS<br>DON'T LIE</span>
-            </h2>
-        </div>
-        <div class="roi-grid">
-            <div class="roi-item">
-                <div class="roi-value">+40%</div>
-                <p class="roi-label">
-                    <span class="lang-es-inline">Aumento en reservas mensuales con booking 24/7</span>
-                    <span class="lang-en-inline">Increase in monthly bookings with 24/7 booking</span>
-                </p>
-            </div>
-            <div class="roi-item">
-                <div class="roi-value">-80%</div>
-                <p class="roi-label">
-                    <span class="lang-es-inline">Reducción de no-shows con recordatorios</span>
-                    <span class="lang-en-inline">No-show reduction with reminders</span>
-                </p>
-            </div>
-            <div class="roi-item">
-                <div class="roi-value">+35%</div>
-                <p class="roi-label">
-                    <span class="lang-es-inline">Más clientes recurrentes con fidelización</span>
-                    <span class="lang-en-inline">More recurring clients with loyalty program</span>
-                </p>
-            </div>
-            <div class="roi-item">
-                <div class="roi-value">$8M+</div>
-                <p class="roi-label">
-                    <span class="lang-es-inline">COP adicionales por mes proyectados</span>
-                    <span class="lang-en-inline">Additional COP projected monthly</span>
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- PRICING -->
-    <section class="pricing" id="inversion">
-        <div class="section-header">
-            <p class="section-tag">
-                <span class="lang-es-inline">Inversión</span>
-                <span class="lang-en-inline">Investment</span>
-            </p>
-            <h2 class="section-title">
-                <span class="lang-es-inline">ELIGE TU<br>NIVEL DE DOMINIO</span>
-                <span class="lang-en-inline">CHOOSE YOUR<br>DOMINANCE LEVEL</span>
-            </h2>
-        </div>
-        <div class="pricing-cards">
-            <div class="pricing-card">
-                <p class="pricing-name">STARTER</p>
-                <p class="pricing-price">$350K <span>COP/mes</span></p>
-                <p class="pricing-desc">
-                    <span class="lang-es-inline">Para empezar a automatizar</span>
-                    <span class="lang-en-inline">To start automating</span>
-                </p>
-                <ul class="pricing-features">
-                    <li>
-                        <span class="lang-es-inline">WhatsApp Booking IA básico</span>
-                        <span class="lang-en-inline">Basic AI WhatsApp Booking</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Recordatorios automáticos</span>
-                        <span class="lang-en-inline">Automatic reminders</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Confirmaciones de cita</span>
-                        <span class="lang-en-inline">Appointment confirmations</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Soporte por WhatsApp</span>
-                        <span class="lang-en-inline">WhatsApp support</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="pricing-card featured">
-                <p class="pricing-name">DOMINATION</p>
-                <p class="pricing-price">$650K <span>COP/mes</span></p>
-                <p class="pricing-desc">
-                    <span class="lang-es-inline">Todo lo que necesitas para ser #1</span>
-                    <span class="lang-en-inline">Everything you need to be #1</span>
-                </p>
-                <ul class="pricing-features">
-                    <li>
-                        <span class="lang-es-inline">Todo de Starter</span>
-                        <span class="lang-en-inline">Everything in Starter</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Recompra automatizada (21 días)</span>
-                        <span class="lang-en-inline">Automated rebooking (21 days)</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Programa de fidelidad completo</span>
-                        <span class="lang-en-inline">Full loyalty program</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Dashboard de métricas</span>
-                        <span class="lang-en-inline">Metrics dashboard</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Bilingüe español + inglés</span>
-                        <span class="lang-en-inline">Bilingual Spanish + English</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Campañas para turistas</span>
-                        <span class="lang-en-inline">Tourist campaigns</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Soporte prioritario</span>
-                        <span class="lang-en-inline">Priority support</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="pricing-card">
-                <p class="pricing-name">EMPIRE</p>
-                <p class="pricing-price">$1.2M <span>COP/mes</span></p>
-                <p class="pricing-desc">
-                    <span class="lang-es-inline">Para escalar a múltiples sedes</span>
-                    <span class="lang-en-inline">To scale to multiple locations</span>
-                </p>
-                <ul class="pricing-features">
-                    <li>
-                        <span class="lang-es-inline">Todo de Domination</span>
-                        <span class="lang-en-inline">Everything in Domination</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Multi-sede (hasta 3 locales)</span>
-                        <span class="lang-en-inline">Multi-location (up to 3)</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">IA personalizada con tu marca</span>
-                        <span class="lang-en-inline">Custom branded AI</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Integración con POS</span>
-                        <span class="lang-en-inline">POS integration</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Account manager dedicado</span>
-                        <span class="lang-en-inline">Dedicated account manager</span>
-                    </li>
-                    <li>
-                        <span class="lang-es-inline">Estrategia de expansión</span>
-                        <span class="lang-en-inline">Expansion strategy</span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <!-- TIMELINE -->
-    <section class="timeline">
-        <div class="section-header">
-            <p class="section-tag">
-                <span class="lang-es-inline">Implementación</span>
-                <span class="lang-en-inline">Implementation</span>
-            </p>
-            <h2 class="section-title">
-                <span class="lang-es-inline">EN 4 SEMANAS<br>ESTÁS OPERANDO</span>
-                <span class="lang-en-inline">IN 4 WEEKS<br>YOU'RE LIVE</span>
-            </h2>
-        </div>
-        <div class="timeline-container">
-            <div class="timeline-item">
-                <div class="timeline-content">
-                    <p class="timeline-week">
-                        <span class="lang-es-inline">SEMANA 1</span>
-                        <span class="lang-en-inline">WEEK 1</span>
-                    </p>
-                    <h4 class="timeline-title">
-                        <span class="lang-es-inline">Setup & Configuración</span>
-                        <span class="lang-en-inline">Setup & Configuration</span>
-                    </h4>
-                    <p class="timeline-desc">
-                        <span class="lang-es">Levantamiento de servicios, precios, horarios. Configuración de WhatsApp Business. Entrenamiento inicial de IA.</span>
-                        <span class="lang-en">Service, pricing, and schedule mapping. WhatsApp Business setup. Initial AI training.</span>
+            <!-- Services Grid -->
+            <div id="servicesGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Barber Services -->
+                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="barber" onclick="selectService('corte-clasico', 25000, 'Corte Clásico')">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-semibold">
+                                <span class="lang-es-inline">Corte Clásico</span>
+                                <span class="lang-en-inline">Classic Cut</span>
+                            </h3>
+                            <p class="text-gray-400 text-sm">45 min</p>
+                        </div>
+                        <span class="text-gold font-display text-2xl">$25K</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        <span class="lang-es-inline">Corte tradicional con tijeras o máquina, incluye lavado y estilo.</span>
+                        <span class="lang-en-inline">Traditional cut with scissors or clippers, includes wash and style.</span>
                     </p>
                 </div>
-                <div class="timeline-dot"></div>
-            </div>
-            <div class="timeline-item">
-                <div class="timeline-content">
-                    <p class="timeline-week">
-                        <span class="lang-es-inline">SEMANA 2</span>
-                        <span class="lang-en-inline">WEEK 2</span>
-                    </p>
-                    <h4 class="timeline-title">
-                        <span class="lang-es-inline">Personalización</span>
-                        <span class="lang-en-inline">Customization</span>
-                    </h4>
-                    <p class="timeline-desc">
-                        <span class="lang-es">Ajustes de tono y personalidad. Integración de programa de fidelidad. Setup de dashboard.</span>
-                        <span class="lang-en">Tone and personality adjustments. Loyalty program integration. Dashboard setup.</span>
+
+                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="barber" onclick="selectService('fade', 30000, 'Fade / Degradado')">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-semibold">Fade / Degradado</h3>
+                            <p class="text-gray-400 text-sm">50 min</p>
+                        </div>
+                        <span class="text-gold font-display text-2xl">$30K</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        <span class="lang-es-inline">Low, mid o high fade con diseño personalizado.</span>
+                        <span class="lang-en-inline">Low, mid or high fade with custom design.</span>
                     </p>
                 </div>
-                <div class="timeline-dot"></div>
-            </div>
-            <div class="timeline-item">
-                <div class="timeline-content">
-                    <p class="timeline-week">
-                        <span class="lang-es-inline">SEMANA 3</span>
-                        <span class="lang-en-inline">WEEK 3</span>
-                    </p>
-                    <h4 class="timeline-title">
-                        <span class="lang-es-inline">Pruebas en Vivo</span>
-                        <span class="lang-en-inline">Live Testing</span>
-                    </h4>
-                    <p class="timeline-desc">
-                        <span class="lang-es">Soft launch con clientes seleccionados. Ajustes basados en feedback real. Optimización de flujos.</span>
-                        <span class="lang-en">Soft launch with selected clients. Real feedback adjustments. Flow optimization.</span>
-                    </p>
-                </div>
-                <div class="timeline-dot"></div>
-            </div>
-            <div class="timeline-item">
-                <div class="timeline-content">
-                    <p class="timeline-week">
-                        <span class="lang-es-inline">SEMANA 4</span>
-                        <span class="lang-en-inline">WEEK 4</span>
-                    </p>
-                    <h4 class="timeline-title">
-                        <span class="lang-es-inline">Lanzamiento Total</span>
-                        <span class="lang-en-inline">Full Launch</span>
-                    </h4>
-                    <p class="timeline-desc">
-                        <span class="lang-es">Go-live completo. Activación de campañas de marketing. Inicio de tracking de métricas.</span>
-                        <span class="lang-en">Full go-live. Marketing campaign activation. Metrics tracking begins.</span>
+
+                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="barber" onclick="selectService('barba', 15000, 'Arreglo de Barba')">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-semibold">
+                                <span class="lang-es-inline">Arreglo de Barba</span>
+                                <span class="lang-en-inline">Beard Trim</span>
+                            </h3>
+                            <p class="text-gray-400 text-sm">25 min</p>
+                        </div>
+                        <span class="text-gold font-display text-2xl">$15K</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        <span class="lang-es-inline">Recorte, perfilado y diseño de barba con navaja.</span>
+                        <span class="lang-en-inline">Trim, shaping and beard design with straight razor.</span>
                     </p>
                 </div>
-                <div class="timeline-dot"></div>
+
+                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="barber" onclick="selectService('afeitado', 20000, 'Afeitado Clásico')">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-semibold">
+                                <span class="lang-es-inline">Afeitado Clásico</span>
+                                <span class="lang-en-inline">Classic Shave</span>
+                            </h3>
+                            <p class="text-gray-400 text-sm">35 min</p>
+                        </div>
+                        <span class="text-gold font-display text-2xl">$20K</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        <span class="lang-es-inline">Afeitado con navaja, toalla caliente y tratamiento facial.</span>
+                        <span class="lang-en-inline">Straight razor shave with hot towel and facial treatment.</span>
+                    </p>
+                </div>
+
+                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="barber" onclick="selectService('combo', 35000, 'Combo Corte + Barba')">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-semibold">
+                                <span class="lang-es-inline">Combo Corte + Barba</span>
+                                <span class="lang-en-inline">Cut + Beard Combo</span>
+                            </h3>
+                            <p class="text-gray-400 text-sm">1h 10min</p>
+                        </div>
+                        <span class="text-gold font-display text-2xl">$35K</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        <span class="lang-es-inline">Corte completo más arreglo de barba. El favorito.</span>
+                        <span class="lang-en-inline">Full cut plus beard trim. The favorite.</span>
+                    </p>
+                </div>
+
+                <!-- Hair Services -->
+                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="hair" onclick="selectService('tinte', 80000, 'Tinte Completo')">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-semibold">
+                                <span class="lang-es-inline">Tinte Completo</span>
+                                <span class="lang-en-inline">Full Color</span>
+                            </h3>
+                            <p class="text-gray-400 text-sm">2h</p>
+                        </div>
+                        <span class="text-gold font-display text-2xl">$80K</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        <span class="lang-es-inline">Coloración profesional con productos de alta calidad.</span>
+                        <span class="lang-en-inline">Professional coloring with high-quality products.</span>
+                    </p>
+                </div>
+
+                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="hair" onclick="selectService('mechas', 120000, 'Mechas / Highlights')">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-semibold">Mechas / Highlights</h3>
+                            <p class="text-gray-400 text-sm">3h</p>
+                        </div>
+                        <span class="text-gold font-display text-2xl">$120K</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        <span class="lang-es-inline">Mechas californianas, balayage o babylights.</span>
+                        <span class="lang-en-inline">Californian highlights, balayage or babylights.</span>
+                    </p>
+                </div>
+
+                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="hair" onclick="selectService('tratamiento', 50000, 'Tratamiento Capilar')">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-semibold">
+                                <span class="lang-es-inline">Tratamiento Capilar</span>
+                                <span class="lang-en-inline">Hair Treatment</span>
+                            </h3>
+                            <p class="text-gray-400 text-sm">45 min</p>
+                        </div>
+                        <span class="text-gold font-display text-2xl">$50K</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        <span class="lang-es-inline">Hidratación profunda, keratina o botox capilar.</span>
+                        <span class="lang-en-inline">Deep hydration, keratin or hair botox.</span>
+                    </p>
+                </div>
+
+                <!-- Nails Services -->
+                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="nails" onclick="selectService('manicure', 25000, 'Manicure Clásico')">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-semibold">
+                                <span class="lang-es-inline">Manicure Clásico</span>
+                                <span class="lang-en-inline">Classic Manicure</span>
+                            </h3>
+                            <p class="text-gray-400 text-sm">40 min</p>
+                        </div>
+                        <span class="text-gold font-display text-2xl">$25K</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        <span class="lang-es-inline">Limpieza, limado, cutículas y esmalte tradicional.</span>
+                        <span class="lang-en-inline">Cleaning, filing, cuticles and traditional polish.</span>
+                    </p>
+                </div>
+
+                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="nails" onclick="selectService('manicure-gel', 45000, 'Manicure Semipermanente')">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-semibold">
+                                <span class="lang-es-inline">Manicure Semipermanente</span>
+                                <span class="lang-en-inline">Gel Manicure</span>
+                            </h3>
+                            <p class="text-gray-400 text-sm">1h</p>
+                        </div>
+                        <span class="text-gold font-display text-2xl">$45K</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        <span class="lang-es-inline">Esmalte en gel con lámpara UV. Dura 3 semanas.</span>
+                        <span class="lang-en-inline">Gel polish with UV lamp. Lasts 3 weeks.</span>
+                    </p>
+                </div>
+
+                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="nails" onclick="selectService('pedicure', 35000, 'Pedicure Completo')">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-semibold">
+                                <span class="lang-es-inline">Pedicure Completo</span>
+                                <span class="lang-en-inline">Full Pedicure</span>
+                            </h3>
+                            <p class="text-gray-400 text-sm">1h</p>
+                        </div>
+                        <span class="text-gold font-display text-2xl">$35K</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        <span class="lang-es-inline">Spa de pies, exfoliación, masaje y esmalte.</span>
+                        <span class="lang-en-inline">Foot spa, exfoliation, massage and polish.</span>
+                    </p>
+                </div>
+
+                <!-- Spa Services -->
+                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="spa" onclick="selectService('facial', 60000, 'Facial Profundo')">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-semibold">
+                                <span class="lang-es-inline">Facial Profundo</span>
+                                <span class="lang-en-inline">Deep Facial</span>
+                            </h3>
+                            <p class="text-gray-400 text-sm">1h</p>
+                        </div>
+                        <span class="text-gold font-display text-2xl">$60K</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        <span class="lang-es-inline">Limpieza facial, mascarilla, vapor y masaje.</span>
+                        <span class="lang-en-inline">Facial cleansing, mask, steam and massage.</span>
+                    </p>
+                </div>
+
+                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="spa" onclick="selectService('masaje', 70000, 'Masaje Relajante')">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-semibold">
+                                <span class="lang-es-inline">Masaje Relajante</span>
+                                <span class="lang-en-inline">Relaxing Massage</span>
+                            </h3>
+                            <p class="text-gray-400 text-sm">1h</p>
+                        </div>
+                        <span class="text-gold font-display text-2xl">$70K</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        <span class="lang-es-inline">Masaje de cuerpo completo con aceites esenciales.</span>
+                        <span class="lang-en-inline">Full body massage with essential oils.</span>
+                    </p>
+                </div>
+
+                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="spa" onclick="selectService('cejas', 12000, 'Diseño de Cejas')">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="text-xl font-semibold">
+                                <span class="lang-es-inline">Diseño de Cejas</span>
+                                <span class="lang-en-inline">Eyebrow Design</span>
+                            </h3>
+                            <p class="text-gray-400 text-sm">20 min</p>
+                        </div>
+                        <span class="text-gold font-display text-2xl">$12K</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        <span class="lang-es-inline">Depilación con cera o hilo. Perfilado perfecto.</span>
+                        <span class="lang-en-inline">Wax or thread removal. Perfect shaping.</span>
+                    </p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA -->
-    <section class="cta">
-        <h2>
-            <span class="lang-es-inline">¿LISTO PARA<br>DOMINAR<br>CARTAGENA?</span>
-            <span class="lang-en-inline">READY TO<br>DOMINATE<br>CARTAGENA?</span>
-        </h2>
-        <p>
-            <span class="lang-es">Esta propuesta es exclusiva para Jermaine Barber's. Primer barbería en Colombia con sistema de booking por IA. La ventaja de ser primero dura para siempre.</span>
-            <span class="lang-en">This proposal is exclusive to Jermaine Barber's. First barbershop in Colombia with AI booking system. The advantage of being first lasts forever.</span>
-        </p>
-        <div class="cta-buttons">
-            <a href="https://wa.me/573006158263?text=Hola%2C%20quiero%20activar%20Jermaine%20AI%20para%20mi%20barber%C3%ADa" class="btn btn-whatsapp">
-                💬 <span class="lang-es-inline">WhatsApp Directo</span><span class="lang-en-inline">Direct WhatsApp</span>
-            </a>
-            <a href="tel:+573181326952" class="btn btn-secondary">
-                📞 <span class="lang-es-inline">Llamar Ahora</span><span class="lang-en-inline">Call Now</span>
-            </a>
+    <!-- Booking Section -->
+    <section id="booking" class="py-20 bg-dark">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="text-gold text-sm tracking-[0.3em] mb-4">
+                <span class="lang-es-inline">RESERVA TU CITA</span>
+                <span class="lang-en-inline">BOOK YOUR APPOINTMENT</span>
+            </p>
+            <h2 class="font-display text-5xl md:text-6xl mb-12">
+                <span class="lang-es-inline">ELIGE TU<br>MOMENTO</span>
+                <span class="lang-en-inline">CHOOSE YOUR<br>TIME</span>
+            </h2>
+
+            <div class="grid lg:grid-cols-2 gap-10">
+                <!-- Calendar -->
+                <div class="glass p-6 rounded-lg">
+                    <div class="flex justify-between items-center mb-6">
+                        <button onclick="prevMonth()" class="text-gold hover:text-gold-light">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                            </svg>
+                        </button>
+                        <h3 id="currentMonth" class="text-xl font-semibold"></h3>
+                        <button onclick="nextMonth()" class="text-gold hover:text-gold-light">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-7 gap-2 text-center mb-4">
+                        <span class="text-gray-500 text-sm lang-es-inline">Dom</span>
+                        <span class="text-gray-500 text-sm lang-en-inline hidden">Sun</span>
+                        <span class="text-gray-500 text-sm lang-es-inline">Lun</span>
+                        <span class="text-gray-500 text-sm lang-en-inline hidden">Mon</span>
+                        <span class="text-gray-500 text-sm lang-es-inline">Mar</span>
+                        <span class="text-gray-500 text-sm lang-en-inline hidden">Tue</span>
+                        <span class="text-gray-500 text-sm lang-es-inline">Mié</span>
+                        <span class="text-gray-500 text-sm lang-en-inline hidden">Wed</span>
+                        <span class="text-gray-500 text-sm lang-es-inline">Jue</span>
+                        <span class="text-gray-500 text-sm lang-en-inline hidden">Thu</span>
+                        <span class="text-gray-500 text-sm lang-es-inline">Vie</span>
+                        <span class="text-gray-500 text-sm lang-en-inline hidden">Fri</span>
+                        <span class="text-gray-500 text-sm lang-es-inline">Sáb</span>
+                        <span class="text-gray-500 text-sm lang-en-inline hidden">Sat</span>
+                    </div>
+                    <div id="calendarDays" class="grid grid-cols-7 gap-2"></div>
+                </div>
+
+                <!-- Time Slots & Summary -->
+                <div>
+                    <div class="glass p-6 rounded-lg mb-6">
+                        <h3 class="text-lg font-semibold mb-4">
+                            <span class="lang-es-inline">Horarios Disponibles</span>
+                            <span class="lang-en-inline">Available Times</span>
+                        </h3>
+                        <div id="timeSlots" class="grid grid-cols-3 gap-3">
+                            <!-- Time slots will be populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Booking Summary -->
+                    <div class="glass p-6 rounded-lg">
+                        <h3 class="text-lg font-semibold mb-4">
+                            <span class="lang-es-inline">Resumen de Reserva</span>
+                            <span class="lang-en-inline">Booking Summary</span>
+                        </h3>
+                        <div id="bookingSummary" class="space-y-3 text-gray-400">
+                            <p>
+                                <span class="lang-es-inline">Selecciona un servicio y fecha</span>
+                                <span class="lang-en-inline">Select a service and date</span>
+                            </p>
+                        </div>
+                        <button id="confirmBooking" onclick="confirmBooking()" class="w-full mt-6 py-4 bg-gold text-dark font-semibold hover:bg-gold-light transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                            <span class="lang-es-inline">CONFIRMAR RESERVA</span>
+                            <span class="lang-en-inline">CONFIRM BOOKING</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- FOOTER -->
-    <footer>
-        <div class="footer-logo">JERMAINE × MACHINEMIND</div>
-        <p class="footer-text">
-            <span class="lang-es-inline">Propuesta Confidencial • Enero 2026 • Cartagena, Colombia</span>
-            <span class="lang-en-inline">Confidential Proposal • January 2026 • Cartagena, Colombia</span>
-        </p>
+    <!-- Shop Section -->
+    <section id="shop" class="py-20 bg-darker">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="text-gold text-sm tracking-[0.3em] mb-4">
+                <span class="lang-es-inline">NUESTRA TIENDA</span>
+                <span class="lang-en-inline">OUR SHOP</span>
+            </p>
+            <h2 class="font-display text-5xl md:text-6xl mb-12">
+                <span class="lang-es-inline">PRODUCTOS<br>PREMIUM</span>
+                <span class="lang-en-inline">PREMIUM<br>PRODUCTS</span>
+            </h2>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Product 1 -->
+                <div class="glass p-4 rounded-lg group">
+                    <div class="aspect-square bg-gradient-to-br from-gold/20 to-transparent rounded-lg mb-4 flex items-center justify-center">
+                        <span class="text-6xl">🧴</span>
+                    </div>
+                    <h3 class="font-semibold mb-1">Pomada Mate</h3>
+                    <p class="text-gray-400 text-sm mb-3">
+                        <span class="lang-es-inline">Fijación fuerte, acabado natural</span>
+                        <span class="lang-en-inline">Strong hold, natural finish</span>
+                    </p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gold font-display text-xl">$45K</span>
+                        <button onclick="addToCart('pomada', 45000)" class="px-4 py-2 bg-gold text-dark text-sm hover:bg-gold-light transition">
+                            <span class="lang-es-inline">Agregar</span>
+                            <span class="lang-en-inline">Add</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="glass p-4 rounded-lg group">
+                    <div class="aspect-square bg-gradient-to-br from-gold/20 to-transparent rounded-lg mb-4 flex items-center justify-center">
+                        <span class="text-6xl">🪒</span>
+                    </div>
+                    <h3 class="font-semibold mb-1">Aceite para Barba</h3>
+                    <p class="text-gray-400 text-sm mb-3">
+                        <span class="lang-es-inline">Hidrata y da brillo</span>
+                        <span class="lang-en-inline">Moisturizes and shines</span>
+                    </p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gold font-display text-xl">$55K</span>
+                        <button onclick="addToCart('aceite', 55000)" class="px-4 py-2 bg-gold text-dark text-sm hover:bg-gold-light transition">
+                            <span class="lang-es-inline">Agregar</span>
+                            <span class="lang-en-inline">Add</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="glass p-4 rounded-lg group">
+                    <div class="aspect-square bg-gradient-to-br from-gold/20 to-transparent rounded-lg mb-4 flex items-center justify-center">
+                        <span class="text-6xl">✂️</span>
+                    </div>
+                    <h3 class="font-semibold mb-1">Kit de Barbero</h3>
+                    <p class="text-gray-400 text-sm mb-3">
+                        <span class="lang-es-inline">Peine, tijeras y capa</span>
+                        <span class="lang-en-inline">Comb, scissors and cape</span>
+                    </p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gold font-display text-xl">$120K</span>
+                        <button onclick="addToCart('kit', 120000)" class="px-4 py-2 bg-gold text-dark text-sm hover:bg-gold-light transition">
+                            <span class="lang-es-inline">Agregar</span>
+                            <span class="lang-en-inline">Add</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="glass p-4 rounded-lg group">
+                    <div class="aspect-square bg-gradient-to-br from-gold/20 to-transparent rounded-lg mb-4 flex items-center justify-center">
+                        <span class="text-6xl">💆</span>
+                    </div>
+                    <h3 class="font-semibold mb-1">Shampoo Anticaída</h3>
+                    <p class="text-gray-400 text-sm mb-3">
+                        <span class="lang-es-inline">Fortalece y previene</span>
+                        <span class="lang-en-inline">Strengthens and prevents</span>
+                    </p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gold font-display text-xl">$65K</span>
+                        <button onclick="addToCart('shampoo', 65000)" class="px-4 py-2 bg-gold text-dark text-sm hover:bg-gold-light transition">
+                            <span class="lang-es-inline">Agregar</span>
+                            <span class="lang-en-inline">Add</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cart Summary (floating) -->
+            <div id="cartFloat" class="hidden fixed bottom-24 right-6 glass p-4 rounded-lg z-40 min-w-[250px]">
+                <h4 class="font-semibold mb-3">
+                    <span class="lang-es-inline">🛒 Tu Carrito</span>
+                    <span class="lang-en-inline">🛒 Your Cart</span>
+                </h4>
+                <div id="cartItems" class="space-y-2 text-sm"></div>
+                <div class="border-t border-gray-700 mt-3 pt-3 flex justify-between font-semibold">
+                    <span>Total:</span>
+                    <span id="cartTotal" class="text-gold">$0</span>
+                </div>
+                <button onclick="checkout()" class="w-full mt-3 py-2 bg-gold text-dark text-sm font-semibold hover:bg-gold-light transition">
+                    <span class="lang-es-inline">Pagar</span>
+                    <span class="lang-en-inline">Checkout</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Location Section -->
+    <section id="location" class="py-20 bg-dark">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="text-gold text-sm tracking-[0.3em] mb-4">
+                <span class="lang-es-inline">ENCUÉNTRANOS</span>
+                <span class="lang-en-inline">FIND US</span>
+            </p>
+            <h2 class="font-display text-5xl md:text-6xl mb-12">
+                <span class="lang-es-inline">EN EL CORAZÓN<br>DEL CENTRO</span>
+                <span class="lang-en-inline">IN THE HEART<br>OF DOWNTOWN</span>
+            </h2>
+
+            <div class="grid lg:grid-cols-2 gap-10">
+                <!-- Map -->
+                <div class="aspect-video lg:aspect-auto lg:h-[400px] rounded-lg overflow-hidden">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3924.123456789!2d-75.5511!3d10.4236!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8ef62f9e43e1d5c5%3A0x1234567890abcdef!2sJermaine%20Barber&#39;s!5e0!3m2!1ses!2sco!4v1234567890"
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy"
+                        class="grayscale hover:grayscale-0 transition duration-500">
+                    </iframe>
+                </div>
+
+                <!-- Info -->
+                <div class="space-y-8">
+                    <div class="glass p-6 rounded-lg">
+                        <h3 class="text-gold text-sm tracking-widest mb-3">
+                            <span class="lang-es-inline">DIRECCIÓN</span>
+                            <span class="lang-en-inline">ADDRESS</span>
+                        </h3>
+                        <p class="text-lg">Calle 6 #2-26, Edificio Granada</p>
+                        <p class="text-gray-400">Local 2A, frente al Hotel Almirante</p>
+                        <p class="text-gray-400">Cartagena de Indias, Bolívar</p>
+                        <a href="https://maps.google.com/?q=Jermaine+Barbers+Cartagena" target="_blank" class="inline-block mt-4 text-gold hover:text-gold-light transition">
+                            <span class="lang-es-inline">Ver en Google Maps →</span>
+                            <span class="lang-en-inline">View on Google Maps →</span>
+                        </a>
+                    </div>
+
+                    <div class="glass p-6 rounded-lg">
+                        <h3 class="text-gold text-sm tracking-widest mb-3">
+                            <span class="lang-es-inline">HORARIOS</span>
+                            <span class="lang-en-inline">HOURS</span>
+                        </h3>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span class="lang-es-inline">Lunes - Viernes</span>
+                                <span class="lang-en-inline">Monday - Friday</span>
+                                <span>9:00 AM - 8:00 PM</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="lang-es-inline">Sábado</span>
+                                <span class="lang-en-inline">Saturday</span>
+                                <span>9:00 AM - 6:00 PM</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="lang-es-inline">Domingo</span>
+                                <span class="lang-en-inline">Sunday</span>
+                                <span class="lang-es-inline">Cerrado</span>
+                                <span class="lang-en-inline">Closed</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass p-6 rounded-lg">
+                        <h3 class="text-gold text-sm tracking-widest mb-3">
+                            <span class="lang-es-inline">CONTACTO</span>
+                            <span class="lang-en-inline">CONTACT</span>
+                        </h3>
+                        <div class="space-y-3">
+                            <a href="tel:+573181326952" class="flex items-center gap-3 hover:text-gold transition">
+                                📞 +57 318 132 6952
+                            </a>
+                            <a href="https://wa.me/573181326952" class="flex items-center gap-3 hover:text-gold transition">
+                                💬 WhatsApp
+                            </a>
+                            <a href="https://instagram.com/jermainebarbers" target="_blank" class="flex items-center gap-3 hover:text-gold transition">
+                                📷 @jermainebarbers
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-10 bg-darker border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="font-display text-2xl text-gold tracking-wider mb-4">JERMAINE BARBER'S</p>
+            <p class="text-gray-500 text-sm">
+                <span class="lang-es-inline">© 2026 Todos los derechos reservados • Powered by MachineMind</span>
+                <span class="lang-en-inline">© 2026 All rights reserved • Powered by MachineMind</span>
+            </p>
+        </div>
     </footer>
 
+    <!-- Sofia AI Chatbot -->
+    <div id="chatWidget" class="fixed bottom-6 right-6 z-50">
+        <!-- Chat Button -->
+        <button id="chatButton" onclick="toggleChat()" class="w-16 h-16 bg-gold rounded-full flex items-center justify-center shadow-lg chat-pulse hover:bg-gold-light transition">
+            <span class="text-2xl">💬</span>
+        </button>
+
+        <!-- Chat Window -->
+        <div id="chatWindow" class="hidden absolute bottom-20 right-0 w-[380px] max-w-[calc(100vw-2rem)] glass rounded-2xl overflow-hidden shadow-2xl">
+            <!-- Chat Header -->
+            <div class="bg-gradient-to-r from-gold to-yellow-600 p-4 flex items-center gap-3">
+                <div class="w-10 h-10 bg-dark rounded-full flex items-center justify-center font-display text-gold">S</div>
+                <div class="flex-1">
+                    <h4 class="font-semibold text-dark">Sofia AI</h4>
+                    <p class="text-dark/70 text-xs">
+                        <span class="lang-es-inline">Tu asistente virtual</span>
+                        <span class="lang-en-inline">Your virtual assistant</span>
+                    </p>
+                </div>
+                <button onclick="toggleChat()" class="text-dark/70 hover:text-dark">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Chat Messages -->
+            <div id="chatMessages" class="h-[350px] overflow-y-auto p-4 space-y-4">
+                <!-- Welcome message -->
+                <div class="flex gap-3 message-in">
+                    <div class="w-8 h-8 bg-gold rounded-full flex items-center justify-center flex-shrink-0 font-display text-dark text-sm">S</div>
+                    <div class="bg-gray-800 rounded-2xl rounded-tl-none p-3 max-w-[80%]">
+                        <p class="text-sm">
+                            <span class="lang-es-inline">¡Hola! 👋 Soy Sofia, tu asistente de Jermaine Barber's. Puedo ayudarte con:</span>
+                            <span class="lang-en-inline">Hi! 👋 I'm Sofia, your Jermaine Barber's assistant. I can help you with:</span>
+                        </p>
+                        <ul class="text-sm mt-2 space-y-1 text-gray-300">
+                            <li>• <span class="lang-es-inline">Reservar citas</span><span class="lang-en-inline">Book appointments</span></li>
+                            <li>• <span class="lang-es-inline">Información de servicios y precios</span><span class="lang-en-inline">Services and pricing info</span></li>
+                            <li>• <span class="lang-es-inline">Horarios y ubicación</span><span class="lang-en-inline">Hours and location</span></li>
+                            <li>• <span class="lang-es-inline">Recomendaciones de productos</span><span class="lang-en-inline">Product recommendations</span></li>
+                        </ul>
+                        <p class="text-sm mt-2">
+                            <span class="lang-es-inline">¿En qué puedo ayudarte hoy?</span>
+                            <span class="lang-en-inline">How can I help you today?</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Replies -->
+            <div id="quickReplies" class="px-4 pb-2 flex flex-wrap gap-2">
+                <button onclick="sendQuickReply('reservar')" class="px-3 py-1 text-xs border border-gold text-gold rounded-full hover:bg-gold hover:text-dark transition">
+                    <span class="lang-es-inline">Reservar cita</span>
+                    <span class="lang-en-inline">Book appointment</span>
+                </button>
+                <button onclick="sendQuickReply('precios')" class="px-3 py-1 text-xs border border-gold text-gold rounded-full hover:bg-gold hover:text-dark transition">
+                    <span class="lang-es-inline">Ver precios</span>
+                    <span class="lang-en-inline">View prices</span>
+                </button>
+                <button onclick="sendQuickReply('horarios')" class="px-3 py-1 text-xs border border-gold text-gold rounded-full hover:bg-gold hover:text-dark transition">
+                    <span class="lang-es-inline">Horarios</span>
+                    <span class="lang-en-inline">Hours</span>
+                </button>
+                <button onclick="sendQuickReply('ubicacion')" class="px-3 py-1 text-xs border border-gold text-gold rounded-full hover:bg-gold hover:text-dark transition">
+                    <span class="lang-es-inline">¿Cómo llego?</span>
+                    <span class="lang-en-inline">How to get there?</span>
+                </button>
+            </div>
+
+            <!-- Chat Input -->
+            <div class="p-4 border-t border-gray-700">
+                <div class="flex gap-2">
+                    <input 
+                        type="text" 
+                        id="chatInput" 
+                        placeholder="Escribe tu mensaje... / Type your message..."
+                        class="flex-1 bg-gray-800 border border-gray-700 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-gold"
+                        onkeypress="if(event.key==='Enter')sendMessage()"
+                    >
+                    <button onclick="sendMessage()" class="w-10 h-10 bg-gold rounded-full flex items-center justify-center hover:bg-gold-light transition">
+                        <svg class="w-5 h-5 text-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+        <div class="glass rounded-2xl max-w-md w-full p-6">
+            <h3 class="font-display text-3xl text-gold mb-4">
+                <span class="lang-es-inline">¡RESERVA CONFIRMADA!</span>
+                <span class="lang-en-inline">BOOKING CONFIRMED!</span>
+            </h3>
+            <div id="bookingDetails" class="space-y-3 mb-6"></div>
+            <p class="text-gray-400 text-sm mb-6">
+                <span class="lang-es-inline">Te enviaremos un recordatorio por WhatsApp 24 horas antes de tu cita.</span>
+                <span class="lang-en-inline">We'll send you a WhatsApp reminder 24 hours before your appointment.</span>
+            </p>
+            <button onclick="closeBookingModal()" class="w-full py-3 bg-gold text-dark font-semibold hover:bg-gold-light transition">
+                <span class="lang-es-inline">CERRAR</span>
+                <span class="lang-en-inline">CLOSE</span>
+            </button>
+        </div>
+    </div>
+
     <script>
+        // ================== STATE MANAGEMENT ==================
+        const state = {
+            selectedService: null,
+            selectedDate: null,
+            selectedTime: null,
+            selectedBarber: 'any',
+            cart: [],
+            currentMonth: new Date(),
+            clients: JSON.parse(localStorage.getItem('jermaine_clients') || '[]'),
+            bookings: JSON.parse(localStorage.getItem('jermaine_bookings') || '[]'),
+            lang: 'es'
+        };
+
+        // ================== LANGUAGE TOGGLE ==================
         function toggleLang() {
             const body = document.body;
             if (body.classList.contains('es')) {
                 body.classList.remove('es');
                 body.classList.add('en');
+                state.lang = 'en';
             } else {
                 body.classList.remove('en');
                 body.classList.add('es');
+                state.lang = 'es';
             }
         }
 
-        // Intersection Observer for animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        }
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
+        // ================== SERVICES FILTER ==================
+        function filterServices(category) {
+            const cards = document.querySelectorAll('.service-card');
+            const buttons = document.querySelectorAll('.service-filter');
+            
+            buttons.forEach(btn => {
+                btn.classList.remove('border-gold', 'text-gold');
+                btn.classList.add('border-gray-600', 'text-gray-400');
+            });
+            event.target.classList.remove('border-gray-600', 'text-gray-400');
+            event.target.classList.add('border-gold', 'text-gold');
+
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
                 }
             });
-        }, observerOptions);
+        }
 
-        document.querySelectorAll('.problem-card, .feature-card, .pricing-card, .roi-item, .timeline-item').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-            el.style.transition = 'all 0.6s ease';
-            observer.observe(el);
-        });
+        function selectService(id, price, name) {
+            state.selectedService = { id, price, name };
+            updateBookingSummary();
+            document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
+        }
 
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // ================== CALENDAR ==================
+        function renderCalendar() {
+            const year = state.currentMonth.getFullYear();
+            const month = state.currentMonth.getMonth();
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const today = new Date();
+
+            const monthNames = state.lang === 'es' 
+                ? ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+                : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+            document.getElementById('currentMonth').textContent = `${monthNames[month]} ${year}`;
+
+            let html = '';
+            for (let i = 0; i < firstDay; i++) {
+                html += '<div></div>';
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(year, month, day);
+                const isToday = date.toDateString() === today.toDateString();
+                const isPast = date < today && !isToday;
+                const isSunday = date.getDay() === 0;
+                const isSelected = state.selectedDate && date.toDateString() === state.selectedDate.toDateString();
+
+                let classes = 'p-2 text-center rounded cursor-pointer transition ';
+                if (isPast || isSunday) {
+                    classes += 'text-gray-600 cursor-not-allowed';
+                } else if (isSelected) {
+                    classes += 'bg-gold text-dark';
+                } else if (isToday) {
+                    classes += 'border border-gold text-gold hover:bg-gold hover:text-dark';
+                } else {
+                    classes += 'hover:bg-gray-800';
                 }
+
+                html += `<div class="${classes}" onclick="${!isPast && !isSunday ? `selectDate(${year}, ${month}, ${day})` : ''}">${day}</div>`;
+            }
+
+            document.getElementById('calendarDays').innerHTML = html;
+        }
+
+        function prevMonth() {
+            state.currentMonth.setMonth(state.currentMonth.getMonth() - 1);
+            renderCalendar();
+        }
+
+        function nextMonth() {
+            state.currentMonth.setMonth(state.currentMonth.getMonth() + 1);
+            renderCalendar();
+        }
+
+        function selectDate(year, month, day) {
+            state.selectedDate = new Date(year, month, day);
+            renderCalendar();
+            renderTimeSlots();
+            updateBookingSummary();
+        }
+
+        // ================== TIME SLOTS ==================
+        function renderTimeSlots() {
+            const times = ['9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30'];
+            
+            // Simulate some booked slots
+            const bookedTimes = ['10:00', '14:30', '16:00'];
+
+            let html = '';
+            times.forEach(time => {
+                const isBooked = bookedTimes.includes(time);
+                const isSelected = state.selectedTime === time;
+                
+                let classes = 'p-2 text-center text-sm rounded transition ';
+                if (isBooked) {
+                    classes += 'bg-gray-800 text-gray-600 cursor-not-allowed line-through';
+                } else if (isSelected) {
+                    classes += 'bg-gold text-dark cursor-pointer';
+                } else {
+                    classes += 'border border-gray-700 hover:border-gold hover:text-gold cursor-pointer';
+                }
+
+                html += `<div class="${classes}" onclick="${!isBooked ? `selectTime('${time}')` : ''}">${time}</div>`;
             });
+
+            document.getElementById('timeSlots').innerHTML = html;
+        }
+
+        function selectTime(time) {
+            state.selectedTime = time;
+            renderTimeSlots();
+            updateBookingSummary();
+        }
+
+        // ================== BOOKING SUMMARY ==================
+        function updateBookingSummary() {
+            const summary = document.getElementById('bookingSummary');
+            const btn = document.getElementById('confirmBooking');
+
+            if (!state.selectedService) {
+                summary.innerHTML = `<p class="text-gray-400">${state.lang === 'es' ? 'Selecciona un servicio y fecha' : 'Select a service and date'}</p>`;
+                btn.disabled = true;
+                return;
+            }
+
+            let html = `
+                <div class="flex justify-between">
+                    <span>${state.lang === 'es' ? 'Servicio' : 'Service'}:</span>
+                    <span class="text-white">${state.selectedService.name}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>${state.lang === 'es' ? 'Precio' : 'Price'}:</span>
+                    <span class="text-gold">$${state.selectedService.price.toLocaleString()} COP</span>
+                </div>
+            `;
+
+            if (state.selectedDate) {
+                const dateStr = state.selectedDate.toLocaleDateString(state.lang === 'es' ? 'es-CO' : 'en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                html += `
+                    <div class="flex justify-between">
+                        <span>${state.lang === 'es' ? 'Fecha' : 'Date'}:</span>
+                        <span class="text-white">${dateStr}</span>
+                    </div>
+                `;
+            }
+
+            if (state.selectedTime) {
+                html += `
+                    <div class="flex justify-between">
+                        <span>${state.lang === 'es' ? 'Hora' : 'Time'}:</span>
+                        <span class="text-white">${state.selectedTime}</span>
+                    </div>
+                `;
+            }
+
+            summary.innerHTML = html;
+            btn.disabled = !(state.selectedService && state.selectedDate && state.selectedTime);
+        }
+
+        // ================== BOOKING CONFIRMATION ==================
+        function confirmBooking() {
+            const booking = {
+                id: Date.now(),
+                service: state.selectedService,
+                date: state.selectedDate.toISOString(),
+                time: state.selectedTime,
+                barber: state.selectedBarber,
+                createdAt: new Date().toISOString()
+            };
+
+            state.bookings.push(booking);
+            localStorage.setItem('jermaine_bookings', JSON.stringify(state.bookings));
+
+            // Show confirmation modal
+            const details = document.getElementById('bookingDetails');
+            details.innerHTML = `
+                <div class="glass p-4 rounded-lg space-y-2">
+                    <p><strong>${state.lang === 'es' ? 'Servicio' : 'Service'}:</strong> ${state.selectedService.name}</p>
+                    <p><strong>${state.lang === 'es' ? 'Fecha' : 'Date'}:</strong> ${state.selectedDate.toLocaleDateString()}</p>
+                    <p><strong>${state.lang === 'es' ? 'Hora' : 'Time'}:</strong> ${state.selectedTime}</p>
+                    <p class="text-gold font-semibold">Total: $${state.selectedService.price.toLocaleString()} COP</p>
+                </div>
+            `;
+            document.getElementById('bookingModal').classList.remove('hidden');
+
+            // Reset state
+            state.selectedService = null;
+            state.selectedDate = null;
+            state.selectedTime = null;
+            updateBookingSummary();
+            renderCalendar();
+            renderTimeSlots();
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').classList.add('hidden');
+        }
+
+        function openBooking() {
+            document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ================== CART ==================
+        function addToCart(product, price) {
+            state.cart.push({ product, price });
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartFloat = document.getElementById('cartFloat');
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+
+            if (state.cart.length === 0) {
+                cartFloat.classList.add('hidden');
+                return;
+            }
+
+            cartFloat.classList.remove('hidden');
+            
+            const grouped = state.cart.reduce((acc, item) => {
+                acc[item.product] = acc[item.product] || { count: 0, price: item.price };
+                acc[item.product].count++;
+                return acc;
+            }, {});
+
+            let html = '';
+            for (const [product, data] of Object.entries(grouped)) {
+                html += `<div class="flex justify-between text-gray-300">
+                    <span>${product} x${data.count}</span>
+                    <span>$${(data.price * data.count).toLocaleString()}</span>
+                </div>`;
+            }
+            cartItems.innerHTML = html;
+
+            const total = state.cart.reduce((sum, item) => sum + item.price, 0);
+            cartTotal.textContent = `$${total.toLocaleString()}`;
+        }
+
+        function checkout() {
+            alert(state.lang === 'es' ? '¡Gracias por tu compra! Te contactaremos por WhatsApp.' : 'Thank you for your purchase! We\'ll contact you via WhatsApp.');
+            state.cart = [];
+            updateCart();
+        }
+
+        // ================== CHAT ==================
+        function toggleChat() {
+            document.getElementById('chatWindow').classList.toggle('hidden');
+        }
+
+        function openChat() {
+            document.getElementById('chatWindow').classList.remove('hidden');
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            addUserMessage(message);
+            input.value = '';
+
+            // Show typing indicator
+            showTyping();
+
+            // Process with Sofia AI
+            setTimeout(() => {
+                hideTyping();
+                const response = processMessage(message);
+                addBotMessage(response);
+            }, 1000 + Math.random() * 1000);
+        }
+
+        function sendQuickReply(type) {
+            const messages = {
+                reservar: state.lang === 'es' ? 'Quiero reservar una cita' : 'I want to book an appointment',
+                precios: state.lang === 'es' ? '¿Cuáles son los precios?' : 'What are the prices?',
+                horarios: state.lang === 'es' ? '¿Cuáles son los horarios?' : 'What are the hours?',
+                ubicacion: state.lang === 'es' ? '¿Dónde están ubicados?' : 'Where are you located?'
+            };
+
+            addUserMessage(messages[type]);
+            showTyping();
+
+            setTimeout(() => {
+                hideTyping();
+                const response = processQuickReply(type);
+                addBotMessage(response);
+            }, 800);
+        }
+
+        function addUserMessage(text) {
+            const container = document.getElementById('chatMessages');
+            container.innerHTML += `
+                <div class="flex gap-3 justify-end message-in">
+                    <div class="bg-gold text-dark rounded-2xl rounded-tr-none p-3 max-w-[80%]">
+                        <p class="text-sm">${text}</p>
+                    </div>
+                </div>
+            `;
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function addBotMessage(text) {
+            const container = document.getElementById('chatMessages');
+            container.innerHTML += `
+                <div class="flex gap-3 message-in">
+                    <div class="w-8 h-8 bg-gold rounded-full flex items-center justify-center flex-shrink-0 font-display text-dark text-sm">S</div>
+                    <div class="bg-gray-800 rounded-2xl rounded-tl-none p-3 max-w-[80%]">
+                        <p class="text-sm">${text}</p>
+                    </div>
+                </div>
+            `;
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function showTyping() {
+            const container = document.getElementById('chatMessages');
+            container.innerHTML += `
+                <div id="typingIndicator" class="flex gap-3 message-in">
+                    <div class="w-8 h-8 bg-gold rounded-full flex items-center justify-center flex-shrink-0 font-display text-dark text-sm">S</div>
+                    <div class="bg-gray-800 rounded-2xl rounded-tl-none p-3 flex gap-1">
+                        <span class="w-2 h-2 bg-gray-500 rounded-full typing-dot"></span>
+                        <span class="w-2 h-2 bg-gray-500 rounded-full typing-dot"></span>
+                        <span class="w-2 h-2 bg-gray-500 rounded-full typing-dot"></span>
+                    </div>
+                </div>
+            `;
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function hideTyping() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) indicator.remove();
+        }
+
+        function processQuickReply(type) {
+            const responses = {
+                reservar: state.lang === 'es' 
+                    ? '¡Perfecto! Para reservar puedes:<br><br>1️⃣ Usar nuestro calendario arriba en la sección "Reservar"<br>2️⃣ Llamarnos al <a href="tel:+573181326952" class="text-gold">+57 318 132 6952</a><br>3️⃣ Escribirnos por <a href="https://wa.me/573181326952" class="text-gold">WhatsApp</a><br><br>¿Qué servicio te interesa?'
+                    : 'Perfect! To book you can:<br><br>1️⃣ Use our calendar above in the "Book" section<br>2️⃣ Call us at <a href="tel:+573181326952" class="text-gold">+57 318 132 6952</a><br>3️⃣ Message us on <a href="https://wa.me/573181326952" class="text-gold">WhatsApp</a><br><br>What service interests you?',
+                
+                precios: state.lang === 'es'
+                    ? '💈 <strong>Barbería:</strong><br>• Corte Clásico: $25,000<br>• Fade/Degradado: $30,000<br>• Arreglo Barba: $15,000<br>• Combo Corte+Barba: $35,000<br><br>💅 <strong>Uñas:</strong><br>• Manicure: $25,000<br>• Pedicure: $35,000<br><br>💆 <strong>Spa:</strong><br>• Facial: $60,000<br>• Masaje: $70,000<br><br>¿Te gustaría reservar alguno?'
+                    : '💈 <strong>Barber:</strong><br>• Classic Cut: $25,000<br>• Fade: $30,000<br>• Beard Trim: $15,000<br>• Cut+Beard Combo: $35,000<br><br>💅 <strong>Nails:</strong><br>• Manicure: $25,000<br>• Pedicure: $35,000<br><br>💆 <strong>Spa:</strong><br>• Facial: $60,000<br>• Massage: $70,000<br><br>Would you like to book any?',
+                
+                horarios: state.lang === 'es'
+                    ? '🕐 <strong>Nuestros horarios:</strong><br><br>Lunes a Viernes: 9:00 AM - 8:00 PM<br>Sábados: 9:00 AM - 6:00 PM<br>Domingos: Cerrado<br><br>El mejor momento para venir sin espera es entre semana de 2-4 PM 😉'
+                    : '🕐 <strong>Our hours:</strong><br><br>Monday-Friday: 9:00 AM - 8:00 PM<br>Saturday: 9:00 AM - 6:00 PM<br>Sunday: Closed<br><br>Best time to come without waiting is weekdays 2-4 PM 😉',
+                
+                ubicacion: state.lang === 'es'
+                    ? '📍 <strong>Estamos en:</strong><br><br>Calle 6 #2-26, Edificio Granada<br>Local 2A, frente al Hotel Almirante<br>Centro Histórico de Cartagena<br><br>👉 <a href="https://maps.google.com/?q=Jermaine+Barbers+Cartagena" class="text-gold" target="_blank">Ver en Google Maps</a><br><br>¡Te esperamos! 🪒'
+                    : '📍 <strong>We\'re at:</strong><br><br>Calle 6 #2-26, Edificio Granada<br>Local 2A, in front of Hotel Almirante<br>Cartagena Historic Center<br><br>👉 <a href="https://maps.google.com/?q=Jermaine+Barbers+Cartagena" class="text-gold" target="_blank">View on Google Maps</a><br><br>We\'re waiting for you! 🪒'
+            };
+            return responses[type];
+        }
+
+        function processMessage(message) {
+            const msg = message.toLowerCase();
+            
+            // Booking intents
+            if (msg.includes('reserv') || msg.includes('cita') || msg.includes('book') || msg.includes('appointment')) {
+                return processQuickReply('reservar');
+            }
+            
+            // Price intents
+            if (msg.includes('precio') || msg.includes('cost') || msg.includes('cuanto') || msg.includes('price') || msg.includes('how much')) {
+                return processQuickReply('precios');
+            }
+            
+            // Hours intents
+            if (msg.includes('horario') || msg.includes('hora') || msg.includes('abren') || msg.includes('cierran') || msg.includes('hour') || msg.includes('open') || msg.includes('close')) {
+                return processQuickReply('horarios');
+            }
+            
+            // Location intents
+            if (msg.includes('donde') || msg.includes('direccion') || msg.includes('ubicacion') || msg.includes('llegar') || msg.includes('where') || msg.includes('location') || msg.includes('address')) {
+                return processQuickReply('ubicacion');
+            }
+            
+            // Service-specific
+            if (msg.includes('fade') || msg.includes('degradado')) {
+                return state.lang === 'es'
+                    ? '💈 El Fade/Degradado cuesta $30,000 COP y toma aproximadamente 50 minutos. Incluye lavado y estilo. ¿Te gustaría reservar?'
+                    : '💈 The Fade costs $30,000 COP and takes approximately 50 minutes. Includes wash and style. Would you like to book?';
+            }
+            
+            if (msg.includes('barba') || msg.includes('beard')) {
+                return state.lang === 'es'
+                    ? '🧔 Tenemos arreglo de barba por $15,000 y el combo corte + barba por $35,000. El afeitado clásico con navaja y toalla caliente cuesta $20,000. ¿Cuál prefieres?'
+                    : '🧔 We have beard trim for $15,000 and the cut + beard combo for $35,000. Classic shave with straight razor and hot towel is $20,000. Which do you prefer?';
+            }
+            
+            if (msg.includes('uña') || msg.includes('manicur') || msg.includes('pedicur') || msg.includes('nail')) {
+                return state.lang === 'es'
+                    ? '💅 ¡También hacemos uñas! Manicure clásico $25,000, semipermanente $45,000, y pedicure completo $35,000. Agenda el tuyo!'
+                    : '💅 We also do nails! Classic manicure $25,000, gel $45,000, and full pedicure $35,000. Book yours!';
+            }
+            
+            if (msg.includes('producto') || msg.includes('product') || msg.includes('comprar') || msg.includes('buy')) {
+                return state.lang === 'es'
+                    ? '🛒 Vendemos productos premium: pomadas, aceites para barba, shampoos y kits de barbero. Puedes verlos en la sección Tienda arriba o comprarlos directamente en el local. ¿Te interesa algo específico?'
+                    : '🛒 We sell premium products: pomades, beard oils, shampoos and barber kits. You can see them in the Shop section above or buy them directly at the shop. Interested in anything specific?';
+            }
+            
+            // Greetings
+            if (msg.includes('hola') || msg.includes('hi') || msg.includes('hello') || msg.includes('buenos') || msg.includes('buenas')) {
+                return state.lang === 'es'
+                    ? '¡Hola! 😊 Bienvenido a Jermaine Barber\'s, la mejor barbería de Cartagena. ¿En qué puedo ayudarte hoy?'
+                    : 'Hello! 😊 Welcome to Jermaine Barber\'s, the best barbershop in Cartagena. How can I help you today?';
+            }
+            
+            // Thanks
+            if (msg.includes('gracias') || msg.includes('thank')) {
+                return state.lang === 'es'
+                    ? '¡Con gusto! 🙌 Si tienes más preguntas, aquí estoy. ¡Te esperamos en Jermaine Barber\'s!'
+                    : 'You\'re welcome! 🙌 If you have more questions, I\'m here. We\'re waiting for you at Jermaine Barber\'s!';
+            }
+            
+            // Default response
+            return state.lang === 'es'
+                ? 'No estoy segura de entender. ¿Podrías preguntarme sobre:<br>• Reservar una cita<br>• Nuestros servicios y precios<br>• Horarios de atención<br>• Cómo llegar<br>• Nuestros productos<br><br>O escríbenos directamente por <a href="https://wa.me/573181326952" class="text-gold">WhatsApp</a> 💬'
+                : 'I\'m not sure I understand. Could you ask me about:<br>• Booking an appointment<br>• Our services and prices<br>• Business hours<br>• How to get here<br>• Our products<br><br>Or message us directly on <a href="https://wa.me/573181326952" class="text-gold">WhatsApp</a> 💬';
+        }
+
+        // ================== INITIALIZATION ==================
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCalendar();
+            renderTimeSlots();
         });
     </script>
 </body>
