@@ -723,24 +723,38 @@
 
     <!-- Sofia AI Chatbot -->
     <div id="chatWidget" class="fixed bottom-6 right-6 z-50">
+        <!-- WhatsApp Direct Button (Secondary) -->
+        <a href="https://wa.me/573181326952?text=Hola%20Jermaine%20Barber's%2C%20quiero%20información" 
+           target="_blank"
+           id="whatsappDirect" 
+           class="hidden absolute bottom-20 right-0 w-14 h-14 bg-green-500 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition">
+            <svg class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+        </a>
+
         <!-- Chat Button -->
-        <button id="chatButton" onclick="toggleChat()" class="w-16 h-16 bg-gold rounded-full flex items-center justify-center shadow-lg chat-pulse hover:bg-gold-light transition">
-            <span class="text-2xl">💬</span>
+        <button id="chatButton" onclick="toggleChat()" class="w-16 h-16 bg-gold rounded-full flex items-center justify-center shadow-lg chat-pulse hover:bg-gold-light transition relative">
+            <span class="text-2xl" id="chatIcon">💬</span>
+            <span id="chatBadge" class="hidden absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-xs flex items-center justify-center">1</span>
         </button>
 
         <!-- Chat Window -->
-        <div id="chatWindow" class="hidden absolute bottom-20 right-0 w-[380px] max-w-[calc(100vw-2rem)] glass rounded-2xl overflow-hidden shadow-2xl">
+        <div id="chatWindow" class="hidden absolute bottom-20 right-0 w-[400px] max-w-[calc(100vw-2rem)] glass rounded-2xl overflow-hidden shadow-2xl">
             <!-- Chat Header -->
-            <div class="bg-gradient-to-r from-gold to-yellow-600 p-4 flex items-center gap-3">
-                <div class="w-10 h-10 bg-dark rounded-full flex items-center justify-center font-display text-gold">S</div>
+            <div class="bg-gradient-to-r from-green-600 to-green-500 p-4 flex items-center gap-3">
+                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center overflow-hidden">
+                    <span class="text-2xl">💈</span>
+                </div>
                 <div class="flex-1">
-                    <h4 class="font-semibold text-dark">Sofia AI</h4>
-                    <p class="text-dark/70 text-xs">
-                        <span class="lang-es-inline">Tu asistente virtual</span>
-                        <span class="lang-en-inline">Your virtual assistant</span>
+                    <h4 class="font-semibold text-white">Jermaine Barber's</h4>
+                    <p class="text-white/80 text-xs flex items-center gap-1">
+                        <span class="w-2 h-2 bg-green-300 rounded-full animate-pulse"></span>
+                        <span class="lang-es-inline">Sofia AI • Responde al instante</span>
+                        <span class="lang-en-inline">Sofia AI • Replies instantly</span>
                     </p>
                 </div>
-                <button onclick="toggleChat()" class="text-dark/70 hover:text-dark">
+                <button onclick="toggleChat()" class="text-white/70 hover:text-white">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
@@ -748,68 +762,88 @@
             </div>
 
             <!-- Chat Messages -->
-            <div id="chatMessages" class="h-[350px] overflow-y-auto p-4 space-y-4">
+            <div id="chatMessages" class="h-[350px] overflow-y-auto p-4 space-y-4 bg-[#0B141A]" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;60&quot; height=&quot;60&quot; viewBox=&quot;0 0 60 60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cg fill=&quot;none&quot; fill-rule=&quot;evenodd&quot;%3E%3Cg fill=&quot;%23ffffff&quot; fill-opacity=&quot;0.02&quot;%3E%3Cpath d=&quot;M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z&quot;/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');">
                 <!-- Welcome message -->
                 <div class="flex gap-3 message-in">
-                    <div class="w-8 h-8 bg-gold rounded-full flex items-center justify-center flex-shrink-0 font-display text-dark text-sm">S</div>
-                    <div class="bg-gray-800 rounded-2xl rounded-tl-none p-3 max-w-[80%]">
+                    <div class="w-8 h-8 bg-gold rounded-full flex items-center justify-center flex-shrink-0 text-sm">💈</div>
+                    <div class="bg-[#1F2C34] rounded-2xl rounded-tl-none p-3 max-w-[85%] shadow">
                         <p class="text-sm">
-                            <span class="lang-es-inline">¡Hola! 👋 Soy Sofia, tu asistente de Jermaine Barber's. Puedo ayudarte con:</span>
-                            <span class="lang-en-inline">Hi! 👋 I'm Sofia, your Jermaine Barber's assistant. I can help you with:</span>
+                            <span class="lang-es-inline">¡Hola! 👋 Soy <strong>Sofia</strong>, la asistente virtual de Jermaine Barber's.</span>
+                            <span class="lang-en-inline">Hi! 👋 I'm <strong>Sofia</strong>, Jermaine Barber's virtual assistant.</span>
                         </p>
-                        <ul class="text-sm mt-2 space-y-1 text-gray-300">
-                            <li>• <span class="lang-es-inline">Reservar citas</span><span class="lang-en-inline">Book appointments</span></li>
-                            <li>• <span class="lang-es-inline">Información de servicios y precios</span><span class="lang-en-inline">Services and pricing info</span></li>
-                            <li>• <span class="lang-es-inline">Horarios y ubicación</span><span class="lang-en-inline">Hours and location</span></li>
-                            <li>• <span class="lang-es-inline">Recomendaciones de productos</span><span class="lang-en-inline">Product recommendations</span></li>
-                        </ul>
-                        <p class="text-sm mt-2">
-                            <span class="lang-es-inline">¿En qué puedo ayudarte hoy?</span>
-                            <span class="lang-en-inline">How can I help you today?</span>
+                        <p class="text-sm mt-2 text-gray-300">
+                            <span class="lang-es-inline">Puedo ayudarte con reservas, precios, horarios y más. ¿Qué necesitas?</span>
+                            <span class="lang-en-inline">I can help with bookings, prices, hours and more. What do you need?</span>
+                        </p>
+                        <p class="text-[10px] text-gray-500 mt-2 text-right">
+                            <span class="lang-es-inline">Ahora</span>
+                            <span class="lang-en-inline">Now</span>
                         </p>
                     </div>
                 </div>
             </div>
 
             <!-- Quick Replies -->
-            <div id="quickReplies" class="px-4 pb-2 flex flex-wrap gap-2">
-                <button onclick="sendQuickReply('reservar')" class="px-3 py-1 text-xs border border-gold text-gold rounded-full hover:bg-gold hover:text-dark transition">
-                    <span class="lang-es-inline">Reservar cita</span>
-                    <span class="lang-en-inline">Book appointment</span>
+            <div id="quickReplies" class="px-4 py-3 bg-[#0B141A] border-t border-gray-800 flex flex-wrap gap-2">
+                <button onclick="sendQuickReply('reservar')" class="px-4 py-2 text-xs bg-[#1F2C34] text-white rounded-full hover:bg-green-600 transition border border-gray-700">
+                    📅 <span class="lang-es-inline">Reservar</span><span class="lang-en-inline">Book</span>
                 </button>
-                <button onclick="sendQuickReply('precios')" class="px-3 py-1 text-xs border border-gold text-gold rounded-full hover:bg-gold hover:text-dark transition">
-                    <span class="lang-es-inline">Ver precios</span>
-                    <span class="lang-en-inline">View prices</span>
+                <button onclick="sendQuickReply('precios')" class="px-4 py-2 text-xs bg-[#1F2C34] text-white rounded-full hover:bg-green-600 transition border border-gray-700">
+                    💰 <span class="lang-es-inline">Precios</span><span class="lang-en-inline">Prices</span>
                 </button>
-                <button onclick="sendQuickReply('horarios')" class="px-3 py-1 text-xs border border-gold text-gold rounded-full hover:bg-gold hover:text-dark transition">
-                    <span class="lang-es-inline">Horarios</span>
-                    <span class="lang-en-inline">Hours</span>
+                <button onclick="sendQuickReply('horarios')" class="px-4 py-2 text-xs bg-[#1F2C34] text-white rounded-full hover:bg-green-600 transition border border-gray-700">
+                    🕐 <span class="lang-es-inline">Horarios</span><span class="lang-en-inline">Hours</span>
                 </button>
-                <button onclick="sendQuickReply('ubicacion')" class="px-3 py-1 text-xs border border-gold text-gold rounded-full hover:bg-gold hover:text-dark transition">
-                    <span class="lang-es-inline">¿Cómo llego?</span>
-                    <span class="lang-en-inline">How to get there?</span>
+                <button onclick="sendQuickReply('ubicacion')" class="px-4 py-2 text-xs bg-[#1F2C34] text-white rounded-full hover:bg-green-600 transition border border-gray-700">
+                    📍 <span class="lang-es-inline">Ubicación</span><span class="lang-en-inline">Location</span>
+                </button>
+                <button onclick="openWhatsAppBooking()" class="px-4 py-2 text-xs bg-green-600 text-white rounded-full hover:bg-green-700 transition">
+                    💬 WhatsApp
                 </button>
             </div>
 
             <!-- Chat Input -->
-            <div class="p-4 border-t border-gray-700">
-                <div class="flex gap-2">
+            <div class="p-3 bg-[#1F2C34]">
+                <div class="flex gap-2 items-center">
                     <input 
                         type="text" 
                         id="chatInput" 
-                        placeholder="Escribe tu mensaje... / Type your message..."
-                        class="flex-1 bg-gray-800 border border-gray-700 rounded-full px-4 py-2 text-sm focus:outline-none focus:border-gold"
+                        placeholder="Escribe un mensaje..."
+                        class="flex-1 bg-[#2A3942] border-none rounded-full px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                         onkeypress="if(event.key==='Enter')sendMessage()"
                     >
-                    <button onclick="sendMessage()" class="w-10 h-10 bg-gold rounded-full flex items-center justify-center hover:bg-gold-light transition">
-                        <svg class="w-5 h-5 text-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <button onclick="sendMessage()" class="w-11 h-11 bg-green-500 rounded-full flex items-center justify-center hover:bg-green-600 transition flex-shrink-0">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                         </svg>
                     </button>
                 </div>
             </div>
+
+            <!-- Continue on WhatsApp Banner -->
+            <div class="p-3 bg-gradient-to-r from-green-600 to-green-500">
+                <a href="https://wa.me/573181326952?text=Hola%2C%20vengo%20de%20la%20página%20web" 
+                   target="_blank"
+                   class="flex items-center justify-center gap-2 text-white text-sm font-medium hover:underline">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                    <span class="lang-es-inline">Continuar en WhatsApp</span>
+                    <span class="lang-en-inline">Continue on WhatsApp</span>
+                    <span>→</span>
+                </a>
+            </div>
         </div>
     </div>
+
+    <!-- WhatsApp Floating Action Button (Mobile) -->
+    <a href="https://wa.me/573181326952?text=Hola%2C%20quiero%20reservar%20una%20cita" 
+       target="_blank"
+       class="md:hidden fixed bottom-24 right-6 z-40 w-14 h-14 bg-green-500 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition">
+        <svg class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+    </a>
 
     <!-- Booking Modal -->
     <div id="bookingModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
@@ -1041,17 +1075,43 @@
             state.bookings.push(booking);
             localStorage.setItem('jermaine_bookings', JSON.stringify(state.bookings));
 
+            const dateStr = state.selectedDate.toLocaleDateString(state.lang === 'es' ? 'es-CO' : 'en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+            
+            // Generate WhatsApp confirmation link
+            const waMessage = state.lang === 'es'
+                ? `Hola Jermaine Barber's! 👋 Quiero confirmar mi reserva:\n\n💈 Servicio: ${state.selectedService.name}\n📅 Fecha: ${dateStr}\n🕐 Hora: ${state.selectedTime}\n💰 Total: $${state.selectedService.price.toLocaleString()} COP\n\n¡Gracias!`
+                : `Hi Jermaine Barber's! 👋 I want to confirm my booking:\n\n💈 Service: ${state.selectedService.name}\n📅 Date: ${dateStr}\n🕐 Time: ${state.selectedTime}\n💰 Total: $${state.selectedService.price.toLocaleString()} COP\n\nThanks!`;
+            
+            const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waMessage)}`;
+
             // Show confirmation modal
             const details = document.getElementById('bookingDetails');
             details.innerHTML = `
                 <div class="glass p-4 rounded-lg space-y-2">
                     <p><strong>${state.lang === 'es' ? 'Servicio' : 'Service'}:</strong> ${state.selectedService.name}</p>
-                    <p><strong>${state.lang === 'es' ? 'Fecha' : 'Date'}:</strong> ${state.selectedDate.toLocaleDateString()}</p>
+                    <p><strong>${state.lang === 'es' ? 'Fecha' : 'Date'}:</strong> ${dateStr}</p>
                     <p><strong>${state.lang === 'es' ? 'Hora' : 'Time'}:</strong> ${state.selectedTime}</p>
                     <p class="text-gold font-semibold">Total: $${state.selectedService.price.toLocaleString()} COP</p>
                 </div>
+                <div class="mt-4 p-4 bg-green-900/30 border border-green-500/50 rounded-lg">
+                    <p class="text-sm text-green-300 mb-3">
+                        ${state.lang === 'es' 
+                            ? '👆 Último paso: Confirma tu cita por WhatsApp' 
+                            : '👆 Last step: Confirm your appointment on WhatsApp'}
+                    </p>
+                    <a href="${waLink}" target="_blank" 
+                       class="flex items-center justify-center gap-2 w-full py-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                        </svg>
+                        ${state.lang === 'es' ? 'Confirmar por WhatsApp' : 'Confirm on WhatsApp'}
+                    </a>
+                </div>
             `;
             document.getElementById('bookingModal').classList.remove('hidden');
+
+            // Track booking
+            trackEvent('booking_created', { service: state.selectedService.name, date: dateStr, time: state.selectedTime });
 
             // Reset state
             state.selectedService = null;
@@ -1113,9 +1173,59 @@
             updateCart();
         }
 
+        // ================== WHATSAPP INTEGRATION ==================
+        const WHATSAPP_NUMBER = '573181326952'; // Jermaine's WhatsApp
+        
+        function openWhatsAppBooking() {
+            const service = state.selectedService ? state.selectedService.name : '';
+            const date = state.selectedDate ? state.selectedDate.toLocaleDateString() : '';
+            const time = state.selectedTime || '';
+            
+            let message = state.lang === 'es' 
+                ? 'Hola Jermaine Barber\'s! 👋 Quiero reservar una cita.'
+                : 'Hi Jermaine Barber\'s! 👋 I want to book an appointment.';
+            
+            if (service) {
+                message += state.lang === 'es' 
+                    ? `\n\n📋 Servicio: ${service}`
+                    : `\n\n📋 Service: ${service}`;
+            }
+            if (date) {
+                message += state.lang === 'es'
+                    ? `\n📅 Fecha: ${date}`
+                    : `\n📅 Date: ${date}`;
+            }
+            if (time) {
+                message += state.lang === 'es'
+                    ? `\n🕐 Hora: ${time}`
+                    : `\n🕐 Time: ${time}`;
+            }
+            
+            const encoded = encodeURIComponent(message);
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`, '_blank');
+        }
+        
+        function openWhatsAppWithMessage(customMessage) {
+            const encoded = encodeURIComponent(customMessage);
+            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`, '_blank');
+        }
+        
+        function generateWhatsAppLink(service, date, time) {
+            let message = state.lang === 'es'
+                ? `Hola! Quiero confirmar mi reserva:\n\n💈 ${service}\n📅 ${date}\n🕐 ${time}\n\nGracias!`
+                : `Hi! I want to confirm my booking:\n\n💈 ${service}\n📅 ${date}\n🕐 ${time}\n\nThanks!`;
+            return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+        }
+
         // ================== CHAT ==================
         function toggleChat() {
-            document.getElementById('chatWindow').classList.toggle('hidden');
+            const window = document.getElementById('chatWindow');
+            window.classList.toggle('hidden');
+            
+            // Track chat opened
+            if (!window.classList.contains('hidden')) {
+                trackEvent('chat_opened');
+            }
         }
 
         function openChat() {
@@ -1138,7 +1248,7 @@
                 hideTyping();
                 const response = processMessage(message);
                 addBotMessage(response);
-            }, 1000 + Math.random() * 1000);
+            }, 800 + Math.random() * 700);
         }
 
         function sendQuickReply(type) {
@@ -1156,15 +1266,17 @@
                 hideTyping();
                 const response = processQuickReply(type);
                 addBotMessage(response);
-            }, 800);
+            }, 600);
         }
 
         function addUserMessage(text) {
             const container = document.getElementById('chatMessages');
+            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
             container.innerHTML += `
                 <div class="flex gap-3 justify-end message-in">
-                    <div class="bg-gold text-dark rounded-2xl rounded-tr-none p-3 max-w-[80%]">
+                    <div class="bg-[#005C4B] rounded-2xl rounded-tr-none p-3 max-w-[80%] shadow">
                         <p class="text-sm">${text}</p>
+                        <p class="text-[10px] text-gray-400 mt-1 text-right">${time} ✓✓</p>
                     </div>
                 </div>
             `;
@@ -1173,11 +1285,13 @@
 
         function addBotMessage(text) {
             const container = document.getElementById('chatMessages');
+            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
             container.innerHTML += `
                 <div class="flex gap-3 message-in">
-                    <div class="w-8 h-8 bg-gold rounded-full flex items-center justify-center flex-shrink-0 font-display text-dark text-sm">S</div>
-                    <div class="bg-gray-800 rounded-2xl rounded-tl-none p-3 max-w-[80%]">
+                    <div class="w-8 h-8 bg-gold rounded-full flex items-center justify-center flex-shrink-0 text-sm">💈</div>
+                    <div class="bg-[#1F2C34] rounded-2xl rounded-tl-none p-3 max-w-[85%] shadow">
                         <p class="text-sm">${text}</p>
+                        <p class="text-[10px] text-gray-500 mt-2 text-right">${time}</p>
                     </div>
                 </div>
             `;
@@ -1188,8 +1302,8 @@
             const container = document.getElementById('chatMessages');
             container.innerHTML += `
                 <div id="typingIndicator" class="flex gap-3 message-in">
-                    <div class="w-8 h-8 bg-gold rounded-full flex items-center justify-center flex-shrink-0 font-display text-dark text-sm">S</div>
-                    <div class="bg-gray-800 rounded-2xl rounded-tl-none p-3 flex gap-1">
+                    <div class="w-8 h-8 bg-gold rounded-full flex items-center justify-center flex-shrink-0 text-sm">💈</div>
+                    <div class="bg-[#1F2C34] rounded-2xl rounded-tl-none p-4 flex gap-1">
                         <span class="w-2 h-2 bg-gray-500 rounded-full typing-dot"></span>
                         <span class="w-2 h-2 bg-gray-500 rounded-full typing-dot"></span>
                         <span class="w-2 h-2 bg-gray-500 rounded-full typing-dot"></span>
@@ -1207,20 +1321,76 @@
         function processQuickReply(type) {
             const responses = {
                 reservar: state.lang === 'es' 
-                    ? '¡Perfecto! Para reservar puedes:<br><br>1️⃣ Usar nuestro calendario arriba en la sección "Reservar"<br>2️⃣ Llamarnos al <a href="tel:+573181326952" class="text-gold">+57 318 132 6952</a><br>3️⃣ Escribirnos por <a href="https://wa.me/573181326952" class="text-gold">WhatsApp</a><br><br>¿Qué servicio te interesa?'
-                    : 'Perfect! To book you can:<br><br>1️⃣ Use our calendar above in the "Book" section<br>2️⃣ Call us at <a href="tel:+573181326952" class="text-gold">+57 318 132 6952</a><br>3️⃣ Message us on <a href="https://wa.me/573181326952" class="text-gold">WhatsApp</a><br><br>What service interests you?',
+                    ? `¡Perfecto! 📅 Puedes reservar de dos formas:<br><br>
+                       <strong>1. En la web:</strong> Usa el calendario arriba ⬆️<br><br>
+                       <strong>2. Por WhatsApp:</strong> <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola%2C%20quiero%20reservar%20una%20cita" target="_blank" class="text-green-400 hover:underline">Reservar por WhatsApp →</a><br><br>
+                       ¿Qué servicio te interesa? 💈`
+                    : `Perfect! 📅 You can book two ways:<br><br>
+                       <strong>1. On the web:</strong> Use the calendar above ⬆️<br><br>
+                       <strong>2. Via WhatsApp:</strong> <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hi%2C%20I%20want%20to%20book%20an%20appointment" target="_blank" class="text-green-400 hover:underline">Book on WhatsApp →</a><br><br>
+                       What service interests you? 💈`,
                 
                 precios: state.lang === 'es'
-                    ? '💈 <strong>Barbería:</strong><br>• Corte Clásico: $25,000<br>• Fade/Degradado: $30,000<br>• Arreglo Barba: $15,000<br>• Combo Corte+Barba: $35,000<br><br>💅 <strong>Uñas:</strong><br>• Manicure: $25,000<br>• Pedicure: $35,000<br><br>💆 <strong>Spa:</strong><br>• Facial: $60,000<br>• Masaje: $70,000<br><br>¿Te gustaría reservar alguno?'
-                    : '💈 <strong>Barber:</strong><br>• Classic Cut: $25,000<br>• Fade: $30,000<br>• Beard Trim: $15,000<br>• Cut+Beard Combo: $35,000<br><br>💅 <strong>Nails:</strong><br>• Manicure: $25,000<br>• Pedicure: $35,000<br><br>💆 <strong>Spa:</strong><br>• Facial: $60,000<br>• Massage: $70,000<br><br>Would you like to book any?',
+                    ? `💈 <strong>BARBERÍA</strong><br>
+                       • Corte Clásico: $25,000<br>
+                       • Fade/Degradado: $30,000<br>
+                       • Barba: $15,000<br>
+                       • Corte + Barba: $35,000<br>
+                       • Afeitado Clásico: $20,000<br><br>
+                       💅 <strong>UÑAS</strong><br>
+                       • Manicure: $25,000<br>
+                       • Semipermanente: $45,000<br>
+                       • Pedicure: $35,000<br><br>
+                       💆 <strong>SPA</strong><br>
+                       • Facial: $60,000<br>
+                       • Masaje: $70,000<br><br>
+                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola%2C%20quiero%20reservar" target="_blank" class="text-green-400 hover:underline">📲 Reservar por WhatsApp</a>`
+                    : `💈 <strong>BARBER</strong><br>
+                       • Classic Cut: $25,000<br>
+                       • Fade: $30,000<br>
+                       • Beard: $15,000<br>
+                       • Cut + Beard: $35,000<br>
+                       • Classic Shave: $20,000<br><br>
+                       💅 <strong>NAILS</strong><br>
+                       • Manicure: $25,000<br>
+                       • Gel: $45,000<br>
+                       • Pedicure: $35,000<br><br>
+                       💆 <strong>SPA</strong><br>
+                       • Facial: $60,000<br>
+                       • Massage: $70,000<br><br>
+                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hi%2C%20I%20want%20to%20book" target="_blank" class="text-green-400 hover:underline">📲 Book on WhatsApp</a>`,
                 
                 horarios: state.lang === 'es'
-                    ? '🕐 <strong>Nuestros horarios:</strong><br><br>Lunes a Viernes: 9:00 AM - 8:00 PM<br>Sábados: 9:00 AM - 6:00 PM<br>Domingos: Cerrado<br><br>El mejor momento para venir sin espera es entre semana de 2-4 PM 😉'
-                    : '🕐 <strong>Our hours:</strong><br><br>Monday-Friday: 9:00 AM - 8:00 PM<br>Saturday: 9:00 AM - 6:00 PM<br>Sunday: Closed<br><br>Best time to come without waiting is weekdays 2-4 PM 😉',
+                    ? `🕐 <strong>HORARIOS</strong><br><br>
+                       📅 Lunes - Viernes: 9AM - 8PM<br>
+                       📅 Sábado: 9AM - 6PM<br>
+                       📅 Domingo: Cerrado<br><br>
+                       💡 <em>Tip: Los mejores horarios sin espera son entre semana de 2-4 PM</em><br><br>
+                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola%2C%20%C2%BFtienen%20disponibilidad%20hoy%3F" target="_blank" class="text-green-400 hover:underline">📲 Consultar disponibilidad</a>`
+                    : `🕐 <strong>HOURS</strong><br><br>
+                       📅 Monday - Friday: 9AM - 8PM<br>
+                       📅 Saturday: 9AM - 6PM<br>
+                       📅 Sunday: Closed<br><br>
+                       💡 <em>Tip: Best times without wait are weekdays 2-4 PM</em><br><br>
+                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hi%2C%20do%20you%20have%20availability%20today%3F" target="_blank" class="text-green-400 hover:underline">📲 Check availability</a>`,
                 
                 ubicacion: state.lang === 'es'
-                    ? '📍 <strong>Estamos en:</strong><br><br>Calle 6 #2-26, Edificio Granada<br>Local 2A, frente al Hotel Almirante<br>Centro Histórico de Cartagena<br><br>👉 <a href="https://maps.google.com/?q=Jermaine+Barbers+Cartagena" class="text-gold" target="_blank">Ver en Google Maps</a><br><br>¡Te esperamos! 🪒'
-                    : '📍 <strong>We\'re at:</strong><br><br>Calle 6 #2-26, Edificio Granada<br>Local 2A, in front of Hotel Almirante<br>Cartagena Historic Center<br><br>👉 <a href="https://maps.google.com/?q=Jermaine+Barbers+Cartagena" class="text-gold" target="_blank">View on Google Maps</a><br><br>We\'re waiting for you! 🪒'
+                    ? `📍 <strong>UBICACIÓN</strong><br><br>
+                       Calle 6 #2-26, Edificio Granada<br>
+                       Local 2A, frente al Hotel Almirante<br>
+                       Centro Histórico, Cartagena<br><br>
+                       🚶 A 2 min de la Torre del Reloj<br>
+                       🚕 Fácil acceso en taxi<br><br>
+                       <a href="https://maps.google.com/?q=Jermaine+Barbers+Cartagena" target="_blank" class="text-green-400 hover:underline">🗺️ Ver en Google Maps</a><br>
+                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola%2C%20voy%20para%20all%C3%A1%2C%20%C2%BFc%C3%B3mo%20llego%3F" target="_blank" class="text-green-400 hover:underline">📲 Pedir indicaciones</a>`
+                    : `📍 <strong>LOCATION</strong><br><br>
+                       Calle 6 #2-26, Edificio Granada<br>
+                       Local 2A, across from Hotel Almirante<br>
+                       Historic Center, Cartagena<br><br>
+                       🚶 2 min from Clock Tower<br>
+                       🚕 Easy taxi access<br><br>
+                       <a href="https://maps.google.com/?q=Jermaine+Barbers+Cartagena" target="_blank" class="text-green-400 hover:underline">🗺️ View on Google Maps</a><br>
+                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hi%2C%20I%27m%20heading%20there%2C%20how%20do%20I%20get%20there%3F" target="_blank" class="text-green-400 hover:underline">📲 Ask for directions</a>`
             };
             return responses[type];
         }
@@ -1229,68 +1399,165 @@
             const msg = message.toLowerCase();
             
             // Booking intents
-            if (msg.includes('reserv') || msg.includes('cita') || msg.includes('book') || msg.includes('appointment')) {
+            if (msg.includes('reserv') || msg.includes('cita') || msg.includes('book') || msg.includes('appointment') || msg.includes('agendar')) {
                 return processQuickReply('reservar');
             }
             
             // Price intents
-            if (msg.includes('precio') || msg.includes('cost') || msg.includes('cuanto') || msg.includes('price') || msg.includes('how much')) {
+            if (msg.includes('precio') || msg.includes('cost') || msg.includes('cuanto') || msg.includes('price') || msg.includes('how much') || msg.includes('tarifa')) {
                 return processQuickReply('precios');
             }
             
             // Hours intents
-            if (msg.includes('horario') || msg.includes('hora') || msg.includes('abren') || msg.includes('cierran') || msg.includes('hour') || msg.includes('open') || msg.includes('close')) {
+            if (msg.includes('horario') || msg.includes('hora') || msg.includes('abren') || msg.includes('cierran') || msg.includes('hour') || msg.includes('open') || msg.includes('close') || msg.includes('disponib')) {
                 return processQuickReply('horarios');
             }
             
             // Location intents
-            if (msg.includes('donde') || msg.includes('direccion') || msg.includes('ubicacion') || msg.includes('llegar') || msg.includes('where') || msg.includes('location') || msg.includes('address')) {
+            if (msg.includes('donde') || msg.includes('direccion') || msg.includes('ubicacion') || msg.includes('llegar') || msg.includes('where') || msg.includes('location') || msg.includes('address') || msg.includes('mapa')) {
                 return processQuickReply('ubicacion');
             }
             
-            // Service-specific
+            // Service-specific queries
             if (msg.includes('fade') || msg.includes('degradado')) {
                 return state.lang === 'es'
-                    ? '💈 El Fade/Degradado cuesta $30,000 COP y toma aproximadamente 50 minutos. Incluye lavado y estilo. ¿Te gustaría reservar?'
-                    : '💈 The Fade costs $30,000 COP and takes approximately 50 minutes. Includes wash and style. Would you like to book?';
+                    ? `💈 <strong>FADE / DEGRADADO</strong><br><br>
+                       Precio: $30,000 COP<br>
+                       Duración: ~50 min<br><br>
+                       Incluye: Low, mid o high fade con diseño personalizado, lavado y estilo.<br><br>
+                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola%2C%20quiero%20un%20fade" target="_blank" class="text-green-400 hover:underline">📲 Reservar Fade</a>`
+                    : `💈 <strong>FADE</strong><br><br>
+                       Price: $30,000 COP<br>
+                       Duration: ~50 min<br><br>
+                       Includes: Low, mid or high fade with custom design, wash and style.<br><br>
+                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hi%2C%20I%20want%20a%20fade" target="_blank" class="text-green-400 hover:underline">📲 Book Fade</a>`;
             }
             
             if (msg.includes('barba') || msg.includes('beard')) {
                 return state.lang === 'es'
-                    ? '🧔 Tenemos arreglo de barba por $15,000 y el combo corte + barba por $35,000. El afeitado clásico con navaja y toalla caliente cuesta $20,000. ¿Cuál prefieres?'
-                    : '🧔 We have beard trim for $15,000 and the cut + beard combo for $35,000. Classic shave with straight razor and hot towel is $20,000. Which do you prefer?';
+                    ? `🧔 <strong>SERVICIOS DE BARBA</strong><br><br>
+                       • Arreglo de Barba: $15,000 (25 min)<br>
+                       • Afeitado Clásico: $20,000 (35 min)<br>
+                       • Combo Corte+Barba: $35,000 (1h 10min)<br><br>
+                       El afeitado incluye navaja, toalla caliente y tratamiento facial 🔥<br><br>
+                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola%2C%20quiero%20servicio%20de%20barba" target="_blank" class="text-green-400 hover:underline">📲 Reservar</a>`
+                    : `🧔 <strong>BEARD SERVICES</strong><br><br>
+                       • Beard Trim: $15,000 (25 min)<br>
+                       • Classic Shave: $20,000 (35 min)<br>
+                       • Cut+Beard Combo: $35,000 (1h 10min)<br><br>
+                       Shave includes straight razor, hot towel and facial treatment 🔥<br><br>
+                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hi%2C%20I%20want%20beard%20service" target="_blank" class="text-green-400 hover:underline">📲 Book</a>`;
             }
             
             if (msg.includes('uña') || msg.includes('manicur') || msg.includes('pedicur') || msg.includes('nail')) {
                 return state.lang === 'es'
-                    ? '💅 ¡También hacemos uñas! Manicure clásico $25,000, semipermanente $45,000, y pedicure completo $35,000. Agenda el tuyo!'
-                    : '💅 We also do nails! Classic manicure $25,000, gel $45,000, and full pedicure $35,000. Book yours!';
+                    ? `💅 <strong>SERVICIOS DE UÑAS</strong><br><br>
+                       • Manicure Clásico: $25,000 (40 min)<br>
+                       • Manicure Semipermanente: $45,000 (1h)<br>
+                       • Pedicure Completo: $35,000 (1h)<br><br>
+                       El semipermanente dura hasta 3 semanas ✨<br><br>
+                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola%2C%20quiero%20manicure%2Fpedicure" target="_blank" class="text-green-400 hover:underline">📲 Reservar</a>`
+                    : `💅 <strong>NAIL SERVICES</strong><br><br>
+                       • Classic Manicure: $25,000 (40 min)<br>
+                       • Gel Manicure: $45,000 (1h)<br>
+                       • Full Pedicure: $35,000 (1h)<br><br>
+                       Gel lasts up to 3 weeks ✨<br><br>
+                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hi%2C%20I%20want%20manicure%2Fpedicure" target="_blank" class="text-green-400 hover:underline">📲 Book</a>`;
             }
             
-            if (msg.includes('producto') || msg.includes('product') || msg.includes('comprar') || msg.includes('buy')) {
+            if (msg.includes('masaje') || msg.includes('massage') || msg.includes('spa') || msg.includes('facial') || msg.includes('relaj')) {
                 return state.lang === 'es'
-                    ? '🛒 Vendemos productos premium: pomadas, aceites para barba, shampoos y kits de barbero. Puedes verlos en la sección Tienda arriba o comprarlos directamente en el local. ¿Te interesa algo específico?'
-                    : '🛒 We sell premium products: pomades, beard oils, shampoos and barber kits. You can see them in the Shop section above or buy them directly at the shop. Interested in anything specific?';
+                    ? `💆 <strong>SERVICIOS SPA</strong><br><br>
+                       • Facial Profundo: $60,000 (1h)<br>
+                       • Masaje Relajante: $70,000 (1h)<br>
+                       • Diseño de Cejas: $12,000 (20 min)<br><br>
+                       Perfecto para después de un buen corte 😌<br><br>
+                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola%2C%20quiero%20un%20servicio%20de%20spa" target="_blank" class="text-green-400 hover:underline">📲 Reservar</a>`
+                    : `💆 <strong>SPA SERVICES</strong><br><br>
+                       • Deep Facial: $60,000 (1h)<br>
+                       • Relaxing Massage: $70,000 (1h)<br>
+                       • Eyebrow Design: $12,000 (20 min)<br><br>
+                       Perfect after a good cut 😌<br><br>
+                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hi%2C%20I%20want%20a%20spa%20service" target="_blank" class="text-green-400 hover:underline">📲 Book</a>`;
+            }
+            
+            if (msg.includes('producto') || msg.includes('product') || msg.includes('comprar') || msg.includes('buy') || msg.includes('pomada') || msg.includes('aceite') || msg.includes('shampoo')) {
+                return state.lang === 'es'
+                    ? `🛒 <strong>PRODUCTOS</strong><br><br>
+                       • Pomada Mate: $45,000<br>
+                       • Aceite para Barba: $55,000<br>
+                       • Kit de Barbero: $120,000<br>
+                       • Shampoo Anticaída: $65,000<br><br>
+                       Puedes comprarlos en el local o reservar para recoger 📦<br><br>
+                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola%2C%20quiero%20comprar%20productos" target="_blank" class="text-green-400 hover:underline">📲 Consultar disponibilidad</a>`
+                    : `🛒 <strong>PRODUCTS</strong><br><br>
+                       • Matte Pomade: $45,000<br>
+                       • Beard Oil: $55,000<br>
+                       • Barber Kit: $120,000<br>
+                       • Anti-Hair Loss Shampoo: $65,000<br><br>
+                       Buy in store or reserve for pickup 📦<br><br>
+                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hi%2C%20I%20want%20to%20buy%20products" target="_blank" class="text-green-400 hover:underline">📲 Check availability</a>`;
             }
             
             // Greetings
-            if (msg.includes('hola') || msg.includes('hi') || msg.includes('hello') || msg.includes('buenos') || msg.includes('buenas')) {
+            if (msg.includes('hola') || msg.includes('hi') || msg.includes('hello') || msg.includes('buenos') || msg.includes('buenas') || msg.includes('hey')) {
                 return state.lang === 'es'
-                    ? '¡Hola! 😊 Bienvenido a Jermaine Barber\'s, la mejor barbería de Cartagena. ¿En qué puedo ayudarte hoy?'
-                    : 'Hello! 😊 Welcome to Jermaine Barber\'s, the best barbershop in Cartagena. How can I help you today?';
+                    ? `¡Hola! 😊 Bienvenido a Jermaine Barber's.<br><br>Soy Sofia, tu asistente. ¿En qué puedo ayudarte?<br><br>
+                       • 💈 Reservar cita<br>
+                       • 💰 Ver precios<br>
+                       • 🕐 Consultar horarios<br>
+                       • 📍 Cómo llegar`
+                    : `Hello! 😊 Welcome to Jermaine Barber's.<br><br>I'm Sofia, your assistant. How can I help?<br><br>
+                       • 💈 Book appointment<br>
+                       • 💰 See prices<br>
+                       • 🕐 Check hours<br>
+                       • 📍 Get directions`;
             }
             
             // Thanks
-            if (msg.includes('gracias') || msg.includes('thank')) {
+            if (msg.includes('gracias') || msg.includes('thank') || msg.includes('genial') || msg.includes('perfecto') || msg.includes('great')) {
                 return state.lang === 'es'
-                    ? '¡Con gusto! 🙌 Si tienes más preguntas, aquí estoy. ¡Te esperamos en Jermaine Barber\'s!'
-                    : 'You\'re welcome! 🙌 If you have more questions, I\'m here. We\'re waiting for you at Jermaine Barber\'s!';
+                    ? `¡Con mucho gusto! 🙌<br><br>Si necesitas algo más, aquí estoy. ¡Te esperamos en Jermaine Barber's! 💈<br><br>
+                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola" target="_blank" class="text-green-400 hover:underline">📲 Escribirnos por WhatsApp</a>`
+                    : `You're welcome! 🙌<br><br>If you need anything else, I'm here. See you at Jermaine Barber's! 💈<br><br>
+                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hi" target="_blank" class="text-green-400 hover:underline">📲 Message us on WhatsApp</a>`;
             }
             
-            // Default response
+            // Human request
+            if (msg.includes('humano') || msg.includes('persona') || msg.includes('human') || msg.includes('real person') || msg.includes('hablar con')) {
+                return state.lang === 'es'
+                    ? `¡Claro! Te conecto con el equipo de Jermaine's directamente 👇<br><br>
+                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola%2C%20quiero%20hablar%20con%20alguien%20del%20equipo" target="_blank" class="text-green-400 hover:underline font-semibold">📲 Hablar con el equipo →</a><br><br>
+                       O llama al: <a href="tel:+573181326952" class="text-green-400">+57 318 132 6952</a>`
+                    : `Of course! Let me connect you with the Jermaine's team directly 👇<br><br>
+                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hi%2C%20I%20want%20to%20talk%20to%20someone%20from%20the%20team" target="_blank" class="text-green-400 hover:underline font-semibold">📲 Talk to the team →</a><br><br>
+                       Or call: <a href="tel:+573181326952" class="text-green-400">+57 318 132 6952</a>`;
+            }
+            
+            // Default response with WhatsApp fallback
             return state.lang === 'es'
-                ? 'No estoy segura de entender. ¿Podrías preguntarme sobre:<br>• Reservar una cita<br>• Nuestros servicios y precios<br>• Horarios de atención<br>• Cómo llegar<br>• Nuestros productos<br><br>O escríbenos directamente por <a href="https://wa.me/573181326952" class="text-gold">WhatsApp</a> 💬'
-                : 'I\'m not sure I understand. Could you ask me about:<br>• Booking an appointment<br>• Our services and prices<br>• Business hours<br>• How to get here<br>• Our products<br><br>Or message us directly on <a href="https://wa.me/573181326952" class="text-gold">WhatsApp</a> 💬';
+                ? `No estoy segura de entender tu pregunta 🤔<br><br>Puedo ayudarte con:<br>
+                   • Reservas y citas<br>
+                   • Precios de servicios<br>
+                   • Horarios<br>
+                   • Ubicación y cómo llegar<br>
+                   • Productos<br><br>
+                   O si prefieres, escríbenos directamente:<br>
+                   <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola%2C%20tengo%20una%20pregunta" target="_blank" class="text-green-400 hover:underline font-semibold">📲 Chatear en WhatsApp →</a>`
+                : `I'm not sure I understand your question 🤔<br><br>I can help with:<br>
+                   • Bookings and appointments<br>
+                   • Service prices<br>
+                   • Hours<br>
+                   • Location and directions<br>
+                   • Products<br><br>
+                   Or if you prefer, message us directly:<br>
+                   <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hi%2C%20I%20have%20a%20question" target="_blank" class="text-green-400 hover:underline font-semibold">📲 Chat on WhatsApp →</a>`;
+        }
+        
+        // Track events (for analytics)
+        function trackEvent(eventName, data = {}) {
+            console.log('Event:', eventName, data);
+            // TODO: Send to analytics when backend is ready
         }
 
         // ================== INITIALIZATION ==================
