@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jermaine Barber's × MachineMind | La Revolución del Booking</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #F4E4BC;
+            --black: #0A0A0A;
+            --dark: #141414;
+            --darker: #1A1A1A;
+            --white: #FAFAFA;
+            --gray: #888;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--black);
+            color: var(--white);
+            overflow-x: hidden;
+        }
+
+        /* Grain Overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: linear-gradient(to bottom, rgba(10,10,10,0.95), transparent);
+        }
+
+        .logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 3px;
+            color: var(--gold);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            opacity: 0.7;
+            transition: all 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+            color: var(--gold);
+        }
+
+        .lang-toggle {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 8px 16px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+
+        .lang-toggle:hover {
+            background: var(--gold);
+            color: var(--black);
+        }
+
+        /* Sections */
+        section {
+            min-height: 100vh;
+            padding: 120px 60px;
+            position: relative;
+        }
+
+        /* Hero */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(ellipse at center, rgba(212,175,55,0.08) 0%, transparent 70%);
+        }
+
+        .hero-badge {
+            display: inline-block;
+            border: 1px solid var(--gold);
+            padding: 8px 24px;
+            font-size: 0.7rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 40px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(4rem, 12vw, 10rem);
+            line-height: 0.9;
+            letter-spacing: -2px;
+            margin-bottom: 30px;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .hero h1 span {
+            color: var(--gold);
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 600px;
+            line-height: 1.8;
+            margin-bottom: 50px;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 60px;
+            margin-top: 60px;
+            animation: fadeInUp 0.8s ease 0.6s both;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3.5rem;
+            color: var(--gold);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gray);
+            margin-top: 8px;
+        }
+
+        /* Problem Section */
+        .problem {
+            background: var(--dark);
+        }
+
+        .section-header {
+            margin-bottom: 80px;
+        }
+
+        .section-tag {
+            font-size: 0.7rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            line-height: 1;
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .problem-card {
+            background: var(--black);
+            border: 1px solid rgba(212,175,55,0.2);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s;
+        }
+
+        .problem-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-5px);
+        }
+
+        .problem-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gold);
+            transform: scaleY(0);
+            transition: transform 0.4s;
+        }
+
+        .problem-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .problem-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .problem-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .problem-card p {
+            color: var(--gray);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        .problem-stat {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            color: #ff4444;
+            margin-top: 20px;
+        }
+
+        /* Solution Section */
+        .solution {
+            background: linear-gradient(135deg, var(--black) 0%, var(--darker) 100%);
+        }
+
+        .solution-intro {
+            max-width: 800px;
+            margin-bottom: 80px;
+        }
+
+        .solution-intro p {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: var(--gray);
+        }
+
+        .solution-intro strong {
+            color: var(--gold);
+        }
+
+        /* WhatsApp Demo */
+        .whatsapp-demo {
+            background: var(--dark);
+            border-radius: 30px;
+            max-width: 400px;
+            margin: 60px auto;
+            overflow: hidden;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+        }
+
+        .wa-header {
+            background: #075E54;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .wa-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.2rem;
+            color: var(--black);
+        }
+
+        .wa-name {
+            flex: 1;
+        }
+
+        .wa-name h4 {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .wa-name span {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .wa-chat {
+            padding: 20px;
+            background: #0B141A;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .wa-message {
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            animation: messageIn 0.4s ease;
+        }
+
+        .wa-message.user {
+            background: #005C4B;
+            align-self: flex-end;
+            border-bottom-right-radius: 0;
+        }
+
+        .wa-message.bot {
+            background: #1F2C34;
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+        }
+
+        .wa-time {
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.5);
+            text-align: right;
+            margin-top: 4px;
+        }
+
+        .wa-typing {
+            display: flex;
+            gap: 4px;
+            padding: 15px;
+            align-self: flex-start;
+        }
+
+        .wa-typing span {
+            width: 8px;
+            height: 8px;
+            background: #555;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .wa-typing span:nth-child(2) { animation-delay: 0.2s; }
+        .wa-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 100% { transform: translateY(0); opacity: 0.4; }
+            50% { transform: translateY(-5px); opacity: 1; }
+        }
+
+        @keyframes messageIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Features Grid */
+        .features {
+            background: var(--black);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--darker) 100%);
+            border: 1px solid rgba(212,175,55,0.1);
+            padding: 50px 40px;
+            position: relative;
+            transition: all 0.4s;
+        }
+
+        .feature-card:hover {
+            border-color: var(--gold);
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+        }
+
+        .feature-number {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 4rem;
+            color: rgba(212,175,55,0.2);
+            position: absolute;
+            top: 20px;
+            right: 30px;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 25px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            color: var(--gray);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        /* Blue Ocean Section */
+        .blue-ocean {
+            background: linear-gradient(180deg, var(--dark) 0%, var(--black) 100%);
+        }
+
+        .ocean-visual {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            margin-top: 60px;
+        }
+
+        .ocean-before, .ocean-after {
+            padding: 40px;
+            border-radius: 20px;
+        }
+
+        .ocean-before {
+            background: rgba(255,68,68,0.1);
+            border: 1px solid rgba(255,68,68,0.3);
+        }
+
+        .ocean-after {
+            background: rgba(212,175,55,0.1);
+            border: 1px solid rgba(212,175,55,0.3);
+        }
+
+        .ocean-label {
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .ocean-before .ocean-label {
+            color: #ff4444;
+        }
+
+        .ocean-after .ocean-label {
+            color: var(--gold);
+        }
+
+        .ocean-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 25px;
+        }
+
+        .ocean-list {
+            list-style: none;
+        }
+
+        .ocean-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ocean-before .ocean-list li::before {
+            content: '✗';
+            color: #ff4444;
+        }
+
+        .ocean-after .ocean-list li::before {
+            content: '✓';
+            color: var(--gold);
+        }
+
+        /* ROI Section */
+        .roi {
+            background: var(--black);
+            text-align: center;
+        }
+
+        .roi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .roi-item {
+            padding: 40px 30px;
+            background: var(--dark);
+            border: 1px solid rgba(212,175,55,0.2);
+            transition: all 0.4s;
+        }
+
+        .roi-item:hover {
+            border-color: var(--gold);
+            transform: translateY(-10px);
+        }
+
+        .roi-value {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 4rem;
+            color: var(--gold);
+            line-height: 1;
+        }
+
+        .roi-label {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-top: 15px;
+            line-height: 1.5;
+        }
+
+        /* Pricing Section */
+        .pricing {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--black) 100%);
+        }
+
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .pricing-card {
+            background: var(--black);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 50px 40px;
+            position: relative;
+            transition: all 0.4s;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--gold);
+            transform: scale(1.05);
+        }
+
+        .pricing-card.featured::before {
+            content: 'RECOMENDADO';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--gold);
+            color: var(--black);
+            padding: 8px 20px;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .pricing-name {
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 15px;
+        }
+
+        .pricing-price {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3.5rem;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .pricing-price span {
+            font-size: 1rem;
+            color: var(--gray);
+        }
+
+        .pricing-desc {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .pricing-features {
+            list-style: none;
+        }
+
+        .pricing-features li {
+            padding: 10px 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .pricing-features li::before {
+            content: '✓';
+            color: var(--gold);
+        }
+
+        /* Timeline Section */
+        .timeline {
+            background: var(--black);
+        }
+
+        .timeline-container {
+            position: relative;
+            max-width: 800px;
+            margin: 60px auto 0;
+        }
+
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--gold), transparent);
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 60px;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            flex: 1;
+            background: var(--dark);
+            padding: 30px;
+            border: 1px solid rgba(212,175,55,0.2);
+        }
+
+        .timeline-week {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
+
+        .timeline-title {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .timeline-desc {
+            color: var(--gray);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 30px;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: var(--gold);
+            border-radius: 50%;
+            border: 4px solid var(--black);
+        }
+
+        /* CTA Section */
+        .cta {
+            background: linear-gradient(135deg, rgba(212,175,55,0.1) 0%, var(--black) 100%);
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            line-height: 1;
+            margin-bottom: 30px;
+        }
+
+        .cta p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto 50px;
+            line-height: 1.7;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 36px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--gold);
+            color: var(--black);
+        }
+
+        .btn-primary:hover {
+            background: var(--gold-light);
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(212,175,55,0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--white);
+            border: 1px solid var(--white);
+        }
+
+        .btn-secondary:hover {
+            background: var(--white);
+            color: var(--black);
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        .btn-whatsapp:hover {
+            background: #20BD5A;
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(37,211,102,0.3);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            padding: 60px;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            letter-spacing: 3px;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+
+        .footer-text {
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Language Toggle */
+        .lang-es, .lang-en { display: none; }
+        body.es .lang-es { display: block; }
+        body.en .lang-en { display: block; }
+        body.es .lang-es-inline { display: inline; }
+        body.en .lang-en-inline { display: inline; }
+        body.es .lang-en-inline { display: none; }
+        body.en .lang-es-inline { display: none; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            section {
+                padding: 80px 30px;
+            }
+
+            nav {
+                padding: 15px 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .ocean-visual {
+                grid-template-columns: 1fr;
+            }
+
+            .roi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .timeline-container::before {
+                left: 20px;
+            }
+
+            .timeline-item {
+                flex-direction: column !important;
+                padding-left: 50px;
+            }
+
+            .timeline-dot {
+                left: 20px;
+            }
+
+            .pricing-card.featured {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body class="es">
+    <nav>
+        <div class="logo">JERMAINE × MACHINEMIND</div>
+        <div class="nav-links">
+            <a href="#problema" class="lang-es-inline">El Problema</a>
+            <a href="#problema" class="lang-en-inline">The Problem</a>
+            <a href="#solucion" class="lang-es-inline">Solución</a>
+            <a href="#solucion" class="lang-en-inline">Solution</a>
+            <a href="#roi" class="lang-es-inline">ROI</a>
+            <a href="#roi" class="lang-en-inline">ROI</a>
+            <a href="#inversion" class="lang-es-inline">Inversión</a>
+            <a href="#inversion" class="lang-en-inline">Pricing</a>
+        </div>
+        <button class="lang-toggle" onclick="toggleLang()">EN / ES</button>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-badge">
+            <span class="lang-es-inline">Propuesta Exclusiva 2026</span>
+            <span class="lang-en-inline">Exclusive Proposal 2026</span>
+        </div>
+        <h1>
+            <span class="lang-es-inline">LA BARBERÍA<br><span>#1</span> DE<br>COLOMBIA</span>
+            <span class="lang-en-inline">COLOMBIA'S<br><span>#1</span><br>BARBERSHOP</span>
+        </h1>
+        <p class="hero-subtitle">
+            <span class="lang-es">Sistema de reservas por WhatsApp con IA + Marketing automatizado + Fidelización inteligente. Todo lo que necesitas para dominar Cartagena y expandir a toda Colombia.</span>
+            <span class="lang-en">AI-powered WhatsApp booking system + Automated marketing + Smart loyalty program. Everything you need to dominate Cartagena and expand across Colombia.</span>
+        </p>
+        <div class="hero-stats">
+            <div class="stat">
+                <div class="stat-value">5.0★</div>
+                <div class="stat-label">
+                    <span class="lang-es-inline">Calificación Google</span>
+                    <span class="lang-en-inline">Google Rating</span>
+                </div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">591</div>
+                <div class="stat-label">
+                    <span class="lang-es-inline">Reviews</span>
+                    <span class="lang-en-inline">Reviews</span>
+                </div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">2.3K</div>
+                <div class="stat-label">
+                    <span class="lang-es-inline">Seguidores IG</span>
+                    <span class="lang-en-inline">IG Followers</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROBLEM -->
+    <section class="problem" id="problema">
+        <div class="section-header">
+            <p class="section-tag">
+                <span class="lang-es-inline">El Problema</span>
+                <span class="lang-en-inline">The Problem</span>
+            </p>
+            <h2 class="section-title">
+                <span class="lang-es-inline">POR QUÉ PIERDEN DINERO<br>TODAS LAS BARBERÍAS</span>
+                <span class="lang-en-inline">WHY EVERY BARBERSHOP<br>IS LOSING MONEY</span>
+            </h2>
+        </div>
+        <div class="problem-grid">
+            <div class="problem-card">
+                <div class="problem-icon">📞</div>
+                <h3>
+                    <span class="lang-es-inline">Llamadas Perdidas = Clientes Perdidos</span>
+                    <span class="lang-en-inline">Missed Calls = Lost Clients</span>
+                </h3>
+                <p>
+                    <span class="lang-es">Cada llamada que no contestas mientras estás cortando es un cliente que fue a la competencia. No puedes contestar el teléfono con tijeras en la mano.</span>
+                    <span class="lang-en">Every call you miss while cutting hair is a client who went to your competition. You can't answer the phone with scissors in your hand.</span>
+                </p>
+                <div class="problem-stat">-35%</div>
+                <p style="color: var(--gray); font-size: 0.8rem; margin-top: 5px;">
+                    <span class="lang-es-inline">Reservas perdidas por mes</span>
+                    <span class="lang-en-inline">Bookings lost per month</span>
+                </p>
+            </div>
+            <div class="problem-card">
+                <div class="problem-icon">❌</div>
+                <h3>
+                    <span class="lang-es-inline">No-Shows Destruyen Tu Día</span>
+                    <span class="lang-en-inline">No-Shows Destroy Your Day</span>
+                </h3>
+                <p>
+                    <span class="lang-es">Un cliente que no llega significa 45 minutos perdidos, dinero que no entra, y un barbero sentado sin hacer nada. Los recordatorios manuales son imposibles.</span>
+                    <span class="lang-en">A client who doesn't show means 45 wasted minutes, lost revenue, and a barber sitting idle. Manual reminders are impossible to maintain.</span>
+                </p>
+                <div class="problem-stat">23%</div>
+                <p style="color: var(--gray); font-size: 0.8rem; margin-top: 5px;">
+                    <span class="lang-es-inline">Tasa promedio de no-shows</span>
+                    <span class="lang-en-inline">Average no-show rate</span>
+                </p>
+            </div>
+            <div class="problem-card">
+                <div class="problem-icon">🔄</div>
+                <h3>
+                    <span class="lang-es-inline">Cero Recompra Automatizada</span>
+                    <span class="lang-en-inline">Zero Automated Rebooking</span>
+                </h3>
+                <p>
+                    <span class="lang-es">Un corte dura 3-4 semanas. Si no le recuerdas al cliente que vuelva, irá a otra barbería. El que manda el mensaje primero, gana.</span>
+                    <span class="lang-en">A haircut lasts 3-4 weeks. If you don't remind the client to come back, they'll go elsewhere. Whoever messages first, wins.</span>
+                </p>
+                <div class="problem-stat">67%</div>
+                <p style="color: var(--gray); font-size: 0.8rem; margin-top: 5px;">
+                    <span class="lang-es-inline">Clientes no vuelven sin recordatorio</span>
+                    <span class="lang-en-inline">Clients don't return without reminder</span>
+                </p>
+            </div>
+            <div class="problem-card">
+                <div class="problem-icon">🌙</div>
+                <h3>
+                    <span class="lang-es-inline">Cerrado = Sin Reservas</span>
+                    <span class="lang-en-inline">Closed = No Bookings</span>
+                </h3>
+                <p>
+                    <span class="lang-es">Tu barbería cierra a las 8 PM. Los turistas del hotel Almirante buscan corte a las 10 PM cuando planean su día siguiente. Reservas que nunca llegan.</span>
+                    <span class="lang-en">Your shop closes at 8 PM. Tourists from Hotel Almirante look for cuts at 10 PM while planning their next day. Bookings that never arrive.</span>
+                </p>
+                <div class="problem-stat">40%</div>
+                <p style="color: var(--gray); font-size: 0.8rem; margin-top: 5px;">
+                    <span class="lang-es-inline">Búsquedas fuera de horario</span>
+                    <span class="lang-en-inline">Off-hours searches</span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOLUTION -->
+    <section class="solution" id="solucion">
+        <div class="section-header">
+            <p class="section-tag">
+                <span class="lang-es-inline">La Solución</span>
+                <span class="lang-en-inline">The Solution</span>
+            </p>
+            <h2 class="section-title">
+                <span class="lang-es-inline">JERMAINE AI<br>TU BARBERO DIGITAL</span>
+                <span class="lang-en-inline">JERMAINE AI<br>YOUR DIGITAL BARBER</span>
+            </h2>
+        </div>
+        <div class="solution-intro">
+            <p>
+                <span class="lang-es">Imagina tener un recepcionista que <strong>nunca duerme</strong>, habla perfecto español e inglés, conoce todos tus servicios y precios, reserva citas 24/7, y manda recordatorios automáticos. <strong>Eso es Jermaine AI.</strong></span>
+                <span class="lang-en">Imagine having a receptionist who <strong>never sleeps</strong>, speaks perfect Spanish and English, knows all your services and prices, books appointments 24/7, and sends automatic reminders. <strong>That's Jermaine AI.</strong></span>
+            </p>
+        </div>
+
+        <!-- WhatsApp Demo -->
+        <div class="whatsapp-demo">
+            <div class="wa-header">
+                <div class="wa-avatar">JB</div>
+                <div class="wa-name">
+                    <h4>Jermaine Barber's AI</h4>
+                    <span>Online</span>
+                </div>
+            </div>
+            <div class="wa-chat" id="chat-demo">
+                <div class="wa-message user">
+                    <span class="lang-es">Hola, quiero reservar un corte para mañana</span>
+                    <span class="lang-en">Hi, I want to book a haircut for tomorrow</span>
+                    <div class="wa-time">10:32 PM ✓✓</div>
+                </div>
+                <div class="wa-message bot">
+                    <span class="lang-es">¡Hola! 👋 Bienvenido a Jermaine Barber's, la mejor barbería del centro histórico de Cartagena.<br><br>Para mañana tenemos estos horarios disponibles:<br><br>🕐 9:00 AM<br>🕐 11:30 AM<br>🕐 2:00 PM<br>🕐 4:30 PM<br><br>¿Cuál te funciona mejor?</span>
+                    <span class="lang-en">Hello! 👋 Welcome to Jermaine Barber's, the best barbershop in Cartagena's historic center.<br><br>For tomorrow we have these times available:<br><br>🕐 9:00 AM<br>🕐 11:30 AM<br>🕐 2:00 PM<br>🕐 4:30 PM<br><br>Which works best for you?</span>
+                    <div class="wa-time">10:32 PM</div>
+                </div>
+                <div class="wa-message user">
+                    <span class="lang-es">El de las 11:30. ¿Cuánto cuesta?</span>
+                    <span class="lang-en">The 11:30 one. How much is it?</span>
+                    <div class="wa-time">10:33 PM ✓✓</div>
+                </div>
+                <div class="wa-message bot">
+                    <span class="lang-es">Perfecto! 💈<br><br>📋 <strong>Tu reserva:</strong><br>• Corte clásico: $25.000 COP<br>• Fecha: Mañana 11:30 AM<br>• Barbero: El próximo disponible<br><br>¿Quieres agregar barba ($15.000) o cejas ($8.000)?<br><br>Responde "CONFIRMAR" para asegurar tu cita. 🪒</span>
+                    <span class="lang-en">Perfect! 💈<br><br>📋 <strong>Your booking:</strong><br>• Classic cut: $25,000 COP (~$6 USD)<br>• Date: Tomorrow 11:30 AM<br>• Barber: Next available<br><br>Want to add beard trim ($15,000) or eyebrows ($8,000)?<br><br>Reply "CONFIRM" to secure your appointment. 🪒</span>
+                    <div class="wa-time">10:33 PM</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="features">
+        <div class="section-header">
+            <p class="section-tag">
+                <span class="lang-es-inline">Características</span>
+                <span class="lang-en-inline">Features</span>
+            </p>
+            <h2 class="section-title">
+                <span class="lang-es-inline">TODO LO QUE<br>NECESITAS</span>
+                <span class="lang-en-inline">EVERYTHING<br>YOU NEED</span>
+            </h2>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <span class="feature-number">01</span>
+                <div class="feature-icon">💬</div>
+                <h3>
+                    <span class="lang-es-inline">WhatsApp Booking 24/7</span>
+                    <span class="lang-en-inline">24/7 WhatsApp Booking</span>
+                </h3>
+                <p>
+                    <span class="lang-es">Clientes reservan por WhatsApp a cualquier hora. La IA entiende español, inglés y hasta "spanglish" de turistas.</span>
+                    <span class="lang-en">Clients book via WhatsApp anytime. The AI understands Spanish, English, and even tourist "Spanglish".</span>
+                </p>
+                <ul class="feature-list">
+                    <li>
+                        <span class="lang-es-inline">Reservas automáticas sin intervención</span>
+                        <span class="lang-en-inline">Automatic bookings without intervention</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Confirmaciones instantáneas</span>
+                        <span class="lang-en-inline">Instant confirmations</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Cambios y cancelaciones fáciles</span>
+                        <span class="lang-en-inline">Easy changes and cancellations</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <span class="feature-number">02</span>
+                <div class="feature-icon">🔔</div>
+                <h3>
+                    <span class="lang-es-inline">Recordatorios Anti No-Show</span>
+                    <span class="lang-en-inline">Anti No-Show Reminders</span>
+                </h3>
+                <p>
+                    <span class="lang-es">Sistema automático de recordatorios 24h y 2h antes de la cita. Reduce no-shows hasta un 80%.</span>
+                    <span class="lang-en">Automatic reminder system 24h and 2h before appointment. Reduces no-shows by up to 80%.</span>
+                </p>
+                <ul class="feature-list">
+                    <li>
+                        <span class="lang-es-inline">Recordatorio 24 horas antes</span>
+                        <span class="lang-en-inline">24-hour reminder</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Recordatorio 2 horas antes</span>
+                        <span class="lang-en-inline">2-hour reminder</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Confirmación de asistencia</span>
+                        <span class="lang-en-inline">Attendance confirmation</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <span class="feature-number">03</span>
+                <div class="feature-icon">🔄</div>
+                <h3>
+                    <span class="lang-es-inline">Recompra Automatizada</span>
+                    <span class="lang-en-inline">Automated Rebooking</span>
+                </h3>
+                <p>
+                    <span class="lang-es">A los 21 días del último corte, el sistema contacta al cliente automáticamente para su próxima cita.</span>
+                    <span class="lang-en">21 days after the last cut, the system automatically contacts the client for their next appointment.</span>
+                </p>
+                <ul class="feature-list">
+                    <li>
+                        <span class="lang-es-inline">Ciclo de 3 semanas personalizable</span>
+                        <span class="lang-en-inline">Customizable 3-week cycle</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Mensaje personalizado por cliente</span>
+                        <span class="lang-en-inline">Personalized message per client</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Aumento de frecuencia de visita</span>
+                        <span class="lang-en-inline">Increased visit frequency</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <span class="feature-number">04</span>
+                <div class="feature-icon">⭐</div>
+                <h3>
+                    <span class="lang-es-inline">Programa de Fidelidad</span>
+                    <span class="lang-en-inline">Loyalty Program</span>
+                </h3>
+                <p>
+                    <span class="lang-es">"5 cortes = 1 gratis". El sistema trackea automáticamente y notifica cuando llegan al premio.</span>
+                    <span class="lang-en">"5 cuts = 1 free". The system automatically tracks and notifies when they reach the reward.</span>
+                </p>
+                <ul class="feature-list">
+                    <li>
+                        <span class="lang-es-inline">Puntos por cada visita</span>
+                        <span class="lang-en-inline">Points per visit</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Notificación de recompensa</span>
+                        <span class="lang-en-inline">Reward notification</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Niveles VIP para clientes frecuentes</span>
+                        <span class="lang-en-inline">VIP levels for frequent clients</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <span class="feature-number">05</span>
+                <div class="feature-icon">📱</div>
+                <h3>
+                    <span class="lang-es-inline">Marketing de Captación</span>
+                    <span class="lang-en-inline">Client Acquisition Marketing</span>
+                </h3>
+                <p>
+                    <span class="lang-es">Campañas automatizadas para turistas. QR codes en hoteles cercanos. Link en bio de Instagram que reserva directo.</span>
+                    <span class="lang-en">Automated campaigns for tourists. QR codes in nearby hotels. Instagram bio link that books directly.</span>
+                </p>
+                <ul class="feature-list">
+                    <li>
+                        <span class="lang-es-inline">QR para Hotel Almirante y cercanos</span>
+                        <span class="lang-en-inline">QR for Hotel Almirante and nearby</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Campañas para eventos especiales</span>
+                        <span class="lang-en-inline">Special event campaigns</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Instagram Link in Bio optimizado</span>
+                        <span class="lang-en-inline">Optimized Instagram Link in Bio</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <span class="feature-number">06</span>
+                <div class="feature-icon">📊</div>
+                <h3>
+                    <span class="lang-es-inline">Dashboard de Control</span>
+                    <span class="lang-en-inline">Control Dashboard</span>
+                </h3>
+                <p>
+                    <span class="lang-es">Visualiza reservas, ingresos, clientes nuevos vs recurrentes, y rendimiento de barberos en tiempo real.</span>
+                    <span class="lang-en">View bookings, revenue, new vs returning clients, and barber performance in real-time.</span>
+                </p>
+                <ul class="feature-list">
+                    <li>
+                        <span class="lang-es-inline">Métricas en tiempo real</span>
+                        <span class="lang-en-inline">Real-time metrics</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Reportes semanales automáticos</span>
+                        <span class="lang-en-inline">Automatic weekly reports</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Predicción de ingresos</span>
+                        <span class="lang-en-inline">Revenue forecasting</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- BLUE OCEAN -->
+    <section class="blue-ocean">
+        <div class="section-header">
+            <p class="section-tag">
+                <span class="lang-es-inline">Ventaja Competitiva</span>
+                <span class="lang-en-inline">Competitive Advantage</span>
+            </p>
+            <h2 class="section-title">
+                <span class="lang-es-inline">OCÉANO AZUL<br>DONDE NADIE MÁS ESTÁ</span>
+                <span class="lang-en-inline">BLUE OCEAN<br>WHERE NO ONE ELSE IS</span>
+            </h2>
+        </div>
+        <div class="ocean-visual">
+            <div class="ocean-before">
+                <p class="ocean-label">
+                    <span class="lang-es-inline">Todas las barberías de Cartagena</span>
+                    <span class="lang-en-inline">Every barbershop in Cartagena</span>
+                </p>
+                <h3 class="ocean-title">
+                    <span class="lang-es-inline">OCÉANO ROJO</span>
+                    <span class="lang-en-inline">RED OCEAN</span>
+                </h3>
+                <ul class="ocean-list">
+                    <li>
+                        <span class="lang-es-inline">Reservas por llamada o presencial</span>
+                        <span class="lang-en-inline">Phone or walk-in bookings only</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Sin recordatorios automáticos</span>
+                        <span class="lang-en-inline">No automatic reminders</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Cerrado después de las 8 PM</span>
+                        <span class="lang-en-inline">Closed after 8 PM</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Solo hablan español</span>
+                        <span class="lang-en-inline">Spanish only</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Sin programa de fidelidad</span>
+                        <span class="lang-en-inline">No loyalty program</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Marketing básico en Instagram</span>
+                        <span class="lang-en-inline">Basic Instagram marketing</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="ocean-after">
+                <p class="ocean-label">Jermaine Barber's 2026</p>
+                <h3 class="ocean-title">
+                    <span class="lang-es-inline">OCÉANO AZUL</span>
+                    <span class="lang-en-inline">BLUE OCEAN</span>
+                </h3>
+                <ul class="ocean-list">
+                    <li>
+                        <span class="lang-es-inline">WhatsApp booking 24/7 con IA</span>
+                        <span class="lang-en-inline">24/7 AI WhatsApp booking</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Recordatorios que eliminan no-shows</span>
+                        <span class="lang-en-inline">No-show eliminating reminders</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Reservas a medianoche? Sin problema</span>
+                        <span class="lang-en-inline">Midnight bookings? No problem</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Bilingüe: español + inglés perfecto</span>
+                        <span class="lang-en-inline">Bilingual: perfect Spanish + English</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Fidelidad automatizada con premios</span>
+                        <span class="lang-en-inline">Automated loyalty with rewards</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Marketing inteligente de turistas</span>
+                        <span class="lang-en-inline">Smart tourist marketing</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI -->
+    <section class="roi" id="roi">
+        <div class="section-header">
+            <p class="section-tag">
+                <span class="lang-es-inline">Retorno de Inversión</span>
+                <span class="lang-en-inline">Return on Investment</span>
+            </p>
+            <h2 class="section-title">
+                <span class="lang-es-inline">LOS NÚMEROS<br>NO MIENTEN</span>
+                <span class="lang-en-inline">THE NUMBERS<br>DON'T LIE</span>
+            </h2>
+        </div>
+        <div class="roi-grid">
+            <div class="roi-item">
+                <div class="roi-value">+40%</div>
+                <p class="roi-label">
+                    <span class="lang-es-inline">Aumento en reservas mensuales con booking 24/7</span>
+                    <span class="lang-en-inline">Increase in monthly bookings with 24/7 booking</span>
+                </p>
+            </div>
+            <div class="roi-item">
+                <div class="roi-value">-80%</div>
+                <p class="roi-label">
+                    <span class="lang-es-inline">Reducción de no-shows con recordatorios</span>
+                    <span class="lang-en-inline">No-show reduction with reminders</span>
+                </p>
+            </div>
+            <div class="roi-item">
+                <div class="roi-value">+35%</div>
+                <p class="roi-label">
+                    <span class="lang-es-inline">Más clientes recurrentes con fidelización</span>
+                    <span class="lang-en-inline">More recurring clients with loyalty program</span>
+                </p>
+            </div>
+            <div class="roi-item">
+                <div class="roi-value">$8M+</div>
+                <p class="roi-label">
+                    <span class="lang-es-inline">COP adicionales por mes proyectados</span>
+                    <span class="lang-en-inline">Additional COP projected monthly</span>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="pricing" id="inversion">
+        <div class="section-header">
+            <p class="section-tag">
+                <span class="lang-es-inline">Inversión</span>
+                <span class="lang-en-inline">Investment</span>
+            </p>
+            <h2 class="section-title">
+                <span class="lang-es-inline">ELIGE TU<br>NIVEL DE DOMINIO</span>
+                <span class="lang-en-inline">CHOOSE YOUR<br>DOMINANCE LEVEL</span>
+            </h2>
+        </div>
+        <div class="pricing-cards">
+            <div class="pricing-card">
+                <p class="pricing-name">STARTER</p>
+                <p class="pricing-price">$350K <span>COP/mes</span></p>
+                <p class="pricing-desc">
+                    <span class="lang-es-inline">Para empezar a automatizar</span>
+                    <span class="lang-en-inline">To start automating</span>
+                </p>
+                <ul class="pricing-features">
+                    <li>
+                        <span class="lang-es-inline">WhatsApp Booking IA básico</span>
+                        <span class="lang-en-inline">Basic AI WhatsApp Booking</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Recordatorios automáticos</span>
+                        <span class="lang-en-inline">Automatic reminders</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Confirmaciones de cita</span>
+                        <span class="lang-en-inline">Appointment confirmations</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Soporte por WhatsApp</span>
+                        <span class="lang-en-inline">WhatsApp support</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="pricing-card featured">
+                <p class="pricing-name">DOMINATION</p>
+                <p class="pricing-price">$650K <span>COP/mes</span></p>
+                <p class="pricing-desc">
+                    <span class="lang-es-inline">Todo lo que necesitas para ser #1</span>
+                    <span class="lang-en-inline">Everything you need to be #1</span>
+                </p>
+                <ul class="pricing-features">
+                    <li>
+                        <span class="lang-es-inline">Todo de Starter</span>
+                        <span class="lang-en-inline">Everything in Starter</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Recompra automatizada (21 días)</span>
+                        <span class="lang-en-inline">Automated rebooking (21 days)</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Programa de fidelidad completo</span>
+                        <span class="lang-en-inline">Full loyalty program</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Dashboard de métricas</span>
+                        <span class="lang-en-inline">Metrics dashboard</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Bilingüe español + inglés</span>
+                        <span class="lang-en-inline">Bilingual Spanish + English</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Campañas para turistas</span>
+                        <span class="lang-en-inline">Tourist campaigns</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Soporte prioritario</span>
+                        <span class="lang-en-inline">Priority support</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="pricing-card">
+                <p class="pricing-name">EMPIRE</p>
+                <p class="pricing-price">$1.2M <span>COP/mes</span></p>
+                <p class="pricing-desc">
+                    <span class="lang-es-inline">Para escalar a múltiples sedes</span>
+                    <span class="lang-en-inline">To scale to multiple locations</span>
+                </p>
+                <ul class="pricing-features">
+                    <li>
+                        <span class="lang-es-inline">Todo de Domination</span>
+                        <span class="lang-en-inline">Everything in Domination</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Multi-sede (hasta 3 locales)</span>
+                        <span class="lang-en-inline">Multi-location (up to 3)</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">IA personalizada con tu marca</span>
+                        <span class="lang-en-inline">Custom branded AI</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Integración con POS</span>
+                        <span class="lang-en-inline">POS integration</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Account manager dedicado</span>
+                        <span class="lang-en-inline">Dedicated account manager</span>
+                    </li>
+                    <li>
+                        <span class="lang-es-inline">Estrategia de expansión</span>
+                        <span class="lang-en-inline">Expansion strategy</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section class="timeline">
+        <div class="section-header">
+            <p class="section-tag">
+                <span class="lang-es-inline">Implementación</span>
+                <span class="lang-en-inline">Implementation</span>
+            </p>
+            <h2 class="section-title">
+                <span class="lang-es-inline">EN 4 SEMANAS<br>ESTÁS OPERANDO</span>
+                <span class="lang-en-inline">IN 4 WEEKS<br>YOU'RE LIVE</span>
+            </h2>
+        </div>
+        <div class="timeline-container">
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <p class="timeline-week">
+                        <span class="lang-es-inline">SEMANA 1</span>
+                        <span class="lang-en-inline">WEEK 1</span>
+                    </p>
+                    <h4 class="timeline-title">
+                        <span class="lang-es-inline">Setup & Configuración</span>
+                        <span class="lang-en-inline">Setup & Configuration</span>
+                    </h4>
+                    <p class="timeline-desc">
+                        <span class="lang-es">Levantamiento de servicios, precios, horarios. Configuración de WhatsApp Business. Entrenamiento inicial de IA.</span>
+                        <span class="lang-en">Service, pricing, and schedule mapping. WhatsApp Business setup. Initial AI training.</span>
+                    </p>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <p class="timeline-week">
+                        <span class="lang-es-inline">SEMANA 2</span>
+                        <span class="lang-en-inline">WEEK 2</span>
+                    </p>
+                    <h4 class="timeline-title">
+                        <span class="lang-es-inline">Personalización</span>
+                        <span class="lang-en-inline">Customization</span>
+                    </h4>
+                    <p class="timeline-desc">
+                        <span class="lang-es">Ajustes de tono y personalidad. Integración de programa de fidelidad. Setup de dashboard.</span>
+                        <span class="lang-en">Tone and personality adjustments. Loyalty program integration. Dashboard setup.</span>
+                    </p>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <p class="timeline-week">
+                        <span class="lang-es-inline">SEMANA 3</span>
+                        <span class="lang-en-inline">WEEK 3</span>
+                    </p>
+                    <h4 class="timeline-title">
+                        <span class="lang-es-inline">Pruebas en Vivo</span>
+                        <span class="lang-en-inline">Live Testing</span>
+                    </h4>
+                    <p class="timeline-desc">
+                        <span class="lang-es">Soft launch con clientes seleccionados. Ajustes basados en feedback real. Optimización de flujos.</span>
+                        <span class="lang-en">Soft launch with selected clients. Real feedback adjustments. Flow optimization.</span>
+                    </p>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <p class="timeline-week">
+                        <span class="lang-es-inline">SEMANA 4</span>
+                        <span class="lang-en-inline">WEEK 4</span>
+                    </p>
+                    <h4 class="timeline-title">
+                        <span class="lang-es-inline">Lanzamiento Total</span>
+                        <span class="lang-en-inline">Full Launch</span>
+                    </h4>
+                    <p class="timeline-desc">
+                        <span class="lang-es">Go-live completo. Activación de campañas de marketing. Inicio de tracking de métricas.</span>
+                        <span class="lang-en">Full go-live. Marketing campaign activation. Metrics tracking begins.</span>
+                    </p>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <h2>
+            <span class="lang-es-inline">¿LISTO PARA<br>DOMINAR<br>CARTAGENA?</span>
+            <span class="lang-en-inline">READY TO<br>DOMINATE<br>CARTAGENA?</span>
+        </h2>
+        <p>
+            <span class="lang-es">Esta propuesta es exclusiva para Jermaine Barber's. Primer barbería en Colombia con sistema de booking por IA. La ventaja de ser primero dura para siempre.</span>
+            <span class="lang-en">This proposal is exclusive to Jermaine Barber's. First barbershop in Colombia with AI booking system. The advantage of being first lasts forever.</span>
+        </p>
+        <div class="cta-buttons">
+            <a href="https://wa.me/573006158263?text=Hola%2C%20quiero%20activar%20Jermaine%20AI%20para%20mi%20barber%C3%ADa" class="btn btn-whatsapp">
+                💬 <span class="lang-es-inline">WhatsApp Directo</span><span class="lang-en-inline">Direct WhatsApp</span>
+            </a>
+            <a href="tel:+573181326952" class="btn btn-secondary">
+                📞 <span class="lang-es-inline">Llamar Ahora</span><span class="lang-en-inline">Call Now</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-logo">JERMAINE × MACHINEMIND</div>
+        <p class="footer-text">
+            <span class="lang-es-inline">Propuesta Confidencial • Enero 2026 • Cartagena, Colombia</span>
+            <span class="lang-en-inline">Confidential Proposal • January 2026 • Cartagena, Colombia</span>
+        </p>
+    </footer>
+
+    <script>
+        function toggleLang() {
+            const body = document.body;
+            if (body.classList.contains('es')) {
+                body.classList.remove('es');
+                body.classList.add('en');
+            } else {
+                body.classList.remove('en');
+                body.classList.add('es');
+            }
+        }
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.problem-card, .feature-card, .pricing-card, .roi-item, .timeline-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
