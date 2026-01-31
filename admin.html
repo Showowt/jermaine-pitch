@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jermaine Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>tailwind.config={theme:{extend:{colors:{gold:'#D4AF37',dark:'#09090b',card:'#18181b',border:'#27272a'}}}}</script>
+    <style>
+        .sidebar-item.active{background:linear-gradient(90deg,rgba(212,175,55,0.15) 0%,transparent 100%);border-left:3px solid #D4AF37;color:#D4AF37}
+        .badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:500}
+        .badge-confirmed{background:rgba(34,197,94,0.15);color:#22c55e}
+        .badge-pending{background:rgba(234,179,8,0.15);color:#eab308}
+        .badge-completed{background:rgba(59,130,246,0.15);color:#3b82f6}
+    </style>
+</head>
+<body class="bg-dark text-white font-sans">
+    <!-- LOGIN -->
+    <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-md">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-gold rounded-2xl flex items-center justify-center mx-auto mb-4 text-dark text-4xl font-bold">JB</div>
+                <h1 class="text-4xl text-gold tracking-wider font-bold">JERMAINE ADMIN</h1>
+                <p class="text-zinc-500 text-sm mt-2">Panel de Administración</p>
+            </div>
+            <div class="bg-card border border-border rounded-2xl p-8">
+                <form onsubmit="handleLogin(event)">
+                    <div class="mb-5"><label class="block text-sm text-zinc-400 mb-2">Usuario</label><input type="text" id="loginUser" value="jermaine" class="w-full bg-dark border border-border rounded-xl px-4 py-3.5 focus:outline-none focus:border-gold text-white"></div>
+                    <div class="mb-6"><label class="block text-sm text-zinc-400 mb-2">Contraseña</label><input type="password" id="loginPass" value="barber2026" class="w-full bg-dark border border-border rounded-xl px-4 py-3.5 focus:outline-none focus:border-gold text-white"></div>
+                    <button type="submit" class="w-full bg-gold text-dark font-semibold py-4 rounded-xl hover:opacity-90 transition text-lg">Ingresar</button>
+                </form>
+                <p class="text-center text-zinc-600 text-xs mt-6">Demo: jermaine / barber2026</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="dashboard" class="hidden">
+        <header class="fixed top-0 left-0 right-0 h-16 bg-dark/95 backdrop-blur border-b border-border z-50 flex items-center justify-between px-6">
+            <div class="flex items-center gap-4">
+                <button onclick="toggleSidebar()" class="lg:hidden p-2">☰</button>
+                <div class="w-9 h-9 bg-gold rounded-lg flex items-center justify-center text-dark font-bold">JB</div>
+                <span class="text-xl font-bold hidden sm:block">JERMAINE ADMIN</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="w-9 h-9 bg-gold rounded-full flex items-center justify-center text-dark font-bold">J</div>
+                <button onclick="handleLogout()" class="text-zinc-400 hover:text-red-500">🚪</button>
+            </div>
+        </header>
+
+        <aside id="sidebar" class="fixed left-0 top-16 bottom-0 w-64 bg-card border-r border-border transform -translate-x-full lg:translate-x-0 transition-transform z-40 overflow-y-auto p-3">
+            <div class="text-xs text-zinc-500 uppercase px-3 py-2">Principal</div>
+            <button onclick="showSection('overview')" data-section="overview" class="sidebar-item active w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">📊 Dashboard</button>
+            <button onclick="showSection('bookings')" data-section="bookings" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">📅 Reservas</button>
+            <button onclick="showSection('clients')" data-section="clients" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">👥 Clientes</button>
+            <div class="text-xs text-zinc-500 uppercase px-3 py-2 mt-4">Finanzas</div>
+            <button onclick="showSection('finances')" data-section="finances" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">📈 P&L</button>
+            <button onclick="showSection('expenses')" data-section="expenses" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">🧾 Gastos</button>
+            <button onclick="showSection('cashflow')" data-section="cashflow" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">💰 Flujo Caja</button>
+            <div class="text-xs text-zinc-500 uppercase px-3 py-2 mt-4">Operaciones</div>
+            <button onclick="showSection('staff')" data-section="staff" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">✂️ Empleados</button>
+            <button onclick="showSection('inventory')" data-section="inventory" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">📦 Inventario</button>
+            <button onclick="showSection('availability')" data-section="availability" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">🕐 Disponibilidad</button>
+            <div class="text-xs text-zinc-500 uppercase px-3 py-2 mt-4">Sistema</div>
+            <button onclick="showSection('gallery')" data-section="gallery" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">🖼️ Galería</button>
+            <button onclick="showSection('chatbot')" data-section="chatbot" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">🤖 Sofia AI</button>
+            <button onclick="showSection('settings')" data-section="settings" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">⚙️ Config</button>
+            <div class="mt-6 p-4 bg-gold/10 rounded-xl border border-gold/20"><p class="text-xs text-zinc-400 mb-1">Ingresos Hoy</p><p class="text-2xl font-bold text-gold">$485,000</p><p class="text-xs text-green-500">↑ 12%</p></div>
+        </aside>
+
+        <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-30 lg:hidden hidden"></div>
+
+        <main class="lg:ml-64 pt-16 min-h-screen p-4 lg:p-6">
+            <!-- OVERVIEW -->
+            <section id="section-overview">
+                <div class="mb-6"><h1 class="text-2xl font-bold">Buenos días, Jermaine 👋</h1><p class="text-zinc-500">Jueves, 30 de Enero 2026</p></div>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-card border border-border rounded-xl p-5"><div class="w-10 h-10 bg-green-500/15 rounded-lg flex items-center justify-center text-green-500 mb-3">💵</div><p class="text-zinc-400 text-xs">Ingresos Hoy</p><p class="text-xl font-bold">$485,000</p></div>
+                    <div class="bg-card border border-border rounded-xl p-5"><div class="w-10 h-10 bg-blue-500/15 rounded-lg flex items-center justify-center text-blue-500 mb-3">📅</div><p class="text-zinc-400 text-xs">Citas Hoy</p><p class="text-xl font-bold">14 / 18</p></div>
+                    <div class="bg-card border border-border rounded-xl p-5"><div class="w-10 h-10 bg-purple-500/15 rounded-lg flex items-center justify-center text-purple-500 mb-3">👥</div><p class="text-zinc-400 text-xs">Clientes Nuevos</p><p class="text-xl font-bold">47</p></div>
+                    <div class="bg-card border border-border rounded-xl p-5"><div class="w-10 h-10 bg-gold/15 rounded-lg flex items-center justify-center text-gold mb-3">⭐</div><p class="text-zinc-400 text-xs">Rating</p><p class="text-xl font-bold">5.0 / 591</p></div>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-card border border-border rounded-xl p-5"><h3 class="font-semibold mb-4">Ingresos vs Gastos</h3><canvas id="revenueChart" height="180"></canvas></div>
+                    <div class="bg-card border border-border rounded-xl p-5"><h3 class="font-semibold mb-4">Servicios Populares</h3><canvas id="servicesChart" height="180"></canvas></div>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 bg-card border border-border rounded-xl p-5">
+                        <h3 class="font-semibold mb-4">Citas de Hoy</h3>
+                        <table class="w-full text-sm"><thead><tr class="text-zinc-500 text-xs border-b border-border"><th class="text-left pb-3">Hora</th><th class="text-left pb-3">Cliente</th><th class="text-left pb-3">Servicio</th><th class="text-left pb-3">Estado</th><th class="text-right pb-3">Monto</th></tr></thead><tbody id="todayAppointments"></tbody></table>
+                    </div>
+                    <div class="space-y-4">
+                        <h3 class="font-semibold">Acciones</h3>
+                        <button onclick="openModal('bookingModal')" class="w-full bg-gold/10 border border-gold/30 rounded-xl p-4 text-left hover:bg-gold/20">➕ Nueva Reserva</button>
+                        <button onclick="openModal('expenseModal')" class="w-full bg-card border border-border rounded-xl p-4 text-left hover:border-red-500/50">🧾 Registrar Gasto</button>
+                        <button onclick="openModal('incomeModal')" class="w-full bg-card border border-border rounded-xl p-4 text-left hover:border-green-500/50">💰 Registrar Venta</button>
+                        <button onclick="showSection('gallery')" class="w-full bg-card border border-border rounded-xl p-4 text-left hover:border-purple-500/50">📸 Subir Fotos</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BOOKINGS -->
+            <section id="section-bookings" class="hidden">
+                <div class="flex justify-between items-center mb-6"><div><h1 class="text-2xl font-bold">Reservas</h1></div><button onclick="openModal('bookingModal')" class="px-5 py-2.5 bg-gold text-dark font-semibold rounded-lg">➕ Nueva</button></div>
+                <div class="bg-card border border-border rounded-xl overflow-hidden"><table class="w-full text-sm"><thead class="bg-dark/50"><tr class="text-zinc-400 text-xs"><th class="text-left p-4">ID</th><th class="text-left p-4">Fecha</th><th class="text-left p-4">Cliente</th><th class="text-left p-4">Servicio</th><th class="text-left p-4">Estado</th><th class="text-right p-4">Monto</th></tr></thead><tbody id="bookingsTableBody"></tbody></table></div>
+            </section>
+
+            <!-- CLIENTS -->
+            <section id="section-clients" class="hidden">
+                <div class="flex justify-between items-center mb-6"><h1 class="text-2xl font-bold">Clientes CRM</h1><button onclick="openModal('clientModal')" class="px-5 py-2.5 bg-gold text-dark font-semibold rounded-lg">➕ Nuevo</button></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="clientsGrid"></div>
+            </section>
+
+            <!-- FINANCES -->
+            <section id="section-finances" class="hidden">
+                <h1 class="text-2xl font-bold mb-6">Centro Financiero (P&L)</h1>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-green-500/10 border border-green-500/30 rounded-xl p-5"><p class="text-green-400 text-xs">Ingresos</p><p class="text-2xl font-bold text-green-400">$12.4M</p></div>
+                    <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-5"><p class="text-red-400 text-xs">Gastos</p><p class="text-2xl font-bold text-red-400">$4.2M</p></div>
+                    <div class="bg-gold/10 border border-gold/30 rounded-xl p-5"><p class="text-gold text-xs">Utilidad</p><p class="text-2xl font-bold text-gold">$8.2M</p></div>
+                    <div class="bg-card border border-border rounded-xl p-5"><p class="text-zinc-400 text-xs">Caja</p><p class="text-2xl font-bold">$15.8M</p></div>
+                </div>
+                <div class="bg-card border border-border rounded-xl p-6">
+                    <h3 class="font-semibold mb-4">Estado de Resultados - Enero</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between py-2 border-b border-border"><span>Servicios</span><span class="text-green-400">$10,850,000</span></div>
+                        <div class="flex justify-between py-2 border-b border-border"><span>Productos</span><span class="text-green-400">$1,550,000</span></div>
+                        <div class="flex justify-between py-2 border-b border-border font-bold"><span>TOTAL INGRESOS</span><span class="text-green-400">$12,400,000</span></div>
+                        <div class="flex justify-between py-2"><span class="text-zinc-500">(-) Nómina</span><span class="text-red-400">-$2,500,000</span></div>
+                        <div class="flex justify-between py-2"><span class="text-zinc-500">(-) Arriendo</span><span class="text-red-400">-$800,000</span></div>
+                        <div class="flex justify-between py-2"><span class="text-zinc-500">(-) Insumos</span><span class="text-red-400">-$450,000</span></div>
+                        <div class="flex justify-between py-2"><span class="text-zinc-500">(-) Servicios</span><span class="text-red-400">-$280,000</span></div>
+                        <div class="flex justify-between py-2 border-b border-border"><span class="text-zinc-500">(-) Otros</span><span class="text-red-400">-$170,000</span></div>
+                        <div class="flex justify-between py-3 font-bold text-lg bg-gold/10 -mx-6 px-6 rounded-lg"><span>UTILIDAD NETA</span><span class="text-gold">$8,200,000</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- EXPENSES -->
+            <section id="section-expenses" class="hidden">
+                <div class="flex justify-between items-center mb-6"><h1 class="text-2xl font-bold">Gastos</h1><button onclick="openModal('expenseModal')" class="px-5 py-2.5 bg-red-500 text-white font-semibold rounded-lg">➕ Nuevo</button></div>
+                <div class="bg-card border border-border rounded-xl overflow-hidden"><table class="w-full text-sm"><thead class="bg-dark/50"><tr class="text-zinc-400 text-xs"><th class="text-left p-4">Fecha</th><th class="text-left p-4">Descripción</th><th class="text-left p-4">Categoría</th><th class="text-right p-4">Monto</th></tr></thead><tbody id="expensesTableBody"></tbody></table></div>
+            </section>
+
+            <!-- CASHFLOW -->
+            <section id="section-cashflow" class="hidden">
+                <h1 class="text-2xl font-bold mb-6">Flujo de Caja</h1>
+                <div class="grid grid-cols-3 gap-6 mb-6">
+                    <div class="bg-green-500/10 border border-green-500/30 rounded-xl p-6"><p class="text-zinc-400 text-sm">Entradas</p><p class="text-3xl font-bold text-green-400">$12.4M</p></div>
+                    <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-6"><p class="text-zinc-400 text-sm">Salidas</p><p class="text-3xl font-bold text-red-400">$4.2M</p></div>
+                    <div class="bg-gold/10 border border-gold/30 rounded-xl p-6"><p class="text-zinc-400 text-sm">Flujo Neto</p><p class="text-3xl font-bold text-gold">+$8.2M</p></div>
+                </div>
+                <div class="bg-card border border-border rounded-xl p-6"><canvas id="cashflowChart" height="200"></canvas></div>
+            </section>
+
+            <!-- STAFF -->
+            <section id="section-staff" class="hidden">
+                <h1 class="text-2xl font-bold mb-6">Empleados</h1>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="staffGrid"></div>
+            </section>
+
+            <!-- INVENTORY -->
+            <section id="section-inventory" class="hidden">
+                <h1 class="text-2xl font-bold mb-6">Inventario</h1>
+                <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mb-6">⚠️ 3 productos con bajo stock</div>
+                <div class="bg-card border border-border rounded-xl overflow-hidden"><table class="w-full text-sm"><thead class="bg-dark/50"><tr class="text-zinc-400 text-xs"><th class="text-left p-4">Producto</th><th class="text-left p-4">Categoría</th><th class="text-center p-4">Stock</th><th class="text-right p-4">Precio</th><th class="text-center p-4">Estado</th></tr></thead><tbody id="inventoryTableBody"></tbody></table></div>
+            </section>
+
+            <!-- AVAILABILITY -->
+            <section id="section-availability" class="hidden">
+                <h1 class="text-2xl font-bold mb-6">Disponibilidad</h1>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="barberStatus"></div>
+            </section>
+
+            <!-- GALLERY -->
+            <section id="section-gallery" class="hidden">
+                <div class="flex justify-between items-center mb-6"><h1 class="text-2xl font-bold">Galería</h1><div class="flex gap-3"><button onclick="connectGoogleDrive()" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">📁 Google Drive</button><button onclick="uploadPhotos()" class="px-4 py-2 bg-gold text-dark rounded-lg text-sm font-semibold">📸 Subir</button></div></div>
+                <div class="border-2 border-dashed border-border rounded-xl p-12 text-center mb-6 hover:border-gold cursor-pointer" onclick="uploadPhotos()">📤 Arrastra fotos o haz clic</div>
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4" id="galleryGrid"></div>
+            </section>
+
+            <!-- CHATBOT -->
+            <section id="section-chatbot" class="hidden">
+                <h1 class="text-2xl font-bold mb-6">Sofia AI</h1>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-card border border-border rounded-xl p-5"><p class="text-zinc-400 text-xs">Conversaciones</p><p class="text-2xl font-bold">847</p></div>
+                    <div class="bg-card border border-border rounded-xl p-5"><p class="text-zinc-400 text-xs">Reservas vía Chat</p><p class="text-2xl font-bold text-green-400">234</p></div>
+                    <div class="bg-card border border-border rounded-xl p-5"><p class="text-zinc-400 text-xs">Resolución</p><p class="text-2xl font-bold text-gold">94%</p></div>
+                    <div class="bg-card border border-border rounded-xl p-5"><p class="text-zinc-400 text-xs">Escaladas</p><p class="text-2xl font-bold">51</p></div>
+                </div>
+                <div class="bg-card border border-border rounded-xl p-6 mb-6">
+                    <div class="flex justify-between mb-4"><h3 class="font-semibold">Base de Conocimiento</h3><button onclick="addKnowledge()" class="text-gold text-sm">+ Agregar</button></div>
+                    <div class="space-y-3" id="knowledgeBase"></div>
+                </div>
+            </section>
+
+            <!-- SETTINGS -->
+            <section id="section-settings" class="hidden">
+                <h1 class="text-2xl font-bold mb-6">Configuración</h1>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-card border border-border rounded-xl p-6">
+                        <h3 class="font-semibold mb-4">Negocio</h3>
+                        <div class="space-y-4">
+                            <div><label class="block text-sm text-zinc-400 mb-2">Nombre</label><input type="text" value="Jermaine Barber's" class="w-full bg-dark border border-border rounded-lg px-4 py-3"></div>
+                            <div><label class="block text-sm text-zinc-400 mb-2">WhatsApp</label><input type="text" value="+57 318 132 6952" class="w-full bg-dark border border-border rounded-lg px-4 py-3"></div>
+                        </div>
+                    </div>
+                    <div class="bg-card border border-border rounded-xl p-6">
+                        <h3 class="font-semibold mb-4">Logo</h3>
+                        <div class="flex items-center gap-6"><div class="w-20 h-20 bg-gold rounded-2xl flex items-center justify-center text-dark text-4xl font-bold">JB</div><button class="px-4 py-2 bg-gold text-dark rounded-lg text-sm">Subir Logo</button></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODALS -->
+    <div id="bookingModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+        <div class="bg-card border border-border rounded-2xl max-w-lg w-full p-6">
+            <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-semibold">Nueva Reserva</h3><button onclick="closeModal('bookingModal')" class="text-zinc-400">✕</button></div>
+            <form onsubmit="createBooking(event)" class="space-y-4">
+                <input type="text" required placeholder="Cliente" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
+                <input type="tel" required placeholder="Teléfono" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
+                <select required class="w-full bg-dark border border-border rounded-lg px-4 py-3"><option value="">Servicio...</option><option>Corte - $25,000</option><option>Fade - $30,000</option><option>Barba - $15,000</option><option>Combo - $35,000</option></select>
+                <div class="grid grid-cols-2 gap-4"><input type="date" required class="w-full bg-dark border border-border rounded-lg px-4 py-3"><input type="time" required class="w-full bg-dark border border-border rounded-lg px-4 py-3"></div>
+                <div class="flex gap-3"><button type="button" onclick="closeModal('bookingModal')" class="flex-1 py-3 border border-border rounded-lg">Cancelar</button><button type="submit" class="flex-1 py-3 bg-gold text-dark font-semibold rounded-lg">Crear</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="expenseModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+        <div class="bg-card border border-border rounded-2xl max-w-lg w-full p-6">
+            <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-semibold">Registrar Gasto</h3><button onclick="closeModal('expenseModal')" class="text-zinc-400">✕</button></div>
+            <form onsubmit="createExpense(event)" class="space-y-4">
+                <input type="text" required placeholder="Descripción" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
+                <select required class="w-full bg-dark border border-border rounded-lg px-4 py-3"><option value="">Categoría...</option><option>Nómina</option><option>Arriendo</option><option>Insumos</option><option>Servicios</option></select>
+                <input type="number" required placeholder="Monto" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
+                <input type="date" required class="w-full bg-dark border border-border rounded-lg px-4 py-3">
+                <div class="flex gap-3"><button type="button" onclick="closeModal('expenseModal')" class="flex-1 py-3 border border-border rounded-lg">Cancelar</button><button type="submit" class="flex-1 py-3 bg-red-500 text-white font-semibold rounded-lg">Registrar</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="incomeModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+        <div class="bg-card border border-border rounded-2xl max-w-lg w-full p-6">
+            <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-semibold">Registrar Ingreso</h3><button onclick="closeModal('incomeModal')" class="text-zinc-400">✕</button></div>
+            <form onsubmit="createIncome(event)" class="space-y-4">
+                <input type="text" required placeholder="Descripción" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
+                <input type="number" required placeholder="Monto" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
+                <div class="flex gap-3"><button type="button" onclick="closeModal('incomeModal')" class="flex-1 py-3 border border-border rounded-lg">Cancelar</button><button type="submit" class="flex-1 py-3 bg-green-500 text-white font-semibold rounded-lg">Registrar</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="clientModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+        <div class="bg-card border border-border rounded-2xl max-w-lg w-full p-6">
+            <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-semibold">Nuevo Cliente</h3><button onclick="closeModal('clientModal')" class="text-zinc-400">✕</button></div>
+            <form onsubmit="createClient(event)" class="space-y-4">
+                <input type="text" required placeholder="Nombre" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
+                <input type="tel" required placeholder="Teléfono" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
+                <input type="email" placeholder="Email" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
+                <div class="flex gap-3"><button type="button" onclick="closeModal('clientModal')" class="flex-1 py-3 border border-border rounded-lg">Cancelar</button><button type="submit" class="flex-1 py-3 bg-gold text-dark font-semibold rounded-lg">Guardar</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="hidden fixed bottom-6 right-6 bg-green-500 text-white px-6 py-4 rounded-xl z-50">✓ <span id="toastMessage">OK</span></div>
+
+    <script>
+        const DB={bookings:[{id:1,date:'01-30',time:'09:00',client:'Juan Pérez',service:'Fade',barber:'Carlos',status:'completed',amount:30000},{id:2,date:'01-30',time:'09:45',client:'Miguel Torres',service:'Combo',barber:'Miguel',status:'completed',amount:35000},{id:3,date:'01-30',time:'10:30',client:'Carlos Ruiz',service:'Corte',barber:'Andrés',status:'confirmed',amount:25000},{id:4,date:'01-30',time:'11:00',client:'David Smith',service:'Fade',barber:'Carlos',status:'confirmed',amount:30000},{id:5,date:'01-30',time:'11:30',client:'Pedro Gómez',service:'Barba',barber:'Andrés',status:'pending',amount:15000}],clients:[{id:1,name:'Juan Pérez',phone:'+57 300 123',visits:12,spent:420000,loyalty:2},{id:2,name:'Miguel Torres',phone:'+57 301 234',visits:8,spent:280000,loyalty:1},{id:3,name:'Carlos Ruiz',phone:'+57 302 345',visits:15,spent:525000,loyalty:3},{id:4,name:'Pedro Gómez',phone:'+57 303 456',visits:20,spent:700000,loyalty:4}],expenses:[{id:1,date:'01-30',description:'Productos',category:'Insumos',amount:450000},{id:2,date:'01-28',description:'Nómina',category:'Nómina',amount:1250000},{id:3,date:'01-25',description:'Luz',category:'Servicios',amount:180000},{id:4,date:'01-15',description:'Arriendo',category:'Arriendo',amount:800000}],staff:[{id:1,name:'Carlos',role:'Senior',status:'available',bookings:5,revenue:175000},{id:2,name:'Miguel',role:'Barbero',status:'busy',bookings:4,revenue:140000},{id:3,name:'Andrés',role:'Barbero',status:'available',bookings:5,revenue:170000}],inventory:[{id:1,name:'Pomada Mate',category:'Styling',stock:3,price:45000,min:5},{id:2,name:'Aceite Barba',category:'Barba',stock:2,price:55000,min:5},{id:3,name:'Shampoo',category:'Cabello',stock:8,price:65000,min:5},{id:4,name:'Cuchillas',category:'Insumos',stock:1,price:85000,min:3}],knowledge:[{id:1,trigger:'promociones',response:'🎉 20% OFF en Combo esta semana!'},{id:2,trigger:'estacionamiento',response:'🅿️ Parqueadero en Calle 5'},{id:3,trigger:'pago',response:'💳 Efectivo, Nequi, tarjetas'}]};
+        function handleLogin(e){e.preventDefault();const u=document.getElementById('loginUser').value,p=document.getElementById('loginPass').value;if((u==='jermaine'&&p==='barber2026')||(u==='admin'&&p==='admin')){document.getElementById('loginScreen').classList.add('hidden');document.getElementById('dashboard').classList.remove('hidden');localStorage.setItem('jermaine_auth','true');initDashboard();}else alert('Credenciales incorrectas');}
+        function handleLogout(){localStorage.removeItem('jermaine_auth');document.getElementById('dashboard').classList.add('hidden');document.getElementById('loginScreen').classList.remove('hidden');}
+        if(localStorage.getItem('jermaine_auth')==='true'){document.getElementById('loginScreen').classList.add('hidden');document.getElementById('dashboard').classList.remove('hidden');setTimeout(initDashboard,100);}
+        function toggleSidebar(){document.getElementById('sidebar').classList.toggle('-translate-x-full');document.getElementById('sidebarOverlay').classList.toggle('hidden');}
+        function showSection(s){document.querySelectorAll('main>section').forEach(x=>x.classList.add('hidden'));document.getElementById('section-'+s)?.classList.remove('hidden');document.querySelectorAll('.sidebar-item').forEach(x=>{x.classList.remove('active');if(x.dataset.section===s)x.classList.add('active');});if(window.innerWidth<1024)toggleSidebar();initSection(s);}
+        function initSection(s){switch(s){case'bookings':renderBookings();break;case'clients':renderClients();break;case'expenses':renderExpenses();break;case'staff':renderStaff();break;case'inventory':renderInventory();break;case'availability':renderAvailability();break;case'gallery':renderGallery();break;case'chatbot':renderKnowledge();break;case'cashflow':initCashflow();break;}}
+        function openModal(id){document.getElementById(id).classList.remove('hidden');}
+        function closeModal(id){document.getElementById(id).classList.add('hidden');}
+        function showToast(m){const t=document.getElementById('toast');document.getElementById('toastMessage').textContent=m;t.classList.remove('hidden');setTimeout(()=>t.classList.add('hidden'),3000);}
+        function initDashboard(){renderToday();initCharts();}
+        function renderToday(){document.getElementById('todayAppointments').innerHTML=DB.bookings.slice(0,5).map(b=>'<tr class="border-b border-border/50"><td class="py-3">'+b.time+'</td><td class="py-3">'+b.client+'</td><td class="py-3">'+b.service+'</td><td class="py-3"><span class="badge badge-'+b.status+'">'+(b.status==='confirmed'?'Confirmada':b.status==='completed'?'Completada':'Pendiente')+'</span></td><td class="py-3 text-right font-medium">$'+b.amount.toLocaleString()+'</td></tr>').join('');}
+        function initCharts(){const r=document.getElementById('revenueChart');if(r)new Chart(r,{type:'bar',data:{labels:['L','M','X','J','V','S','D'],datasets:[{label:'Ingresos',data:[420,380,450,485,520,680,0],backgroundColor:'rgba(212,175,55,0.8)',borderRadius:6},{label:'Gastos',data:[150,80,120,200,100,150,0],backgroundColor:'rgba(239,68,68,0.6)',borderRadius:6}]},options:{responsive:true,plugins:{legend:{labels:{color:'#a1a1aa'}}},scales:{y:{grid:{color:'#27272a'},ticks:{color:'#a1a1aa'}},x:{grid:{display:false},ticks:{color:'#a1a1aa'}}}}});const s=document.getElementById('servicesChart');if(s)new Chart(s,{type:'doughnut',data:{labels:['Fade','Combo','Corte','Barba','Afeitado'],datasets:[{data:[35,25,20,12,8],backgroundColor:['#D4AF37','#3b82f6','#22c55e','#a855f7','#f97316'],borderWidth:0}]},options:{responsive:true,plugins:{legend:{position:'right',labels:{color:'#a1a1aa'}}}}});}
+        function initCashflow(){const c=document.getElementById('cashflowChart');if(c&&!c.chart){c.chart=new Chart(c,{type:'line',data:{labels:Array.from({length:30},(_,i)=>i+1),datasets:[{label:'Flujo',data:Array.from({length:30},(_,d)=>8000+d*270),borderColor:'#D4AF37',backgroundColor:'rgba(212,175,55,0.1)',fill:true,tension:0.3}]},options:{responsive:true,plugins:{legend:{labels:{color:'#a1a1aa'}}},scales:{y:{grid:{color:'#27272a'},ticks:{color:'#a1a1aa'}},x:{grid:{display:false},ticks:{color:'#a1a1aa'}}}}});}}
+        function renderBookings(){document.getElementById('bookingsTableBody').innerHTML=DB.bookings.map(b=>'<tr class="border-b border-border/50"><td class="p-4">#'+b.id+'</td><td class="p-4">'+b.date+' '+b.time+'</td><td class="p-4">'+b.client+'</td><td class="p-4">'+b.service+'</td><td class="p-4"><span class="badge badge-'+b.status+'">'+(b.status==='confirmed'?'Confirmada':b.status==='completed'?'Completada':'Pendiente')+'</span></td><td class="p-4 text-right">$'+b.amount.toLocaleString()+'</td></tr>').join('');}
+        function renderClients(){document.getElementById('clientsGrid').innerHTML=DB.clients.map(c=>'<div class="bg-card border border-border rounded-xl p-5"><div class="flex items-start gap-4"><div class="w-12 h-12 bg-gold rounded-full flex items-center justify-center text-dark font-semibold">'+c.name.charAt(0)+'</div><div class="flex-1"><h4 class="font-semibold">'+c.name+'</h4><p class="text-sm text-zinc-500">'+c.phone+'</p></div><div class="text-gold">'+'★'.repeat(c.loyalty)+'☆'.repeat(5-c.loyalty)+'</div></div><div class="mt-4 pt-4 border-t border-border grid grid-cols-2 gap-2 text-center text-sm"><div><p class="text-zinc-500">Visitas</p><p class="font-semibold">'+c.visits+'</p></div><div><p class="text-zinc-500">Gastado</p><p class="font-semibold text-green-400">$'+(c.spent/1000).toFixed(0)+'K</p></div></div></div>').join('');}
+        function renderExpenses(){document.getElementById('expensesTableBody').innerHTML=DB.expenses.map(e=>'<tr class="border-b border-border/50"><td class="p-4">'+e.date+'</td><td class="p-4">'+e.description+'</td><td class="p-4"><span class="badge bg-zinc-700">'+e.category+'</span></td><td class="p-4 text-right text-red-400">-$'+e.amount.toLocaleString()+'</td></tr>').join('');}
+        function renderStaff(){document.getElementById('staffGrid').innerHTML=DB.staff.map(s=>'<div class="bg-card border border-border rounded-xl p-6"><div class="flex items-center gap-4 mb-4"><div class="w-14 h-14 bg-'+(s.status==='available'?'green':'yellow')+'-500 rounded-full flex items-center justify-center text-white font-bold text-xl">'+s.name.charAt(0)+'</div><div><h4 class="font-semibold">'+s.name+'</h4><p class="text-sm text-zinc-500">'+s.role+'</p><p class="text-xs '+(s.status==='available'?'text-green-500':'text-yellow-500')+'">● '+(s.status==='available'?'Disponible':'Ocupado')+'</p></div></div><div class="space-y-2 text-sm"><div class="flex justify-between"><span class="text-zinc-500">Citas</span><span>'+s.bookings+'</span></div><div class="flex justify-between"><span class="text-zinc-500">Ingresos</span><span class="text-green-400">$'+s.revenue.toLocaleString()+'</span></div></div></div>').join('');}
+        function renderInventory(){document.getElementById('inventoryTableBody').innerHTML=DB.inventory.map(p=>'<tr class="border-b border-border/50"><td class="p-4">'+p.name+'</td><td class="p-4"><span class="badge bg-zinc-700">'+p.category+'</span></td><td class="p-4 text-center '+(p.stock<=p.min?'text-red-400 font-bold':'')+'">'+p.stock+'</td><td class="p-4 text-right">$'+p.price.toLocaleString()+'</td><td class="p-4 text-center">'+(p.stock<=p.min?'<span class="badge bg-red-500/20 text-red-400">Bajo</span>':'<span class="badge bg-green-500/20 text-green-400">OK</span>')+'</td></tr>').join('');}
+        function renderAvailability(){document.getElementById('barberStatus').innerHTML=DB.staff.map(s=>'<div class="bg-card border border-border rounded-xl p-5"><div class="flex items-center gap-3 mb-4"><div class="w-12 h-12 bg-'+(s.status==='available'?'green':'yellow')+'-500 rounded-full flex items-center justify-center text-white font-bold">'+s.name.charAt(0)+'</div><div><p class="font-semibold">'+s.name+'</p><p class="text-sm '+(s.status==='available'?'text-green-500':'text-yellow-500')+'">● '+(s.status==='available'?'Disponible':'Ocupado')+'</p></div></div><div class="text-sm space-y-1"><div class="flex justify-between"><span class="text-zinc-500">Citas:</span><span>'+s.bookings+'</span></div><div class="flex justify-between"><span class="text-zinc-500">Ingresos:</span><span class="text-green-400">$'+s.revenue.toLocaleString()+'</span></div></div></div>').join('');}
+        function renderGallery(){const e=['💈','✂️','🧔','💇','🪒','💆'];document.getElementById('galleryGrid').innerHTML=e.map(x=>'<div class="aspect-square bg-gold/10 rounded-xl flex items-center justify-center text-4xl border border-border hover:border-gold cursor-pointer">'+x+'</div>').join('');}
+        function renderKnowledge(){document.getElementById('knowledgeBase').innerHTML=DB.knowledge.map(k=>'<div class="bg-dark rounded-xl p-4 border border-border"><p class="text-sm text-zinc-400 mb-1">Trigger: <span class="text-gold">'+k.trigger+'</span></p><p class="text-sm">'+k.response+'</p></div>').join('');}
+        function createBooking(e){e.preventDefault();showToast('✅ Reserva creada');closeModal('bookingModal');e.target.reset();}
+        function createExpense(e){e.preventDefault();showToast('✅ Gasto registrado');closeModal('expenseModal');e.target.reset();}
+        function createIncome(e){e.preventDefault();showToast('✅ Ingreso registrado');closeModal('incomeModal');e.target.reset();}
+        function createClient(e){e.preventDefault();showToast('✅ Cliente guardado');closeModal('clientModal');e.target.reset();}
+        function addKnowledge(){const t=prompt('Palabra clave:');if(!t)return;const r=prompt('Respuesta:');if(!r)return;DB.knowledge.push({id:Date.now(),trigger:t,response:r});renderKnowledge();showToast('✅ Agregado');}
+        function connectGoogleDrive(){showToast('🔗 Conectando...');setTimeout(()=>showToast('✅ Google Drive conectado'),2000);}
+        function uploadPhotos(){const i=document.createElement('input');i.type='file';i.multiple=true;i.accept='image/*';i.onchange=()=>showToast('✅ '+i.files.length+' foto(s) subidas');i.click();}
+    </script>
+</body>
+</html>
