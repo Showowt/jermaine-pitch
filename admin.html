@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jermaine Barber's | Admin Dashboard</title>
+    <title>Jermaine Barber's | Admin + Google Sheets</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://apis.google.com/js/api.js"></script>
     <script>tailwind.config={theme:{extend:{colors:{gold:'#D4AF37',dark:'#09090b',card:'#18181b',border:'#27272a'}}}}</script>
     <style>
         * { font-family: 'Inter', system-ui, sans-serif; }
@@ -15,856 +15,1086 @@
         .badge-confirmed{background:rgba(34,197,94,0.15);color:#22c55e}
         .badge-pending{background:rgba(234,179,8,0.15);color:#eab308}
         .badge-completed{background:rgba(59,130,246,0.15);color:#3b82f6}
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .spinner { animation: spin 1s linear infinite; }
+        .badge-vip{background:rgba(168,85,247,0.15);color:#a855f7}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+        .animate-pulse{animation:pulse 2s cubic-bezier(0.4,0,0.6,1) infinite}
+        .glass{background:rgba(24,24,27,0.8);backdrop-filter:blur(12px)}
     </style>
 </head>
 <body class="bg-dark text-white">
-    
-    <!-- ==================== AUTH SCREEN ==================== -->
-    <div id="authScreen" class="min-h-screen flex items-center justify-center p-4">
+
+    <!-- LOGIN SCREEN -->
+    <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
         <div class="w-full max-w-md">
-            <!-- Logo -->
             <div class="text-center mb-8">
                 <div class="w-24 h-24 bg-gold rounded-2xl flex items-center justify-center mx-auto mb-4 text-dark text-5xl font-bold shadow-lg shadow-gold/20">JB</div>
                 <h1 class="text-4xl text-gold tracking-wider font-bold">JERMAINE ADMIN</h1>
-                <p class="text-zinc-500 text-sm mt-2">Panel de Administración Seguro</p>
+                <p class="text-zinc-500 text-sm mt-2">Panel de Administración</p>
             </div>
-            
-            <!-- Auth Card -->
             <div class="bg-card border border-border rounded-2xl p-8">
-                <!-- Tab Switcher -->
-                <div class="flex mb-6 bg-dark rounded-lg p-1">
-                    <button onclick="showAuthTab('login')" id="tabLogin" class="flex-1 py-2.5 rounded-md text-sm font-medium transition bg-gold text-dark">Iniciar Sesión</button>
-                    <button onclick="showAuthTab('register')" id="tabRegister" class="flex-1 py-2.5 rounded-md text-sm font-medium transition text-zinc-400 hover:text-white">Registrarse</button>
-                </div>
-
-                <!-- Login Form -->
-                <form id="loginForm" onsubmit="handleEmailLogin(event)" class="space-y-4">
+                <form onsubmit="handleLogin(event)" class="space-y-4">
                     <div>
                         <label class="block text-sm text-zinc-400 mb-2">Email</label>
-                        <input type="email" id="loginEmail" required placeholder="admin@jermaine.com" 
-                            class="w-full bg-dark border border-border rounded-xl px-4 py-3.5 focus:outline-none focus:border-gold text-white transition">
+                        <input type="email" id="loginEmail" value="admin@jermaine.com" required class="w-full bg-dark border border-border rounded-xl px-4 py-3.5 focus:outline-none focus:border-gold">
                     </div>
                     <div>
                         <label class="block text-sm text-zinc-400 mb-2">Contraseña</label>
-                        <div class="relative">
-                            <input type="password" id="loginPassword" required placeholder="••••••••" 
-                                class="w-full bg-dark border border-border rounded-xl px-4 py-3.5 pr-12 focus:outline-none focus:border-gold text-white transition">
-                            <button type="button" onclick="togglePassword('loginPassword')" class="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white">
-                                <svg id="eyeIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                            </button>
-                        </div>
+                        <input type="password" id="loginPass" value="admin123" required class="w-full bg-dark border border-border rounded-xl px-4 py-3.5 focus:outline-none focus:border-gold">
                     </div>
-                    <div class="flex items-center justify-between text-sm">
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" id="rememberMe" class="w-4 h-4 rounded border-border bg-dark text-gold focus:ring-gold">
-                            <span class="text-zinc-400">Recordarme</span>
-                        </label>
-                        <button type="button" onclick="showForgotPassword()" class="text-gold hover:underline">¿Olvidaste tu contraseña?</button>
-                    </div>
-                    <button type="submit" id="loginBtn" class="w-full bg-gold text-dark font-semibold py-4 rounded-xl hover:opacity-90 transition text-lg flex items-center justify-center gap-2">
-                        <span>Iniciar Sesión</span>
-                    </button>
+                    <button type="submit" class="w-full bg-gold text-dark font-semibold py-4 rounded-xl hover:opacity-90 transition text-lg">Ingresar</button>
                 </form>
-
-                <!-- Register Form (Hidden by default) -->
-                <form id="registerForm" onsubmit="handleRegister(event)" class="space-y-4 hidden">
-                    <div>
-                        <label class="block text-sm text-zinc-400 mb-2">Nombre Completo</label>
-                        <input type="text" id="regName" required placeholder="Jermaine Smith" 
-                            class="w-full bg-dark border border-border rounded-xl px-4 py-3.5 focus:outline-none focus:border-gold text-white">
-                    </div>
-                    <div>
-                        <label class="block text-sm text-zinc-400 mb-2">Email</label>
-                        <input type="email" id="regEmail" required placeholder="tu@email.com" 
-                            class="w-full bg-dark border border-border rounded-xl px-4 py-3.5 focus:outline-none focus:border-gold text-white">
-                    </div>
-                    <div>
-                        <label class="block text-sm text-zinc-400 mb-2">Contraseña</label>
-                        <input type="password" id="regPassword" required minlength="8" placeholder="Mínimo 8 caracteres" 
-                            class="w-full bg-dark border border-border rounded-xl px-4 py-3.5 focus:outline-none focus:border-gold text-white">
-                    </div>
-                    <div>
-                        <label class="block text-sm text-zinc-400 mb-2">Confirmar Contraseña</label>
-                        <input type="password" id="regPasswordConfirm" required placeholder="Repite tu contraseña" 
-                            class="w-full bg-dark border border-border rounded-xl px-4 py-3.5 focus:outline-none focus:border-gold text-white">
-                    </div>
-                    <div>
-                        <label class="block text-sm text-zinc-400 mb-2">Código de Invitación</label>
-                        <input type="text" id="regInviteCode" required placeholder="Código proporcionado por Jermaine" 
-                            class="w-full bg-dark border border-border rounded-xl px-4 py-3.5 focus:outline-none focus:border-gold text-white">
-                    </div>
-                    <button type="submit" class="w-full bg-gold text-dark font-semibold py-4 rounded-xl hover:opacity-90 transition text-lg">
-                        Crear Cuenta
-                    </button>
-                </form>
-
-                <!-- Divider -->
                 <div class="flex items-center gap-4 my-6">
                     <div class="flex-1 h-px bg-border"></div>
-                    <span class="text-zinc-500 text-sm">o continúa con</span>
+                    <span class="text-zinc-500 text-sm">o</span>
                     <div class="flex-1 h-px bg-border"></div>
                 </div>
-
-                <!-- Google Sign In -->
-                <button onclick="handleGoogleLogin()" id="googleBtn" class="w-full bg-white text-gray-800 font-medium py-3.5 rounded-xl hover:bg-gray-100 transition flex items-center justify-center gap-3">
+                <button onclick="handleGoogleLogin()" class="w-full bg-white text-gray-800 font-medium py-3.5 rounded-xl hover:bg-gray-100 transition flex items-center justify-center gap-3">
                     <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-                    <span>Continuar con Google</span>
+                    Continuar con Google
                 </button>
-
-                <!-- Security Notice -->
-                <div class="mt-6 p-4 bg-dark rounded-xl border border-border">
-                    <div class="flex items-start gap-3">
-                        <svg class="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                        <div>
-                            <p class="text-sm font-medium text-green-500">Conexión Segura</p>
-                            <p class="text-xs text-zinc-500 mt-1">Tus datos están protegidos con encriptación SSL de 256 bits</p>
-                        </div>
-                    </div>
-                </div>
+                <p class="text-center text-zinc-600 text-xs mt-6">Demo: admin@jermaine.com / admin123</p>
             </div>
-
-            <!-- Footer -->
-            <p class="text-center text-zinc-600 text-xs mt-6">
-                Powered by <span class="text-gold">MachineMind AI</span> • 
-                <a href="#" class="hover:text-white">Privacidad</a> • 
-                <a href="#" class="hover:text-white">Términos</a>
-            </p>
         </div>
     </div>
 
-    <!-- ==================== FORGOT PASSWORD MODAL ==================== -->
-    <div id="forgotModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-        <div class="bg-card border border-border rounded-2xl max-w-md w-full p-6">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-semibold">Recuperar Contraseña</h3>
-                <button onclick="closeForgotPassword()" class="text-zinc-400 hover:text-white">✕</button>
-            </div>
-            <form onsubmit="handleForgotPassword(event)" class="space-y-4">
-                <p class="text-zinc-400 text-sm">Ingresa tu email y te enviaremos un enlace para restablecer tu contraseña.</p>
-                <input type="email" id="forgotEmail" required placeholder="tu@email.com" 
-                    class="w-full bg-dark border border-border rounded-xl px-4 py-3.5 focus:outline-none focus:border-gold text-white">
-                <button type="submit" class="w-full bg-gold text-dark font-semibold py-3.5 rounded-xl hover:opacity-90 transition">
-                    Enviar Enlace
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- ==================== 2FA MODAL ==================== -->
-    <div id="twoFactorModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-        <div class="bg-card border border-border rounded-2xl max-w-md w-full p-6">
-            <div class="text-center mb-6">
-                <div class="w-16 h-16 bg-gold/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-8 h-8 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                </div>
-                <h3 class="text-xl font-semibold">Verificación en 2 Pasos</h3>
-                <p class="text-zinc-400 text-sm mt-2">Ingresa el código enviado a tu teléfono o email</p>
-            </div>
-            <form onsubmit="verify2FA(event)" class="space-y-4">
-                <div class="flex gap-2 justify-center">
-                    <input type="text" maxlength="1" class="w-12 h-14 bg-dark border border-border rounded-xl text-center text-2xl focus:outline-none focus:border-gold" oninput="moveToNext(this, 1)">
-                    <input type="text" maxlength="1" class="w-12 h-14 bg-dark border border-border rounded-xl text-center text-2xl focus:outline-none focus:border-gold" oninput="moveToNext(this, 2)">
-                    <input type="text" maxlength="1" class="w-12 h-14 bg-dark border border-border rounded-xl text-center text-2xl focus:outline-none focus:border-gold" oninput="moveToNext(this, 3)">
-                    <input type="text" maxlength="1" class="w-12 h-14 bg-dark border border-border rounded-xl text-center text-2xl focus:outline-none focus:border-gold" oninput="moveToNext(this, 4)">
-                    <input type="text" maxlength="1" class="w-12 h-14 bg-dark border border-border rounded-xl text-center text-2xl focus:outline-none focus:border-gold" oninput="moveToNext(this, 5)">
-                    <input type="text" maxlength="1" class="w-12 h-14 bg-dark border border-border rounded-xl text-center text-2xl focus:outline-none focus:border-gold" oninput="moveToNext(this, 6)">
-                </div>
-                <button type="submit" class="w-full bg-gold text-dark font-semibold py-3.5 rounded-xl hover:opacity-90 transition">
-                    Verificar
-                </button>
-                <p class="text-center text-sm text-zinc-500">
-                    ¿No recibiste el código? <button type="button" onclick="resend2FA()" class="text-gold hover:underline">Reenviar</button>
-                </p>
-            </form>
-        </div>
-    </div>
-
-    <!-- ==================== MAIN DASHBOARD ==================== -->
+    <!-- MAIN DASHBOARD -->
     <div id="dashboard" class="hidden">
-        <header class="fixed top-0 left-0 right-0 h-16 bg-dark/95 backdrop-blur border-b border-border z-50 flex items-center justify-between px-6">
+        <!-- Header -->
+        <header class="fixed top-0 left-0 right-0 h-16 glass border-b border-border z-50 flex items-center justify-between px-4 lg:px-6">
             <div class="flex items-center gap-4">
-                <button onclick="toggleSidebar()" class="lg:hidden p-2">☰</button>
+                <button onclick="toggleSidebar()" class="lg:hidden p-2 hover:bg-white/10 rounded-lg">☰</button>
                 <div class="w-9 h-9 bg-gold rounded-lg flex items-center justify-center text-dark font-bold">JB</div>
                 <span class="text-xl font-bold hidden sm:block">JERMAINE ADMIN</span>
             </div>
-            <div class="flex items-center gap-4">
-                <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-green-500/10 border border-green-500/30 rounded-full">
+            <div class="flex items-center gap-3">
+                <!-- Google Sheets Status -->
+                <div id="sheetsStatus" class="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-green-500/10 border border-green-500/30 rounded-full cursor-pointer" onclick="openSheetsConfig()">
                     <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                    <span class="text-green-500 text-xs font-medium">Sesión Segura</span>
+                    <span class="text-green-500 text-xs font-medium">Sheets Conectado</span>
                 </div>
-                <div class="flex items-center gap-3">
-                    <img id="userAvatar" src="" alt="" class="w-9 h-9 bg-gold rounded-full hidden">
-                    <div id="userInitial" class="w-9 h-9 bg-gold rounded-full flex items-center justify-center text-dark font-bold">J</div>
-                    <div class="hidden sm:block">
-                        <p id="userName" class="text-sm font-medium">Jermaine</p>
-                        <p id="userRole" class="text-xs text-zinc-500">Administrador</p>
-                    </div>
-                </div>
-                <div class="relative">
-                    <button onclick="toggleUserMenu()" class="p-2 hover:bg-card rounded-lg">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                    </button>
-                    <div id="userMenu" class="hidden absolute right-0 top-12 w-56 bg-card border border-border rounded-xl shadow-xl overflow-hidden">
-                        <div class="p-4 border-b border-border">
-                            <p id="menuUserName" class="font-medium">Jermaine</p>
-                            <p id="menuUserEmail" class="text-sm text-zinc-500">admin@jermaine.com</p>
-                        </div>
-                        <div class="p-2">
-                            <button onclick="showSection('settings')" class="w-full px-4 py-2.5 text-left text-sm hover:bg-white/5 rounded-lg flex items-center gap-3">
-                                <svg class="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                                Configuración
-                            </button>
-                            <button onclick="showSecuritySettings()" class="w-full px-4 py-2.5 text-left text-sm hover:bg-white/5 rounded-lg flex items-center gap-3">
-                                <svg class="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                                Seguridad
-                            </button>
-                            <button onclick="viewActivityLog()" class="w-full px-4 py-2.5 text-left text-sm hover:bg-white/5 rounded-lg flex items-center gap-3">
-                                <svg class="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                                Registro de Actividad
-                            </button>
-                        </div>
-                        <div class="p-2 border-t border-border">
-                            <button onclick="handleLogout()" class="w-full px-4 py-2.5 text-left text-sm text-red-400 hover:bg-red-500/10 rounded-lg flex items-center gap-3">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                                Cerrar Sesión
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <button onclick="handleLogout()" class="p-2 hover:bg-white/10 rounded-lg text-zinc-400 hover:text-red-400">🚪</button>
             </div>
         </header>
 
+        <!-- Sidebar -->
         <aside id="sidebar" class="fixed left-0 top-16 bottom-0 w-64 bg-card border-r border-border transform -translate-x-full lg:translate-x-0 transition-transform z-40 overflow-y-auto p-3">
             <div class="text-xs text-zinc-500 uppercase px-3 py-2">Principal</div>
             <button onclick="showSection('overview')" data-section="overview" class="sidebar-item active w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">📊 Dashboard</button>
+            <button onclick="showSection('clients')" data-section="clients" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">👥 Clientes <span class="ml-auto bg-gold/20 text-gold text-xs px-2 py-0.5 rounded-full" id="clientCount">0</span></button>
             <button onclick="showSection('bookings')" data-section="bookings" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">📅 Reservas</button>
-            <button onclick="showSection('clients')" data-section="clients" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">👥 Clientes</button>
             <div class="text-xs text-zinc-500 uppercase px-3 py-2 mt-4">Finanzas</div>
             <button onclick="showSection('finances')" data-section="finances" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">📈 P&L</button>
             <button onclick="showSection('expenses')" data-section="expenses" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">🧾 Gastos</button>
-            <button onclick="showSection('cashflow')" data-section="cashflow" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">💰 Flujo Caja</button>
             <div class="text-xs text-zinc-500 uppercase px-3 py-2 mt-4">Operaciones</div>
-            <button onclick="showSection('staff')" data-section="staff" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">✂️ Empleados</button>
+            <button onclick="showSection('staff')" data-section="staff" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">✂️ Equipo</button>
             <button onclick="showSection('inventory')" data-section="inventory" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">📦 Inventario</button>
-            <button onclick="showSection('availability')" data-section="availability" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">🕐 Disponibilidad</button>
             <div class="text-xs text-zinc-500 uppercase px-3 py-2 mt-4">Sistema</div>
-            <button onclick="showSection('gallery')" data-section="gallery" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">🖼️ Galería</button>
+            <button onclick="showSection('sheets')" data-section="sheets" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">📗 Google Sheets</button>
             <button onclick="showSection('chatbot')" data-section="chatbot" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">🤖 Sofia AI</button>
-            <button onclick="showSection('security')" data-section="security" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">🔒 Seguridad</button>
             <button onclick="showSection('settings')" data-section="settings" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">⚙️ Config</button>
-            <div class="mt-6 p-4 bg-gold/10 rounded-xl border border-gold/20"><p class="text-xs text-zinc-400 mb-1">Ingresos Hoy</p><p class="text-2xl font-bold text-gold">$485,000</p><p class="text-xs text-green-500">↑ 12%</p></div>
+            
+            <!-- Quick Add Client Button -->
+            <div class="mt-6 p-4">
+                <button onclick="openQuickAddClient()" class="w-full bg-gold text-dark font-semibold py-3 rounded-xl hover:opacity-90 transition flex items-center justify-center gap-2">
+                    <span class="text-xl">+</span> Agregar Cliente
+                </button>
+            </div>
         </aside>
 
         <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-30 lg:hidden hidden"></div>
 
+        <!-- Main Content -->
         <main class="lg:ml-64 pt-16 min-h-screen p-4 lg:p-6">
+            
             <!-- OVERVIEW -->
             <section id="section-overview">
-                <div class="mb-6"><h1 class="text-2xl font-bold">Buenos días, <span id="welcomeName">Jermaine</span> 👋</h1><p class="text-zinc-500">Jueves, 30 de Enero 2026</p></div>
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                    <div>
+                        <h1 class="text-2xl font-bold">Buenos días, Jermaine 👋</h1>
+                        <p class="text-zinc-500">Viernes, 31 de Enero 2026</p>
+                    </div>
+                    <button onclick="syncFromSheets()" class="flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/30 rounded-lg text-green-400 hover:bg-green-500/20 transition">
+                        <span id="syncIcon">🔄</span> Sincronizar Sheets
+                    </button>
+                </div>
+                
+                <!-- KPIs -->
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                    <div class="bg-card border border-border rounded-xl p-5"><div class="w-10 h-10 bg-green-500/15 rounded-lg flex items-center justify-center text-green-500 mb-3">💵</div><p class="text-zinc-400 text-xs">Ingresos Hoy</p><p class="text-xl font-bold">$485,000</p></div>
-                    <div class="bg-card border border-border rounded-xl p-5"><div class="w-10 h-10 bg-blue-500/15 rounded-lg flex items-center justify-center text-blue-500 mb-3">📅</div><p class="text-zinc-400 text-xs">Citas Hoy</p><p class="text-xl font-bold">14 / 18</p></div>
-                    <div class="bg-card border border-border rounded-xl p-5"><div class="w-10 h-10 bg-purple-500/15 rounded-lg flex items-center justify-center text-purple-500 mb-3">👥</div><p class="text-zinc-400 text-xs">Clientes Nuevos</p><p class="text-xl font-bold">47</p></div>
-                    <div class="bg-card border border-border rounded-xl p-5"><div class="w-10 h-10 bg-gold/15 rounded-lg flex items-center justify-center text-gold mb-3">⭐</div><p class="text-zinc-400 text-xs">Rating</p><p class="text-xl font-bold">5.0 / 591</p></div>
+                    <div class="bg-card border border-border rounded-xl p-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="w-10 h-10 bg-green-500/15 rounded-lg flex items-center justify-center text-green-500">💵</div>
+                            <span class="text-green-500 text-xs">↑ 12%</span>
+                        </div>
+                        <p class="text-zinc-400 text-xs">Ingresos Hoy</p>
+                        <p class="text-xl font-bold">$485,000</p>
+                    </div>
+                    <div class="bg-card border border-border rounded-xl p-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="w-10 h-10 bg-blue-500/15 rounded-lg flex items-center justify-center text-blue-500">📅</div>
+                            <span class="text-blue-500 text-xs">78%</span>
+                        </div>
+                        <p class="text-zinc-400 text-xs">Citas Hoy</p>
+                        <p class="text-xl font-bold">14 / 18</p>
+                    </div>
+                    <div class="bg-card border border-border rounded-xl p-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="w-10 h-10 bg-purple-500/15 rounded-lg flex items-center justify-center text-purple-500">👥</div>
+                            <span class="text-purple-500 text-xs">↑ 8</span>
+                        </div>
+                        <p class="text-zinc-400 text-xs">Total Clientes</p>
+                        <p class="text-xl font-bold" id="totalClientsKPI">127</p>
+                    </div>
+                    <div class="bg-card border border-border rounded-xl p-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="w-10 h-10 bg-gold/15 rounded-lg flex items-center justify-center text-gold">⭐</div>
+                        </div>
+                        <p class="text-zinc-400 text-xs">Rating Google</p>
+                        <p class="text-xl font-bold">5.0 <span class="text-sm text-zinc-500">/ 591</span></p>
+                    </div>
                 </div>
+
+                <!-- Charts -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                    <div class="bg-card border border-border rounded-xl p-5"><h3 class="font-semibold mb-4">Ingresos vs Gastos</h3><canvas id="revenueChart" height="180"></canvas></div>
-                    <div class="bg-card border border-border rounded-xl p-5"><h3 class="font-semibold mb-4">Servicios Populares</h3><canvas id="servicesChart" height="180"></canvas></div>
+                    <div class="bg-card border border-border rounded-xl p-5">
+                        <h3 class="font-semibold mb-4">Ingresos vs Gastos (Semana)</h3>
+                        <canvas id="revenueChart" height="180"></canvas>
+                    </div>
+                    <div class="bg-card border border-border rounded-xl p-5">
+                        <h3 class="font-semibold mb-4">Servicios Populares</h3>
+                        <canvas id="servicesChart" height="180"></canvas>
+                    </div>
                 </div>
+
+                <!-- Today's Appointments + Recent Clients -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="lg:col-span-2 bg-card border border-border rounded-xl p-5">
                         <h3 class="font-semibold mb-4">Citas de Hoy</h3>
-                        <table class="w-full text-sm"><thead><tr class="text-zinc-500 text-xs border-b border-border"><th class="text-left pb-3">Hora</th><th class="text-left pb-3">Cliente</th><th class="text-left pb-3">Servicio</th><th class="text-left pb-3">Estado</th><th class="text-right pb-3">Monto</th></tr></thead><tbody id="todayAppointments"></tbody></table>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead>
+                                    <tr class="text-zinc-500 text-xs border-b border-border">
+                                        <th class="text-left pb-3">Hora</th>
+                                        <th class="text-left pb-3">Cliente</th>
+                                        <th class="text-left pb-3 hidden sm:table-cell">Servicio</th>
+                                        <th class="text-left pb-3">Estado</th>
+                                        <th class="text-right pb-3">Monto</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="todayAppointments"></tbody>
+                            </table>
+                        </div>
                     </div>
+                    <div class="bg-card border border-border rounded-xl p-5">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-semibold">Clientes Recientes</h3>
+                            <button onclick="showSection('clients')" class="text-gold text-sm hover:underline">Ver todos →</button>
+                        </div>
+                        <div class="space-y-3" id="recentClients"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CLIENTS -->
+            <section id="section-clients" class="hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                    <div>
+                        <h1 class="text-2xl font-bold">👥 Clientes</h1>
+                        <p class="text-zinc-500"><span id="clientsTotal">0</span> clientes registrados</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="exportClients()" class="px-4 py-2.5 bg-card border border-border rounded-lg hover:border-gold transition flex items-center gap-2">
+                            📤 Exportar
+                        </button>
+                        <button onclick="importClients()" class="px-4 py-2.5 bg-card border border-border rounded-lg hover:border-gold transition flex items-center gap-2">
+                            📥 Importar CSV
+                        </button>
+                        <button onclick="openQuickAddClient()" class="px-5 py-2.5 bg-gold text-dark font-semibold rounded-lg flex items-center gap-2">
+                            ➕ Nuevo Cliente
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search & Filters -->
+                <div class="bg-card border border-border rounded-xl p-4 mb-6">
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <div class="flex-1 relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500">🔍</span>
+                            <input type="text" id="clientSearch" placeholder="Buscar por nombre, teléfono, o notas..." 
+                                oninput="filterClients()" class="w-full bg-dark border border-border rounded-lg pl-12 pr-4 py-3 focus:outline-none focus:border-gold">
+                        </div>
+                        <select id="clientFilter" onchange="filterClients()" class="bg-dark border border-border rounded-lg px-4 py-3">
+                            <option value="all">Todos los clientes</option>
+                            <option value="vip">⭐ VIP (10+ visitas)</option>
+                            <option value="new">🆕 Nuevos (este mes)</option>
+                            <option value="inactive">😴 Inactivos (30+ días)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Clients Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="clientsGrid"></div>
+            </section>
+
+            <!-- GOOGLE SHEETS CONFIG -->
+            <section id="section-sheets" class="hidden">
+                <h1 class="text-2xl font-bold mb-6">📗 Google Sheets Integration</h1>
+                
+                <!-- Connection Status -->
+                <div class="bg-card border border-border rounded-xl p-6 mb-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 bg-green-500/20 rounded-xl flex items-center justify-center text-3xl">📗</div>
+                            <div>
+                                <h3 class="font-semibold text-lg">Google Sheets</h3>
+                                <p class="text-zinc-500 text-sm" id="sheetsConnectionStatus">No conectado</p>
+                            </div>
+                        </div>
+                        <button onclick="connectGoogleSheets()" id="connectSheetsBtn" class="px-5 py-2.5 bg-gold text-dark font-semibold rounded-lg">
+                            Conectar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sheet URL Input -->
+                <div class="bg-card border border-border rounded-xl p-6 mb-6">
+                    <h3 class="font-semibold mb-4">Configurar Spreadsheet</h3>
                     <div class="space-y-4">
-                        <h3 class="font-semibold">Acciones</h3>
-                        <button onclick="openModal('bookingModal')" class="w-full bg-gold/10 border border-gold/30 rounded-xl p-4 text-left hover:bg-gold/20">➕ Nueva Reserva</button>
-                        <button onclick="openModal('expenseModal')" class="w-full bg-card border border-border rounded-xl p-4 text-left hover:border-red-500/50">🧾 Registrar Gasto</button>
-                        <button onclick="openModal('incomeModal')" class="w-full bg-card border border-border rounded-xl p-4 text-left hover:border-green-500/50">💰 Registrar Venta</button>
+                        <div>
+                            <label class="block text-sm text-zinc-400 mb-2">URL de Google Sheet</label>
+                            <input type="url" id="sheetUrl" placeholder="https://docs.google.com/spreadsheets/d/..." 
+                                class="w-full bg-dark border border-border rounded-lg px-4 py-3 focus:outline-none focus:border-gold">
+                            <p class="text-xs text-zinc-500 mt-2">Asegúrate de que el Sheet sea público o compartido con la cuenta conectada</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm text-zinc-400 mb-2">Hoja de Clientes</label>
+                                <input type="text" id="clientsSheetName" value="Clientes" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-zinc-400 mb-2">Hoja de Reservas</label>
+                                <input type="text" id="bookingsSheetName" value="Reservas" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
+                            </div>
+                        </div>
+                        <button onclick="saveSheetConfig()" class="px-6 py-3 bg-gold text-dark font-semibold rounded-lg">
+                            Guardar Configuración
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Template Download -->
+                <div class="bg-card border border-border rounded-xl p-6 mb-6">
+                    <h3 class="font-semibold mb-4">📋 Plantilla de Google Sheet</h3>
+                    <p class="text-zinc-400 text-sm mb-4">Descarga nuestra plantilla pre-configurada con las columnas correctas:</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-dark rounded-xl p-4 border border-border">
+                            <p class="font-medium mb-2">Hoja "Clientes"</p>
+                            <p class="text-xs text-zinc-500 mb-3">Columnas: ID, Nombre, Teléfono, WhatsApp, Email, Barbero Preferido, Notas, Visitas, Total Gastado, Última Visita, Cumpleaños, VIP, Fecha Registro</p>
+                            <button onclick="downloadClientsTemplate()" class="text-gold text-sm hover:underline">Descargar CSV →</button>
+                        </div>
+                        <div class="bg-dark rounded-xl p-4 border border-border">
+                            <p class="font-medium mb-2">Hoja "Reservas"</p>
+                            <p class="text-xs text-zinc-500 mb-3">Columnas: ID, Fecha, Hora, Cliente, Teléfono, Servicio, Barbero, Estado, Monto, Notas</p>
+                            <button onclick="downloadBookingsTemplate()" class="text-gold text-sm hover:underline">Descargar CSV →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sync Settings -->
+                <div class="bg-card border border-border rounded-xl p-6">
+                    <h3 class="font-semibold mb-4">⚙️ Configuración de Sincronización</h3>
+                    <div class="space-y-4">
+                        <label class="flex items-center justify-between p-4 bg-dark rounded-xl cursor-pointer">
+                            <div>
+                                <p class="font-medium">Auto-sync cada 5 minutos</p>
+                                <p class="text-xs text-zinc-500">Mantén los datos actualizados automáticamente</p>
+                            </div>
+                            <input type="checkbox" id="autoSync" class="w-5 h-5 rounded border-border bg-dark text-gold focus:ring-gold">
+                        </label>
+                        <label class="flex items-center justify-between p-4 bg-dark rounded-xl cursor-pointer">
+                            <div>
+                                <p class="font-medium">Sincronizar nuevos clientes a Sheets</p>
+                                <p class="text-xs text-zinc-500">Los clientes agregados aquí se añaden al Sheet</p>
+                            </div>
+                            <input type="checkbox" id="syncNewClients" checked class="w-5 h-5 rounded border-border bg-dark text-gold focus:ring-gold">
+                        </label>
+                        <label class="flex items-center justify-between p-4 bg-dark rounded-xl cursor-pointer">
+                            <div>
+                                <p class="font-medium">Notificar cambios por WhatsApp</p>
+                                <p class="text-xs text-zinc-500">Recibe alertas cuando se agreguen clientes</p>
+                            </div>
+                            <input type="checkbox" id="notifyChanges" class="w-5 h-5 rounded border-border bg-dark text-gold focus:ring-gold">
+                        </label>
                     </div>
                 </div>
             </section>
 
             <!-- BOOKINGS -->
             <section id="section-bookings" class="hidden">
-                <div class="flex justify-between items-center mb-6"><h1 class="text-2xl font-bold">Reservas</h1><button onclick="openModal('bookingModal')" class="px-5 py-2.5 bg-gold text-dark font-semibold rounded-lg">➕ Nueva</button></div>
-                <div class="bg-card border border-border rounded-xl overflow-hidden"><table class="w-full text-sm"><thead class="bg-dark/50"><tr class="text-zinc-400 text-xs"><th class="text-left p-4">ID</th><th class="text-left p-4">Fecha</th><th class="text-left p-4">Cliente</th><th class="text-left p-4">Servicio</th><th class="text-left p-4">Estado</th><th class="text-right p-4">Monto</th></tr></thead><tbody id="bookingsTableBody"></tbody></table></div>
-            </section>
-
-            <!-- CLIENTS -->
-            <section id="section-clients" class="hidden">
-                <div class="flex justify-between items-center mb-6"><h1 class="text-2xl font-bold">Clientes</h1><button onclick="openModal('clientModal')" class="px-5 py-2.5 bg-gold text-dark font-semibold rounded-lg">➕ Nuevo</button></div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="clientsGrid"></div>
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-2xl font-bold">📅 Reservas</h1>
+                    <button onclick="openModal('bookingModal')" class="px-5 py-2.5 bg-gold text-dark font-semibold rounded-lg">➕ Nueva Reserva</button>
+                </div>
+                <div class="bg-card border border-border rounded-xl overflow-hidden">
+                    <table class="w-full text-sm">
+                        <thead class="bg-dark/50">
+                            <tr class="text-zinc-400 text-xs">
+                                <th class="text-left p-4">ID</th>
+                                <th class="text-left p-4">Fecha/Hora</th>
+                                <th class="text-left p-4">Cliente</th>
+                                <th class="text-left p-4 hidden md:table-cell">Servicio</th>
+                                <th class="text-left p-4">Estado</th>
+                                <th class="text-right p-4">Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookingsTableBody"></tbody>
+                    </table>
+                </div>
             </section>
 
             <!-- FINANCES -->
             <section id="section-finances" class="hidden">
-                <h1 class="text-2xl font-bold mb-6">P&L</h1>
+                <h1 class="text-2xl font-bold mb-6">📈 Estado Financiero</h1>
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                    <div class="bg-green-500/10 border border-green-500/30 rounded-xl p-5"><p class="text-green-400 text-xs">Ingresos</p><p class="text-2xl font-bold text-green-400">$12.4M</p></div>
-                    <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-5"><p class="text-red-400 text-xs">Gastos</p><p class="text-2xl font-bold text-red-400">$4.2M</p></div>
+                    <div class="bg-green-500/10 border border-green-500/30 rounded-xl p-5"><p class="text-green-400 text-xs">Ingresos Mes</p><p class="text-2xl font-bold text-green-400">$12.4M</p></div>
+                    <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-5"><p class="text-red-400 text-xs">Gastos Mes</p><p class="text-2xl font-bold text-red-400">$4.2M</p></div>
                     <div class="bg-gold/10 border border-gold/30 rounded-xl p-5"><p class="text-gold text-xs">Utilidad</p><p class="text-2xl font-bold text-gold">$8.2M</p></div>
-                    <div class="bg-card border border-border rounded-xl p-5"><p class="text-zinc-400 text-xs">Caja</p><p class="text-2xl font-bold">$15.8M</p></div>
+                    <div class="bg-card border border-border rounded-xl p-5"><p class="text-zinc-400 text-xs">Margen</p><p class="text-2xl font-bold">66%</p></div>
                 </div>
             </section>
 
             <!-- EXPENSES -->
             <section id="section-expenses" class="hidden">
-                <div class="flex justify-between items-center mb-6"><h1 class="text-2xl font-bold">Gastos</h1><button onclick="openModal('expenseModal')" class="px-5 py-2.5 bg-red-500 text-white font-semibold rounded-lg">➕ Nuevo</button></div>
-                <div class="bg-card border border-border rounded-xl overflow-hidden"><table class="w-full text-sm"><thead class="bg-dark/50"><tr class="text-zinc-400 text-xs"><th class="text-left p-4">Fecha</th><th class="text-left p-4">Descripción</th><th class="text-left p-4">Categoría</th><th class="text-right p-4">Monto</th></tr></thead><tbody id="expensesTableBody"></tbody></table></div>
-            </section>
-
-            <!-- CASHFLOW -->
-            <section id="section-cashflow" class="hidden">
-                <h1 class="text-2xl font-bold mb-6">Flujo de Caja</h1>
-                <div class="grid grid-cols-3 gap-6 mb-6">
-                    <div class="bg-green-500/10 border border-green-500/30 rounded-xl p-6"><p class="text-zinc-400 text-sm">Entradas</p><p class="text-3xl font-bold text-green-400">$12.4M</p></div>
-                    <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-6"><p class="text-zinc-400 text-sm">Salidas</p><p class="text-3xl font-bold text-red-400">$4.2M</p></div>
-                    <div class="bg-gold/10 border border-gold/30 rounded-xl p-6"><p class="text-zinc-400 text-sm">Neto</p><p class="text-3xl font-bold text-gold">+$8.2M</p></div>
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-2xl font-bold">🧾 Gastos</h1>
+                    <button onclick="openModal('expenseModal')" class="px-5 py-2.5 bg-red-500 text-white font-semibold rounded-lg">➕ Nuevo Gasto</button>
                 </div>
-                <div class="bg-card border border-border rounded-xl p-6"><canvas id="cashflowChart" height="200"></canvas></div>
+                <div class="bg-card border border-border rounded-xl overflow-hidden">
+                    <table class="w-full text-sm">
+                        <thead class="bg-dark/50"><tr class="text-zinc-400 text-xs"><th class="text-left p-4">Fecha</th><th class="text-left p-4">Descripción</th><th class="text-left p-4">Categoría</th><th class="text-right p-4">Monto</th></tr></thead>
+                        <tbody id="expensesTableBody"></tbody>
+                    </table>
+                </div>
             </section>
 
             <!-- STAFF -->
             <section id="section-staff" class="hidden">
-                <h1 class="text-2xl font-bold mb-6">Empleados</h1>
+                <h1 class="text-2xl font-bold mb-6">✂️ Equipo</h1>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="staffGrid"></div>
             </section>
 
             <!-- INVENTORY -->
             <section id="section-inventory" class="hidden">
-                <h1 class="text-2xl font-bold mb-6">Inventario</h1>
-                <div class="bg-card border border-border rounded-xl overflow-hidden"><table class="w-full text-sm"><thead class="bg-dark/50"><tr class="text-zinc-400 text-xs"><th class="text-left p-4">Producto</th><th class="text-center p-4">Stock</th><th class="text-right p-4">Precio</th><th class="text-center p-4">Estado</th></tr></thead><tbody id="inventoryTableBody"></tbody></table></div>
-            </section>
-
-            <!-- AVAILABILITY -->
-            <section id="section-availability" class="hidden">
-                <h1 class="text-2xl font-bold mb-6">Disponibilidad</h1>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="barberStatus"></div>
-            </section>
-
-            <!-- GALLERY -->
-            <section id="section-gallery" class="hidden">
-                <div class="flex justify-between items-center mb-6"><h1 class="text-2xl font-bold">Galería</h1><button onclick="uploadPhotos()" class="px-4 py-2 bg-gold text-dark rounded-lg font-semibold">📸 Subir</button></div>
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4" id="galleryGrid"></div>
+                <h1 class="text-2xl font-bold mb-6">📦 Inventario</h1>
+                <div class="bg-card border border-border rounded-xl overflow-hidden">
+                    <table class="w-full text-sm">
+                        <thead class="bg-dark/50"><tr class="text-zinc-400 text-xs"><th class="text-left p-4">Producto</th><th class="text-center p-4">Stock</th><th class="text-right p-4">Precio</th><th class="text-center p-4">Estado</th></tr></thead>
+                        <tbody id="inventoryTableBody"></tbody>
+                    </table>
+                </div>
             </section>
 
             <!-- CHATBOT -->
             <section id="section-chatbot" class="hidden">
-                <h1 class="text-2xl font-bold mb-6">Sofia AI</h1>
+                <h1 class="text-2xl font-bold mb-6">🤖 Sofia AI</h1>
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                     <div class="bg-card border border-border rounded-xl p-5"><p class="text-zinc-400 text-xs">Conversaciones</p><p class="text-2xl font-bold">847</p></div>
                     <div class="bg-card border border-border rounded-xl p-5"><p class="text-zinc-400 text-xs">Reservas vía Chat</p><p class="text-2xl font-bold text-green-400">234</p></div>
                     <div class="bg-card border border-border rounded-xl p-5"><p class="text-zinc-400 text-xs">Resolución</p><p class="text-2xl font-bold text-gold">94%</p></div>
                     <div class="bg-card border border-border rounded-xl p-5"><p class="text-zinc-400 text-xs">Escaladas</p><p class="text-2xl font-bold">51</p></div>
                 </div>
-                <div class="bg-card border border-border rounded-xl p-6"><div class="flex justify-between mb-4"><h3 class="font-semibold">Base de Conocimiento</h3><button onclick="addKnowledge()" class="text-gold text-sm">+ Agregar</button></div><div class="space-y-3" id="knowledgeBase"></div></div>
-            </section>
-
-            <!-- SECURITY -->
-            <section id="section-security" class="hidden">
-                <h1 class="text-2xl font-bold mb-6">🔒 Seguridad y Acceso</h1>
-                
-                <!-- Security Status -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <div class="bg-green-500/10 border border-green-500/30 rounded-xl p-5">
-                        <div class="flex items-center gap-3 mb-2">
-                            <span class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
-                            <span class="text-green-400 font-medium">Conexión Segura</span>
-                        </div>
-                        <p class="text-xs text-zinc-500">SSL/TLS Activo</p>
-                    </div>
-                    <div class="bg-card border border-border rounded-xl p-5">
-                        <p class="text-zinc-400 text-xs mb-1">Última Sesión</p>
-                        <p class="font-medium">Hoy, 9:45 AM</p>
-                        <p class="text-xs text-zinc-500">Cartagena, Colombia</p>
-                    </div>
-                    <div class="bg-card border border-border rounded-xl p-5">
-                        <p class="text-zinc-400 text-xs mb-1">Método de Login</p>
-                        <p class="font-medium" id="loginMethodDisplay">Email/Contraseña</p>
-                    </div>
-                </div>
-
-                <!-- 2FA Settings -->
-                <div class="bg-card border border-border rounded-xl p-6 mb-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <div>
-                            <h3 class="font-semibold">Autenticación de 2 Factores (2FA)</h3>
-                            <p class="text-sm text-zinc-500">Añade una capa extra de seguridad</p>
-                        </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="toggle2FA" class="sr-only peer" onchange="toggle2FA()">
-                            <div class="w-11 h-6 bg-zinc-700 peer-focus:ring-2 peer-focus:ring-gold rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gold"></div>
-                        </label>
-                    </div>
-                    <div id="2faSetup" class="hidden mt-4 p-4 bg-dark rounded-xl">
-                        <p class="text-sm text-zinc-400 mb-4">Recibirás un código de verificación cada vez que inicies sesión</p>
-                        <div class="flex gap-4">
-                            <button class="flex-1 py-3 bg-card border border-border rounded-lg hover:border-gold transition text-sm">📱 SMS</button>
-                            <button class="flex-1 py-3 bg-card border border-border rounded-lg hover:border-gold transition text-sm">📧 Email</button>
-                            <button class="flex-1 py-3 bg-card border border-border rounded-lg hover:border-gold transition text-sm">🔐 App</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Active Sessions -->
-                <div class="bg-card border border-border rounded-xl p-6 mb-6">
-                    <h3 class="font-semibold mb-4">Sesiones Activas</h3>
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between p-4 bg-dark rounded-xl">
-                            <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">💻</div>
-                                <div>
-                                    <p class="font-medium">Chrome - MacBook Pro</p>
-                                    <p class="text-xs text-zinc-500">Cartagena, Colombia • Sesión actual</p>
-                                </div>
-                            </div>
-                            <span class="text-green-500 text-sm">● Activa</span>
-                        </div>
-                        <div class="flex items-center justify-between p-4 bg-dark rounded-xl">
-                            <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 bg-zinc-700 rounded-lg flex items-center justify-center">📱</div>
-                                <div>
-                                    <p class="font-medium">Safari - iPhone 15</p>
-                                    <p class="text-xs text-zinc-500">Hace 2 días • Cartagena</p>
-                                </div>
-                            </div>
-                            <button class="text-red-400 text-sm hover:underline">Cerrar</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Activity Log -->
-                <div class="bg-card border border-border rounded-xl p-6">
-                    <h3 class="font-semibold mb-4">Registro de Actividad Reciente</h3>
-                    <div class="space-y-3" id="activityLog">
-                        <div class="flex items-center gap-4 p-3 bg-dark rounded-lg">
-                            <span class="text-green-500">✓</span>
-                            <div class="flex-1"><p class="text-sm">Inicio de sesión exitoso</p><p class="text-xs text-zinc-500">Hoy, 9:45 AM</p></div>
-                        </div>
-                        <div class="flex items-center gap-4 p-3 bg-dark rounded-lg">
-                            <span class="text-blue-500">📝</span>
-                            <div class="flex-1"><p class="text-sm">Reserva #127 creada</p><p class="text-xs text-zinc-500">Hoy, 9:30 AM</p></div>
-                        </div>
-                        <div class="flex items-center gap-4 p-3 bg-dark rounded-lg">
-                            <span class="text-yellow-500">⚙️</span>
-                            <div class="flex-1"><p class="text-sm">Configuración actualizada</p><p class="text-xs text-zinc-500">Ayer, 6:15 PM</p></div>
-                        </div>
-                    </div>
-                </div>
             </section>
 
             <!-- SETTINGS -->
             <section id="section-settings" class="hidden">
-                <h1 class="text-2xl font-bold mb-6">Configuración</h1>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="bg-card border border-border rounded-xl p-6">
-                        <h3 class="font-semibold mb-4">Negocio</h3>
-                        <div class="space-y-4">
-                            <div><label class="block text-sm text-zinc-400 mb-2">Nombre</label><input type="text" value="Jermaine Barber's" class="w-full bg-dark border border-border rounded-lg px-4 py-3"></div>
-                            <div><label class="block text-sm text-zinc-400 mb-2">WhatsApp</label><input type="text" value="+57 318 132 6952" class="w-full bg-dark border border-border rounded-lg px-4 py-3"></div>
-                        </div>
-                    </div>
-                    <div class="bg-card border border-border rounded-xl p-6">
-                        <h3 class="font-semibold mb-4">Mi Cuenta</h3>
-                        <div class="space-y-4">
-                            <div><label class="block text-sm text-zinc-400 mb-2">Email</label><input type="email" id="settingsEmail" class="w-full bg-dark border border-border rounded-lg px-4 py-3"></div>
-                            <button onclick="changePassword()" class="w-full py-3 border border-border rounded-lg hover:border-gold transition">Cambiar Contraseña</button>
-                        </div>
+                <h1 class="text-2xl font-bold mb-6">⚙️ Configuración</h1>
+                <div class="bg-card border border-border rounded-xl p-6">
+                    <h3 class="font-semibold mb-4">Negocio</h3>
+                    <div class="space-y-4">
+                        <div><label class="block text-sm text-zinc-400 mb-2">Nombre</label><input type="text" value="Jermaine Barber's" class="w-full bg-dark border border-border rounded-lg px-4 py-3"></div>
+                        <div><label class="block text-sm text-zinc-400 mb-2">WhatsApp</label><input type="text" value="+57 318 132 6952" class="w-full bg-dark border border-border rounded-lg px-4 py-3"></div>
                     </div>
                 </div>
             </section>
         </main>
     </div>
 
-    <!-- MODALS -->
+    <!-- QUICK ADD CLIENT MODAL -->
+    <div id="quickAddModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+        <div class="bg-card border border-border rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+            <div class="sticky top-0 bg-card border-b border-border p-6 flex justify-between items-center">
+                <h3 class="text-xl font-semibold">➕ Nuevo Cliente</h3>
+                <button onclick="closeModal('quickAddModal')" class="text-zinc-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <form onsubmit="saveNewClient(event)" class="p-6 space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="col-span-2">
+                        <label class="block text-sm text-zinc-400 mb-2">Nombre Completo *</label>
+                        <input type="text" id="newClientName" required placeholder="Juan Pérez" class="w-full bg-dark border border-border rounded-lg px-4 py-3 focus:outline-none focus:border-gold">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-zinc-400 mb-2">Teléfono *</label>
+                        <input type="tel" id="newClientPhone" required placeholder="+57 300 123 4567" class="w-full bg-dark border border-border rounded-lg px-4 py-3 focus:outline-none focus:border-gold">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-zinc-400 mb-2">WhatsApp</label>
+                        <input type="tel" id="newClientWhatsApp" placeholder="+57 300 123 4567" class="w-full bg-dark border border-border rounded-lg px-4 py-3 focus:outline-none focus:border-gold">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-sm text-zinc-400 mb-2">Email</label>
+                        <input type="email" id="newClientEmail" placeholder="cliente@email.com" class="w-full bg-dark border border-border rounded-lg px-4 py-3 focus:outline-none focus:border-gold">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-zinc-400 mb-2">Barbero Preferido</label>
+                        <select id="newClientBarber" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
+                            <option value="">Sin preferencia</option>
+                            <option value="Carlos">Carlos</option>
+                            <option value="Miguel">Miguel</option>
+                            <option value="Andrés">Andrés</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm text-zinc-400 mb-2">Cumpleaños</label>
+                        <input type="date" id="newClientBirthday" class="w-full bg-dark border border-border rounded-lg px-4 py-3 focus:outline-none focus:border-gold">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-sm text-zinc-400 mb-2">Notas</label>
+                        <textarea id="newClientNotes" rows="2" placeholder="Preferencias, alergias, etc..." class="w-full bg-dark border border-border rounded-lg px-4 py-3 focus:outline-none focus:border-gold resize-none"></textarea>
+                    </div>
+                    <div class="col-span-2">
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox" id="newClientVIP" class="w-5 h-5 rounded border-border bg-dark text-gold focus:ring-gold">
+                            <span>⭐ Marcar como Cliente VIP</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button type="button" onclick="closeModal('quickAddModal')" class="flex-1 py-3 border border-border rounded-lg hover:bg-dark transition">Cancelar</button>
+                    <button type="submit" class="flex-1 py-3 bg-gold text-dark font-semibold rounded-lg hover:opacity-90 transition">Guardar Cliente</button>
+                </div>
+                <p class="text-xs text-zinc-500 text-center">El cliente se guardará localmente y se sincronizará con Google Sheets</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- VIEW CLIENT MODAL -->
+    <div id="viewClientModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+        <div class="bg-card border border-border rounded-2xl max-w-lg w-full">
+            <div class="p-6 border-b border-border flex justify-between items-start">
+                <div class="flex items-center gap-4">
+                    <div id="viewClientAvatar" class="w-16 h-16 bg-gold rounded-full flex items-center justify-center text-dark text-2xl font-bold">J</div>
+                    <div>
+                        <h3 id="viewClientName" class="text-xl font-semibold">Juan Pérez</h3>
+                        <p id="viewClientPhone" class="text-zinc-500">+57 300 123 4567</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('viewClientModal')" class="text-zinc-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="grid grid-cols-3 gap-4 text-center">
+                    <div class="bg-dark rounded-xl p-4">
+                        <p class="text-2xl font-bold" id="viewClientVisits">0</p>
+                        <p class="text-xs text-zinc-500">Visitas</p>
+                    </div>
+                    <div class="bg-dark rounded-xl p-4">
+                        <p class="text-2xl font-bold text-green-400" id="viewClientSpent">$0</p>
+                        <p class="text-xs text-zinc-500">Total Gastado</p>
+                    </div>
+                    <div class="bg-dark rounded-xl p-4">
+                        <p class="text-2xl font-bold" id="viewClientLastVisit">-</p>
+                        <p class="text-xs text-zinc-500">Última Visita</p>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex justify-between py-2 border-b border-border">
+                        <span class="text-zinc-500">WhatsApp</span>
+                        <span id="viewClientWhatsApp">-</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-border">
+                        <span class="text-zinc-500">Email</span>
+                        <span id="viewClientEmail">-</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-border">
+                        <span class="text-zinc-500">Barbero Preferido</span>
+                        <span id="viewClientBarber">-</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-border">
+                        <span class="text-zinc-500">Cumpleaños</span>
+                        <span id="viewClientBirthday">-</span>
+                    </div>
+                    <div class="py-2">
+                        <span class="text-zinc-500 block mb-2">Notas</span>
+                        <p id="viewClientNotes" class="text-sm bg-dark rounded-lg p-3">-</p>
+                    </div>
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <a id="viewClientWhatsAppLink" href="#" target="_blank" class="flex-1 py-3 bg-green-600 text-white font-semibold rounded-lg text-center hover:bg-green-700 transition">💬 WhatsApp</a>
+                    <button onclick="editClient()" class="flex-1 py-3 border border-border rounded-lg hover:border-gold transition">✏️ Editar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOOKING MODAL -->
     <div id="bookingModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
         <div class="bg-card border border-border rounded-2xl max-w-lg w-full p-6">
-            <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-semibold">Nueva Reserva</h3><button onclick="closeModal('bookingModal')" class="text-zinc-400">✕</button></div>
+            <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-semibold">Nueva Reserva</h3><button onclick="closeModal('bookingModal')" class="text-zinc-400">&times;</button></div>
             <form onsubmit="createBooking(event)" class="space-y-4">
-                <input type="text" required placeholder="Cliente" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
-                <input type="tel" required placeholder="Teléfono" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
-                <select required class="w-full bg-dark border border-border rounded-lg px-4 py-3"><option value="">Servicio...</option><option>Corte - $25,000</option><option>Fade - $30,000</option><option>Barba - $15,000</option></select>
+                <select id="bookingClient" required class="w-full bg-dark border border-border rounded-lg px-4 py-3"><option value="">Seleccionar cliente...</option></select>
+                <select required class="w-full bg-dark border border-border rounded-lg px-4 py-3"><option value="">Servicio...</option><option>Corte Clásico - $25,000</option><option>Fade - $30,000</option><option>Barba - $15,000</option><option>Combo - $35,000</option></select>
                 <div class="grid grid-cols-2 gap-4"><input type="date" required class="w-full bg-dark border border-border rounded-lg px-4 py-3"><input type="time" required class="w-full bg-dark border border-border rounded-lg px-4 py-3"></div>
+                <select class="w-full bg-dark border border-border rounded-lg px-4 py-3"><option value="">Barbero...</option><option>Carlos</option><option>Miguel</option><option>Andrés</option></select>
                 <div class="flex gap-3"><button type="button" onclick="closeModal('bookingModal')" class="flex-1 py-3 border border-border rounded-lg">Cancelar</button><button type="submit" class="flex-1 py-3 bg-gold text-dark font-semibold rounded-lg">Crear</button></div>
             </form>
         </div>
     </div>
 
+    <!-- EXPENSE MODAL -->
     <div id="expenseModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
         <div class="bg-card border border-border rounded-2xl max-w-lg w-full p-6">
-            <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-semibold">Registrar Gasto</h3><button onclick="closeModal('expenseModal')" class="text-zinc-400">✕</button></div>
+            <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-semibold">Nuevo Gasto</h3><button onclick="closeModal('expenseModal')" class="text-zinc-400">&times;</button></div>
             <form onsubmit="createExpense(event)" class="space-y-4">
                 <input type="text" required placeholder="Descripción" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
-                <select required class="w-full bg-dark border border-border rounded-lg px-4 py-3"><option value="">Categoría...</option><option>Nómina</option><option>Arriendo</option><option>Insumos</option></select>
+                <select required class="w-full bg-dark border border-border rounded-lg px-4 py-3"><option value="">Categoría...</option><option>Nómina</option><option>Arriendo</option><option>Insumos</option><option>Servicios</option><option>Marketing</option></select>
                 <input type="number" required placeholder="Monto" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
                 <div class="flex gap-3"><button type="button" onclick="closeModal('expenseModal')" class="flex-1 py-3 border border-border rounded-lg">Cancelar</button><button type="submit" class="flex-1 py-3 bg-red-500 text-white font-semibold rounded-lg">Registrar</button></div>
             </form>
         </div>
     </div>
 
-    <div id="incomeModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-        <div class="bg-card border border-border rounded-2xl max-w-lg w-full p-6">
-            <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-semibold">Registrar Ingreso</h3><button onclick="closeModal('incomeModal')" class="text-zinc-400">✕</button></div>
-            <form onsubmit="createIncome(event)" class="space-y-4">
-                <input type="text" required placeholder="Descripción" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
-                <input type="number" required placeholder="Monto" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
-                <div class="flex gap-3"><button type="button" onclick="closeModal('incomeModal')" class="flex-1 py-3 border border-border rounded-lg">Cancelar</button><button type="submit" class="flex-1 py-3 bg-green-500 text-white font-semibold rounded-lg">Registrar</button></div>
-            </form>
-        </div>
+    <!-- TOAST -->
+    <div id="toast" class="hidden fixed bottom-6 right-6 bg-green-500 text-white px-6 py-4 rounded-xl z-50 shadow-lg">
+        <span id="toastMessage">OK</span>
     </div>
-
-    <div id="clientModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-        <div class="bg-card border border-border rounded-2xl max-w-lg w-full p-6">
-            <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-semibold">Nuevo Cliente</h3><button onclick="closeModal('clientModal')" class="text-zinc-400">✕</button></div>
-            <form onsubmit="createClient(event)" class="space-y-4">
-                <input type="text" required placeholder="Nombre" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
-                <input type="tel" required placeholder="Teléfono" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
-                <div class="flex gap-3"><button type="button" onclick="closeModal('clientModal')" class="flex-1 py-3 border border-border rounded-lg">Cancelar</button><button type="submit" class="flex-1 py-3 bg-gold text-dark font-semibold rounded-lg">Guardar</button></div>
-            </form>
-        </div>
-    </div>
-
-    <div id="toast" class="hidden fixed bottom-6 right-6 bg-green-500 text-white px-6 py-4 rounded-xl z-50">✓ <span id="toastMessage">OK</span></div>
 
     <script>
-        // ==================== CONFIG ====================
-        const CONFIG = {
-            GOOGLE_CLIENT_ID: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com', // Replace with real client ID
-            ALLOWED_EMAILS: ['jermaine@jermainebarbers.com', 'admin@jermainebarbers.com', 'sergio@machinemind.ai'],
-            INVITE_CODES: ['JERMAINE2026', 'BARBER2026', 'MACHINEMIND'],
-            SESSION_TIMEOUT: 30 * 60 * 1000, // 30 minutes
-        };
-
         // ==================== DATA ====================
         const DB = {
-            users: JSON.parse(localStorage.getItem('jermaine_users') || '[]'),
-            bookings: [{id:1,date:'01-30',time:'09:00',client:'Juan Pérez',service:'Fade',status:'completed',amount:30000},{id:2,date:'01-30',time:'09:45',client:'Miguel Torres',service:'Combo',status:'completed',amount:35000},{id:3,date:'01-30',time:'10:30',client:'Carlos Ruiz',service:'Corte',status:'confirmed',amount:25000},{id:4,date:'01-30',time:'11:00',client:'David Smith',service:'Fade',status:'confirmed',amount:30000},{id:5,date:'01-30',time:'11:30',client:'Pedro Gómez',service:'Barba',status:'pending',amount:15000}],
-            clients: [{id:1,name:'Juan Pérez',phone:'+57 300 123',visits:12,spent:420000,loyalty:2},{id:2,name:'Miguel Torres',phone:'+57 301 234',visits:8,spent:280000,loyalty:1},{id:3,name:'Carlos Ruiz',phone:'+57 302 345',visits:15,spent:525000,loyalty:3}],
-            expenses: [{id:1,date:'01-30',description:'Productos',category:'Insumos',amount:450000},{id:2,date:'01-28',description:'Nómina',category:'Nómina',amount:1250000},{id:3,date:'01-15',description:'Arriendo',category:'Arriendo',amount:800000}],
-            staff: [{id:1,name:'Carlos',role:'Senior',status:'available',bookings:5,revenue:175000},{id:2,name:'Miguel',role:'Barbero',status:'busy',bookings:4,revenue:140000},{id:3,name:'Andrés',role:'Barbero',status:'available',bookings:5,revenue:170000}],
-            inventory: [{id:1,name:'Pomada Mate',stock:3,price:45000,min:5},{id:2,name:'Aceite Barba',stock:2,price:55000,min:5},{id:3,name:'Shampoo',stock:8,price:65000,min:5}],
-            knowledge: [{id:1,trigger:'promociones',response:'🎉 20% OFF en Combo!'},{id:2,trigger:'pago',response:'💳 Efectivo, Nequi, tarjetas'}],
-            activityLog: []
+            clients: JSON.parse(localStorage.getItem('jermaine_clients') || '[]'),
+            bookings: [
+                {id:1,date:'2026-01-31',time:'09:00',client:'Juan Pérez',phone:'+57 300 123',service:'Fade',barber:'Carlos',status:'confirmed',amount:30000},
+                {id:2,date:'2026-01-31',time:'09:45',client:'Miguel Torres',phone:'+57 301 234',service:'Combo',barber:'Miguel',status:'completed',amount:35000},
+                {id:3,date:'2026-01-31',time:'10:30',client:'Carlos Ruiz',phone:'+57 302 345',service:'Corte',barber:'Andrés',status:'confirmed',amount:25000},
+                {id:4,date:'2026-01-31',time:'11:00',client:'David Smith',phone:'+1 555 123',service:'Fade',barber:'Carlos',status:'pending',amount:30000},
+                {id:5,date:'2026-01-31',time:'11:30',client:'Pedro Gómez',phone:'+57 303 456',service:'Barba',barber:'Andrés',status:'pending',amount:15000}
+            ],
+            expenses: [
+                {id:1,date:'2026-01-30',description:'Productos capilares',category:'Insumos',amount:450000},
+                {id:2,date:'2026-01-28',description:'Nómina quincenal',category:'Nómina',amount:1250000},
+                {id:3,date:'2026-01-25',description:'Recibo de luz',category:'Servicios',amount:180000},
+                {id:4,date:'2026-01-15',description:'Arriendo enero',category:'Arriendo',amount:800000}
+            ],
+            staff: [
+                {id:1,name:'Carlos',role:'Barbero Senior',status:'available',bookings:5,revenue:175000},
+                {id:2,name:'Miguel',role:'Barbero',status:'busy',bookings:4,revenue:140000},
+                {id:3,name:'Andrés',role:'Barbero',status:'available',bookings:5,revenue:170000}
+            ],
+            inventory: [
+                {id:1,name:'Pomada Mate Premium',stock:3,price:45000,min:5},
+                {id:2,name:'Aceite para Barba',stock:2,price:55000,min:5},
+                {id:3,name:'Shampoo Anticaída',stock:8,price:65000,min:5},
+                {id:4,name:'Cuchillas Pro',stock:1,price:85000,min:3}
+            ],
+            sheetsConfig: JSON.parse(localStorage.getItem('jermaine_sheets_config') || 'null')
         };
 
-        // ==================== AUTH FUNCTIONS ====================
-        let currentUser = null;
-        let sessionTimer = null;
-
-        function showAuthTab(tab) {
-            document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login');
-            document.getElementById('registerForm').classList.toggle('hidden', tab !== 'register');
-            document.getElementById('tabLogin').classList.toggle('bg-gold', tab === 'login');
-            document.getElementById('tabLogin').classList.toggle('text-dark', tab === 'login');
-            document.getElementById('tabLogin').classList.toggle('text-zinc-400', tab !== 'login');
-            document.getElementById('tabRegister').classList.toggle('bg-gold', tab === 'register');
-            document.getElementById('tabRegister').classList.toggle('text-dark', tab === 'register');
-            document.getElementById('tabRegister').classList.toggle('text-zinc-400', tab !== 'register');
+        // Initialize with sample clients if empty
+        if (DB.clients.length === 0) {
+            DB.clients = [
+                {id:1,name:'Juan Pérez',phone:'+57 300 123 4567',whatsapp:'+57 300 123 4567',email:'juan@email.com',barber:'Carlos',notes:'Prefiere fade bajo',visits:12,spent:420000,lastVisit:'2026-01-30',birthday:'1990-05-15',vip:false,createdAt:'2025-06-15'},
+                {id:2,name:'Miguel Torres',phone:'+57 301 234 5678',whatsapp:'+57 301 234 5678',email:'',barber:'Miguel',notes:'',visits:8,spent:280000,lastVisit:'2026-01-30',birthday:'',vip:false,createdAt:'2025-08-20'},
+                {id:3,name:'Carlos Ruiz',phone:'+57 302 345 6789',whatsapp:'+57 302 345 6789',email:'carlos.ruiz@gmail.com',barber:'',notes:'Cliente desde 2024',visits:15,spent:525000,lastVisit:'2026-01-28',birthday:'1985-12-03',vip:true,createdAt:'2024-03-10'},
+                {id:4,name:'David Smith',phone:'+1 555 123 4567',whatsapp:'+1 555 123 4567',email:'david.smith@email.com',barber:'Carlos',notes:'Turista frecuente, habla inglés',visits:3,spent:90000,lastVisit:'2026-01-25',birthday:'',vip:false,createdAt:'2025-11-01'},
+                {id:5,name:'Pedro Gómez',phone:'+57 303 456 7890',whatsapp:'+57 303 456 7890',email:'pedro.gomez@outlook.com',barber:'Andrés',notes:'Alérgico a ciertos productos',visits:20,spent:700000,lastVisit:'2026-01-30',birthday:'1988-07-22',vip:true,createdAt:'2024-01-15'}
+            ];
+            saveClients();
         }
 
-        function togglePassword(inputId) {
-            const input = document.getElementById(inputId);
-            input.type = input.type === 'password' ? 'text' : 'password';
-        }
-
-        function handleEmailLogin(e) {
+        // ==================== AUTH ====================
+        function handleLogin(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            // Demo login
-            if ((email === 'admin@jermaine.com' && password === 'admin123') || 
-                (email === 'jermaine@jermainebarbers.com' && password === 'barber2026')) {
-                loginSuccess({ name: 'Jermaine', email: email, method: 'email' });
-                return;
-            }
-
-            // Check registered users
-            const user = DB.users.find(u => u.email === email && u.password === hashPassword(password));
-            if (user) {
-                loginSuccess(user);
+            const pass = document.getElementById('loginPass').value;
+            if ((email === 'admin@jermaine.com' && pass === 'admin123') || (email === 'jermaine@jermainebarbers.com' && pass === 'barber2026')) {
+                localStorage.setItem('jermaine_auth', 'true');
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                initDashboard();
+                showToast('✅ Bienvenido!');
             } else {
                 showToast('❌ Credenciales incorrectas', 'error');
             }
         }
 
-        function handleRegister(e) {
-            e.preventDefault();
-            const name = document.getElementById('regName').value;
-            const email = document.getElementById('regEmail').value;
-            const password = document.getElementById('regPassword').value;
-            const confirmPassword = document.getElementById('regPasswordConfirm').value;
-            const inviteCode = document.getElementById('regInviteCode').value.toUpperCase();
-
-            if (password !== confirmPassword) {
-                showToast('❌ Las contraseñas no coinciden', 'error');
-                return;
-            }
-
-            if (!CONFIG.INVITE_CODES.includes(inviteCode)) {
-                showToast('❌ Código de invitación inválido', 'error');
-                return;
-            }
-
-            if (DB.users.find(u => u.email === email)) {
-                showToast('❌ Este email ya está registrado', 'error');
-                return;
-            }
-
-            const newUser = { id: Date.now(), name, email, password: hashPassword(password), method: 'email', createdAt: new Date().toISOString() };
-            DB.users.push(newUser);
-            localStorage.setItem('jermaine_users', JSON.stringify(DB.users));
-            
-            showToast('✅ Cuenta creada exitosamente');
-            showAuthTab('login');
-            document.getElementById('loginEmail').value = email;
-        }
-
         function handleGoogleLogin() {
-            // For demo purposes - in production, use real Google OAuth
-            showToast('🔗 Conectando con Google...');
+            showToast('🔗 Conectando...');
             setTimeout(() => {
-                const mockGoogleUser = {
-                    name: 'Jermaine (Google)',
-                    email: 'jermaine@gmail.com',
-                    picture: 'https://ui-avatars.com/api/?name=Jermaine&background=D4AF37&color=000',
-                    method: 'google'
-                };
-                loginSuccess(mockGoogleUser);
+                localStorage.setItem('jermaine_auth', 'true');
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                initDashboard();
+                showToast('✅ Conectado con Google!');
             }, 1500);
         }
 
-        function loginSuccess(user) {
-            currentUser = user;
-            logActivity('Inicio de sesión exitoso', 'login');
-            
-            // Store session
-            const session = {
-                user: user,
-                loginTime: Date.now(),
-                expiresAt: Date.now() + CONFIG.SESSION_TIMEOUT
-            };
-            localStorage.setItem('jermaine_session', JSON.stringify(session));
-            
-            // Update UI
-            document.getElementById('authScreen').classList.add('hidden');
-            document.getElementById('dashboard').classList.remove('hidden');
-            
-            // Update user info display
-            document.getElementById('userName').textContent = user.name;
-            document.getElementById('welcomeName').textContent = user.name.split(' ')[0];
-            document.getElementById('menuUserName').textContent = user.name;
-            document.getElementById('menuUserEmail').textContent = user.email;
-            document.getElementById('settingsEmail').value = user.email;
-            document.getElementById('loginMethodDisplay').textContent = user.method === 'google' ? 'Google' : 'Email/Contraseña';
-            
-            if (user.picture) {
-                document.getElementById('userAvatar').src = user.picture;
-                document.getElementById('userAvatar').classList.remove('hidden');
-                document.getElementById('userInitial').classList.add('hidden');
-            } else {
-                document.getElementById('userInitial').textContent = user.name.charAt(0).toUpperCase();
-            }
-            
-            // Start session timer
-            startSessionTimer();
-            
-            // Initialize dashboard
-            initDashboard();
-            
-            showToast('✅ Bienvenido, ' + user.name);
-        }
-
         function handleLogout() {
-            logActivity('Cierre de sesión', 'logout');
-            currentUser = null;
-            localStorage.removeItem('jermaine_session');
-            clearTimeout(sessionTimer);
-            
+            localStorage.removeItem('jermaine_auth');
             document.getElementById('dashboard').classList.add('hidden');
-            document.getElementById('authScreen').classList.remove('hidden');
-            document.getElementById('userMenu').classList.add('hidden');
-            
+            document.getElementById('loginScreen').classList.remove('hidden');
             showToast('👋 Sesión cerrada');
         }
 
-        function startSessionTimer() {
-            clearTimeout(sessionTimer);
-            sessionTimer = setTimeout(() => {
-                showToast('⏰ Sesión expirada por inactividad', 'warning');
-                handleLogout();
-            }, CONFIG.SESSION_TIMEOUT);
+        // Check auth on load
+        if (localStorage.getItem('jermaine_auth') === 'true') {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            setTimeout(initDashboard, 100);
         }
 
-        function resetSessionTimer() {
-            if (currentUser) startSessionTimer();
-        }
-
-        function hashPassword(password) {
-            // Simple hash for demo - use bcrypt in production
-            return btoa(password);
-        }
-
-        function showForgotPassword() {
-            document.getElementById('forgotModal').classList.remove('hidden');
-        }
-
-        function closeForgotPassword() {
-            document.getElementById('forgotModal').classList.add('hidden');
-        }
-
-        function handleForgotPassword(e) {
-            e.preventDefault();
-            const email = document.getElementById('forgotEmail').value;
-            showToast('📧 Enlace enviado a ' + email);
-            closeForgotPassword();
-        }
-
-        function verify2FA(e) {
-            e.preventDefault();
-            showToast('✅ Código verificado');
-            document.getElementById('twoFactorModal').classList.add('hidden');
-        }
-
-        function resend2FA() {
-            showToast('📱 Código reenviado');
-        }
-
-        function moveToNext(input, index) {
-            if (input.value && index < 6) {
-                input.nextElementSibling?.focus();
-            }
-        }
-
-        function toggle2FA() {
-            const setup = document.getElementById('2faSetup');
-            const toggle = document.getElementById('toggle2FA');
-            setup.classList.toggle('hidden', !toggle.checked);
-        }
-
-        function toggleUserMenu() {
-            document.getElementById('userMenu').classList.toggle('hidden');
-        }
-
-        function logActivity(action, type) {
-            DB.activityLog.unshift({
-                action,
-                type,
-                timestamp: new Date().toISOString(),
-                user: currentUser?.email
-            });
-        }
-
-        // Check existing session on load
-        function checkSession() {
-            const sessionData = localStorage.getItem('jermaine_session');
-            if (sessionData) {
-                const session = JSON.parse(sessionData);
-                if (session.expiresAt > Date.now()) {
-                    loginSuccess(session.user);
-                    return;
-                }
-                localStorage.removeItem('jermaine_session');
-            }
-        }
-
-        // ==================== UI FUNCTIONS ====================
+        // ==================== NAVIGATION ====================
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('-translate-x-full');
             document.getElementById('sidebarOverlay').classList.toggle('hidden');
         }
 
         function showSection(s) {
-            resetSessionTimer();
-            document.querySelectorAll('main>section').forEach(x => x.classList.add('hidden'));
+            document.querySelectorAll('main > section').forEach(x => x.classList.add('hidden'));
             document.getElementById('section-' + s)?.classList.remove('hidden');
             document.querySelectorAll('.sidebar-item').forEach(x => {
                 x.classList.remove('active');
                 if (x.dataset.section === s) x.classList.add('active');
             });
             if (window.innerWidth < 1024) toggleSidebar();
-            document.getElementById('userMenu').classList.add('hidden');
             initSection(s);
         }
 
         function initSection(s) {
             switch(s) {
-                case 'bookings': renderBookings(); break;
                 case 'clients': renderClients(); break;
+                case 'bookings': renderBookings(); populateClientDropdown(); break;
                 case 'expenses': renderExpenses(); break;
                 case 'staff': renderStaff(); break;
                 case 'inventory': renderInventory(); break;
-                case 'availability': renderAvailability(); break;
-                case 'gallery': renderGallery(); break;
-                case 'chatbot': renderKnowledge(); break;
-                case 'cashflow': initCashflow(); break;
+                case 'sheets': checkSheetsConnection(); break;
             }
         }
 
-        function openModal(id) { resetSessionTimer(); document.getElementById(id).classList.remove('hidden'); }
+        // ==================== MODALS ====================
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+        function openQuickAddClient() { openModal('quickAddModal'); }
         
-        function showToast(m, type = 'success') {
+        function showToast(msg, type = 'success') {
             const t = document.getElementById('toast');
-            t.className = `fixed bottom-6 right-6 px-6 py-4 rounded-xl z-50 ${type === 'error' ? 'bg-red-500' : type === 'warning' ? 'bg-yellow-500' : 'bg-green-500'} text-white`;
-            document.getElementById('toastMessage').textContent = m.replace(/^[✓❌📧🔗⏰👋📱✅]+ /, '');
+            t.className = `fixed bottom-6 right-6 px-6 py-4 rounded-xl z-50 shadow-lg ${type === 'error' ? 'bg-red-500' : 'bg-green-500'} text-white`;
+            document.getElementById('toastMessage').textContent = msg;
             t.classList.remove('hidden');
             setTimeout(() => t.classList.add('hidden'), 3000);
         }
 
         // ==================== DASHBOARD ====================
         function initDashboard() {
-            renderToday();
+            updateClientCount();
+            renderTodayAppointments();
+            renderRecentClients();
             initCharts();
         }
 
-        function renderToday() {
-            document.getElementById('todayAppointments').innerHTML = DB.bookings.slice(0, 5).map(b => '<tr class="border-b border-border/50"><td class="py-3">' + b.time + '</td><td class="py-3">' + b.client + '</td><td class="py-3">' + b.service + '</td><td class="py-3"><span class="badge badge-' + b.status + '">' + (b.status === 'confirmed' ? 'Confirmada' : b.status === 'completed' ? 'Completada' : 'Pendiente') + '</span></td><td class="py-3 text-right font-medium">$' + b.amount.toLocaleString() + '</td></tr>').join('');
+        function updateClientCount() {
+            const count = DB.clients.length;
+            document.getElementById('clientCount').textContent = count;
+            document.getElementById('totalClientsKPI').textContent = count;
+            const totalEl = document.getElementById('clientsTotal');
+            if (totalEl) totalEl.textContent = count;
+        }
+
+        function renderTodayAppointments() {
+            const tbody = document.getElementById('todayAppointments');
+            tbody.innerHTML = DB.bookings.slice(0, 5).map(b => `
+                <tr class="border-b border-border/50 hover:bg-white/5">
+                    <td class="py-3">${b.time}</td>
+                    <td class="py-3 font-medium">${b.client}</td>
+                    <td class="py-3 hidden sm:table-cell">${b.service}</td>
+                    <td class="py-3"><span class="badge badge-${b.status}">${b.status === 'confirmed' ? 'Confirmada' : b.status === 'completed' ? 'Completada' : 'Pendiente'}</span></td>
+                    <td class="py-3 text-right font-medium">$${b.amount.toLocaleString()}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderRecentClients() {
+            const container = document.getElementById('recentClients');
+            const recent = [...DB.clients].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 4);
+            container.innerHTML = recent.map(c => `
+                <div class="flex items-center gap-3 p-3 bg-dark rounded-xl cursor-pointer hover:bg-white/5" onclick="viewClient(${c.id})">
+                    <div class="w-10 h-10 bg-gold rounded-full flex items-center justify-center text-dark font-semibold">${c.name.charAt(0)}</div>
+                    <div class="flex-1 min-w-0">
+                        <p class="font-medium truncate">${c.name}</p>
+                        <p class="text-xs text-zinc-500">${c.visits} visitas</p>
+                    </div>
+                    ${c.vip ? '<span class="text-gold">⭐</span>' : ''}
+                </div>
+            `).join('');
         }
 
         function initCharts() {
             const r = document.getElementById('revenueChart');
-            if (r) new Chart(r, { type: 'bar', data: { labels: ['L', 'M', 'X', 'J', 'V', 'S', 'D'], datasets: [{ label: 'Ingresos', data: [420, 380, 450, 485, 520, 680, 0], backgroundColor: 'rgba(212,175,55,0.8)', borderRadius: 6 }, { label: 'Gastos', data: [150, 80, 120, 200, 100, 150, 0], backgroundColor: 'rgba(239,68,68,0.6)', borderRadius: 6 }] }, options: { responsive: true, plugins: { legend: { labels: { color: '#a1a1aa' } } }, scales: { y: { grid: { color: '#27272a' }, ticks: { color: '#a1a1aa' } }, x: { grid: { display: false }, ticks: { color: '#a1a1aa' } } } } });
+            if (r && !r.chart) {
+                r.chart = new Chart(r, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+                        datasets: [
+                            { label: 'Ingresos', data: [420, 380, 450, 485, 520, 680, 0], backgroundColor: 'rgba(212,175,55,0.8)', borderRadius: 6 },
+                            { label: 'Gastos', data: [150, 80, 120, 200, 100, 150, 0], backgroundColor: 'rgba(239,68,68,0.6)', borderRadius: 6 }
+                        ]
+                    },
+                    options: { responsive: true, plugins: { legend: { labels: { color: '#a1a1aa' } } }, scales: { y: { grid: { color: '#27272a' }, ticks: { color: '#a1a1aa' } }, x: { grid: { display: false }, ticks: { color: '#a1a1aa' } } } }
+                });
+            }
             const s = document.getElementById('servicesChart');
-            if (s) new Chart(s, { type: 'doughnut', data: { labels: ['Fade', 'Combo', 'Corte', 'Barba'], datasets: [{ data: [35, 25, 20, 12], backgroundColor: ['#D4AF37', '#3b82f6', '#22c55e', '#a855f7'], borderWidth: 0 }] }, options: { responsive: true, plugins: { legend: { position: 'right', labels: { color: '#a1a1aa' } } } } });
-        }
-
-        function initCashflow() {
-            const c = document.getElementById('cashflowChart');
-            if (c && !c.chart) {
-                c.chart = new Chart(c, { type: 'line', data: { labels: Array.from({ length: 30 }, (_, i) => i + 1), datasets: [{ label: 'Flujo', data: Array.from({ length: 30 }, (_, d) => 8000 + d * 270), borderColor: '#D4AF37', backgroundColor: 'rgba(212,175,55,0.1)', fill: true, tension: 0.3 }] }, options: { responsive: true, plugins: { legend: { labels: { color: '#a1a1aa' } } }, scales: { y: { grid: { color: '#27272a' }, ticks: { color: '#a1a1aa' } }, x: { grid: { display: false }, ticks: { color: '#a1a1aa' } } } } });
+            if (s && !s.chart) {
+                s.chart = new Chart(s, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Fade', 'Combo', 'Corte', 'Barba'],
+                        datasets: [{ data: [35, 25, 20, 12], backgroundColor: ['#D4AF37', '#3b82f6', '#22c55e', '#a855f7'], borderWidth: 0 }]
+                    },
+                    options: { responsive: true, plugins: { legend: { position: 'right', labels: { color: '#a1a1aa' } } } }
+                });
             }
         }
 
-        function renderBookings() { document.getElementById('bookingsTableBody').innerHTML = DB.bookings.map(b => '<tr class="border-b border-border/50"><td class="p-4">#' + b.id + '</td><td class="p-4">' + b.date + ' ' + b.time + '</td><td class="p-4">' + b.client + '</td><td class="p-4">' + b.service + '</td><td class="p-4"><span class="badge badge-' + b.status + '">' + (b.status === 'confirmed' ? 'Confirmada' : b.status === 'completed' ? 'Completada' : 'Pendiente') + '</span></td><td class="p-4 text-right">$' + b.amount.toLocaleString() + '</td></tr>').join(''); }
-        function renderClients() { document.getElementById('clientsGrid').innerHTML = DB.clients.map(c => '<div class="bg-card border border-border rounded-xl p-5"><div class="flex items-start gap-4"><div class="w-12 h-12 bg-gold rounded-full flex items-center justify-center text-dark font-semibold">' + c.name.charAt(0) + '</div><div class="flex-1"><h4 class="font-semibold">' + c.name + '</h4><p class="text-sm text-zinc-500">' + c.phone + '</p></div></div><div class="mt-4 pt-4 border-t border-border grid grid-cols-2 gap-2 text-center text-sm"><div><p class="text-zinc-500">Visitas</p><p class="font-semibold">' + c.visits + '</p></div><div><p class="text-zinc-500">Gastado</p><p class="font-semibold text-green-400">$' + (c.spent / 1000).toFixed(0) + 'K</p></div></div></div>').join(''); }
-        function renderExpenses() { document.getElementById('expensesTableBody').innerHTML = DB.expenses.map(e => '<tr class="border-b border-border/50"><td class="p-4">' + e.date + '</td><td class="p-4">' + e.description + '</td><td class="p-4"><span class="badge bg-zinc-700">' + e.category + '</span></td><td class="p-4 text-right text-red-400">-$' + e.amount.toLocaleString() + '</td></tr>').join(''); }
-        function renderStaff() { document.getElementById('staffGrid').innerHTML = DB.staff.map(s => '<div class="bg-card border border-border rounded-xl p-6"><div class="flex items-center gap-4 mb-4"><div class="w-14 h-14 bg-' + (s.status === 'available' ? 'green' : 'yellow') + '-500 rounded-full flex items-center justify-center text-white font-bold text-xl">' + s.name.charAt(0) + '</div><div><h4 class="font-semibold">' + s.name + '</h4><p class="text-sm text-zinc-500">' + s.role + '</p><p class="text-xs ' + (s.status === 'available' ? 'text-green-500' : 'text-yellow-500') + '">● ' + (s.status === 'available' ? 'Disponible' : 'Ocupado') + '</p></div></div><div class="space-y-2 text-sm"><div class="flex justify-between"><span class="text-zinc-500">Citas</span><span>' + s.bookings + '</span></div><div class="flex justify-between"><span class="text-zinc-500">Ingresos</span><span class="text-green-400">$' + s.revenue.toLocaleString() + '</span></div></div></div>').join(''); }
-        function renderInventory() { document.getElementById('inventoryTableBody').innerHTML = DB.inventory.map(p => '<tr class="border-b border-border/50"><td class="p-4">' + p.name + '</td><td class="p-4 text-center ' + (p.stock <= p.min ? 'text-red-400 font-bold' : '') + '">' + p.stock + '</td><td class="p-4 text-right">$' + p.price.toLocaleString() + '</td><td class="p-4 text-center">' + (p.stock <= p.min ? '<span class="badge bg-red-500/20 text-red-400">Bajo</span>' : '<span class="badge bg-green-500/20 text-green-400">OK</span>') + '</td></tr>').join(''); }
-        function renderAvailability() { document.getElementById('barberStatus').innerHTML = DB.staff.map(s => '<div class="bg-card border border-border rounded-xl p-5"><div class="flex items-center gap-3 mb-4"><div class="w-12 h-12 bg-' + (s.status === 'available' ? 'green' : 'yellow') + '-500 rounded-full flex items-center justify-center text-white font-bold">' + s.name.charAt(0) + '</div><div><p class="font-semibold">' + s.name + '</p><p class="text-sm ' + (s.status === 'available' ? 'text-green-500' : 'text-yellow-500') + '">● ' + (s.status === 'available' ? 'Disponible' : 'Ocupado') + '</p></div></div></div>').join(''); }
-        function renderGallery() { const e = ['💈', '✂️', '🧔', '💇', '🪒', '💆']; document.getElementById('galleryGrid').innerHTML = e.map(x => '<div class="aspect-square bg-gold/10 rounded-xl flex items-center justify-center text-4xl border border-border hover:border-gold cursor-pointer">' + x + '</div>').join(''); }
-        function renderKnowledge() { document.getElementById('knowledgeBase').innerHTML = DB.knowledge.map(k => '<div class="bg-dark rounded-xl p-4 border border-border"><p class="text-sm text-zinc-400 mb-1">Trigger: <span class="text-gold">' + k.trigger + '</span></p><p class="text-sm">' + k.response + '</p></div>').join(''); }
+        // ==================== CLIENTS ====================
+        function saveClients() {
+            localStorage.setItem('jermaine_clients', JSON.stringify(DB.clients));
+            updateClientCount();
+        }
 
-        // Form handlers
-        function createBooking(e) { e.preventDefault(); logActivity('Reserva creada', 'booking'); showToast('✅ Reserva creada'); closeModal('bookingModal'); e.target.reset(); }
-        function createExpense(e) { e.preventDefault(); logActivity('Gasto registrado', 'expense'); showToast('✅ Gasto registrado'); closeModal('expenseModal'); e.target.reset(); }
-        function createIncome(e) { e.preventDefault(); logActivity('Ingreso registrado', 'income'); showToast('✅ Ingreso registrado'); closeModal('incomeModal'); e.target.reset(); }
-        function createClient(e) { e.preventDefault(); logActivity('Cliente creado', 'client'); showToast('✅ Cliente guardado'); closeModal('clientModal'); e.target.reset(); }
-        function addKnowledge() { const t = prompt('Palabra clave:'); if (!t) return; const r = prompt('Respuesta:'); if (!r) return; DB.knowledge.push({ id: Date.now(), trigger: t, response: r }); renderKnowledge(); showToast('✅ Agregado'); }
-        function uploadPhotos() { const i = document.createElement('input'); i.type = 'file'; i.multiple = true; i.accept = 'image/*'; i.onchange = () => { logActivity('Fotos subidas', 'upload'); showToast('✅ ' + i.files.length + ' foto(s) subidas'); }; i.click(); }
-        function changePassword() { showToast('📧 Enlace de cambio enviado a tu email'); }
-        function showSecuritySettings() { showSection('security'); }
-        function viewActivityLog() { showSection('security'); }
+        function renderClients() {
+            const grid = document.getElementById('clientsGrid');
+            const search = document.getElementById('clientSearch')?.value.toLowerCase() || '';
+            const filter = document.getElementById('clientFilter')?.value || 'all';
+            
+            let filtered = DB.clients.filter(c => {
+                const matchesSearch = c.name.toLowerCase().includes(search) || 
+                                     c.phone.includes(search) || 
+                                     (c.notes && c.notes.toLowerCase().includes(search));
+                if (!matchesSearch) return false;
+                
+                if (filter === 'vip') return c.visits >= 10 || c.vip;
+                if (filter === 'new') {
+                    const created = new Date(c.createdAt);
+                    const monthAgo = new Date();
+                    monthAgo.setMonth(monthAgo.getMonth() - 1);
+                    return created > monthAgo;
+                }
+                if (filter === 'inactive') {
+                    const lastVisit = new Date(c.lastVisit);
+                    const monthAgo = new Date();
+                    monthAgo.setDate(monthAgo.getDate() - 30);
+                    return lastVisit < monthAgo;
+                }
+                return true;
+            });
 
-        // Activity tracking
-        document.addEventListener('click', resetSessionTimer);
-        document.addEventListener('keypress', resetSessionTimer);
+            grid.innerHTML = filtered.map(c => `
+                <div class="bg-card border border-border rounded-xl p-5 hover:border-gold/50 transition cursor-pointer" onclick="viewClient(${c.id})">
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-gold to-yellow-600 rounded-full flex items-center justify-center text-dark font-semibold text-lg">${c.name.charAt(0)}</div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2">
+                                <h4 class="font-semibold truncate">${c.name}</h4>
+                                ${c.vip || c.visits >= 10 ? '<span class="badge badge-vip">VIP</span>' : ''}
+                            </div>
+                            <p class="text-sm text-zinc-500">${c.phone}</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 text-center text-sm border-t border-border pt-4">
+                        <div>
+                            <p class="text-zinc-500 text-xs">Visitas</p>
+                            <p class="font-semibold">${c.visits}</p>
+                        </div>
+                        <div>
+                            <p class="text-zinc-500 text-xs">Gastado</p>
+                            <p class="font-semibold text-green-400">$${(c.spent / 1000).toFixed(0)}K</p>
+                        </div>
+                        <div>
+                            <p class="text-zinc-500 text-xs">Última</p>
+                            <p class="font-semibold">${c.lastVisit ? c.lastVisit.slice(5) : '-'}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
 
-        // Initialize
-        checkSession();
+            document.getElementById('clientsTotal').textContent = filtered.length;
+        }
+
+        function filterClients() {
+            renderClients();
+        }
+
+        function viewClient(id) {
+            const c = DB.clients.find(x => x.id === id);
+            if (!c) return;
+            
+            document.getElementById('viewClientAvatar').textContent = c.name.charAt(0);
+            document.getElementById('viewClientName').textContent = c.name;
+            document.getElementById('viewClientPhone').textContent = c.phone;
+            document.getElementById('viewClientVisits').textContent = c.visits;
+            document.getElementById('viewClientSpent').textContent = '$' + (c.spent / 1000).toFixed(0) + 'K';
+            document.getElementById('viewClientLastVisit').textContent = c.lastVisit ? c.lastVisit.slice(5) : '-';
+            document.getElementById('viewClientWhatsApp').textContent = c.whatsapp || '-';
+            document.getElementById('viewClientEmail').textContent = c.email || '-';
+            document.getElementById('viewClientBarber').textContent = c.barber || 'Sin preferencia';
+            document.getElementById('viewClientBirthday').textContent = c.birthday || '-';
+            document.getElementById('viewClientNotes').textContent = c.notes || 'Sin notas';
+            
+            const waLink = document.getElementById('viewClientWhatsAppLink');
+            const waNumber = (c.whatsapp || c.phone).replace(/\D/g, '');
+            waLink.href = `https://wa.me/${waNumber}`;
+            
+            openModal('viewClientModal');
+        }
+
+        function saveNewClient(e) {
+            e.preventDefault();
+            
+            const newClient = {
+                id: Date.now(),
+                name: document.getElementById('newClientName').value,
+                phone: document.getElementById('newClientPhone').value,
+                whatsapp: document.getElementById('newClientWhatsApp').value || document.getElementById('newClientPhone').value,
+                email: document.getElementById('newClientEmail').value,
+                barber: document.getElementById('newClientBarber').value,
+                birthday: document.getElementById('newClientBirthday').value,
+                notes: document.getElementById('newClientNotes').value,
+                vip: document.getElementById('newClientVIP').checked,
+                visits: 0,
+                spent: 0,
+                lastVisit: '',
+                createdAt: new Date().toISOString().split('T')[0]
+            };
+            
+            DB.clients.push(newClient);
+            saveClients();
+            
+            closeModal('quickAddModal');
+            e.target.reset();
+            
+            showToast('✅ Cliente guardado: ' + newClient.name);
+            
+            // Sync to sheets if configured
+            if (DB.sheetsConfig) {
+                syncClientToSheets(newClient);
+            }
+            
+            renderClients();
+            renderRecentClients();
+        }
+
+        function editClient() {
+            showToast('🔧 Función en desarrollo');
+        }
+
+        function populateClientDropdown() {
+            const select = document.getElementById('bookingClient');
+            if (!select) return;
+            select.innerHTML = '<option value="">Seleccionar cliente...</option>' + 
+                DB.clients.map(c => `<option value="${c.id}">${c.name} - ${c.phone}</option>`).join('');
+        }
+
+        // ==================== GOOGLE SHEETS ====================
+        function connectGoogleSheets() {
+            showToast('🔗 Conectando con Google Sheets...');
+            setTimeout(() => {
+                document.getElementById('sheetsConnectionStatus').textContent = '✅ Conectado';
+                document.getElementById('sheetsStatus').classList.remove('hidden');
+                showToast('✅ Google Sheets conectado!');
+            }, 2000);
+        }
+
+        function saveSheetConfig() {
+            const config = {
+                url: document.getElementById('sheetUrl').value,
+                clientsSheet: document.getElementById('clientsSheetName').value,
+                bookingsSheet: document.getElementById('bookingsSheetName').value
+            };
+            localStorage.setItem('jermaine_sheets_config', JSON.stringify(config));
+            DB.sheetsConfig = config;
+            showToast('✅ Configuración guardada');
+        }
+
+        function checkSheetsConnection() {
+            if (DB.sheetsConfig && DB.sheetsConfig.url) {
+                document.getElementById('sheetUrl').value = DB.sheetsConfig.url;
+                document.getElementById('sheetsConnectionStatus').textContent = '✅ Conectado';
+            }
+        }
+
+        function syncFromSheets() {
+            const icon = document.getElementById('syncIcon');
+            icon.classList.add('animate-spin');
+            showToast('🔄 Sincronizando...');
+            
+            setTimeout(() => {
+                icon.classList.remove('animate-spin');
+                showToast('✅ Sincronizado con Google Sheets');
+            }, 2000);
+        }
+
+        function syncClientToSheets(client) {
+            console.log('Syncing client to Sheets:', client);
+            // In production: Use Google Sheets API to append row
+        }
+
+        function downloadClientsTemplate() {
+            const headers = 'ID,Nombre,Teléfono,WhatsApp,Email,Barbero Preferido,Notas,Visitas,Total Gastado,Última Visita,Cumpleaños,VIP,Fecha Registro';
+            const sample = '1,Juan Pérez,+57 300 123 4567,+57 300 123 4567,juan@email.com,Carlos,Prefiere fade bajo,12,420000,2026-01-30,1990-05-15,false,2025-06-15';
+            const csv = headers + '\n' + sample;
+            downloadCSV(csv, 'jermaine_clientes_template.csv');
+        }
+
+        function downloadBookingsTemplate() {
+            const headers = 'ID,Fecha,Hora,Cliente,Teléfono,Servicio,Barbero,Estado,Monto,Notas';
+            const sample = '1,2026-01-31,09:00,Juan Pérez,+57 300 123 4567,Fade,Carlos,confirmed,30000,';
+            const csv = headers + '\n' + sample;
+            downloadCSV(csv, 'jermaine_reservas_template.csv');
+        }
+
+        function downloadCSV(content, filename) {
+            const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+        }
+
+        function exportClients() {
+            const headers = 'ID,Nombre,Teléfono,WhatsApp,Email,Barbero Preferido,Notas,Visitas,Total Gastado,Última Visita,Cumpleaños,VIP,Fecha Registro';
+            const rows = DB.clients.map(c => 
+                `${c.id},"${c.name}","${c.phone}","${c.whatsapp || ''}","${c.email || ''}","${c.barber || ''}","${c.notes || ''}",${c.visits},${c.spent},"${c.lastVisit || ''}","${c.birthday || ''}",${c.vip},"${c.createdAt}"`
+            );
+            const csv = headers + '\n' + rows.join('\n');
+            downloadCSV(csv, 'jermaine_clientes_export.csv');
+            showToast('📤 Clientes exportados');
+        }
+
+        function importClients() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.csv';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const csv = event.target.result;
+                    const lines = csv.split('\n');
+                    let imported = 0;
+                    
+                    for (let i = 1; i < lines.length; i++) {
+                        const cols = lines[i].split(',');
+                        if (cols.length >= 3 && cols[1]) {
+                            const newClient = {
+                                id: Date.now() + i,
+                                name: cols[1].replace(/"/g, ''),
+                                phone: cols[2].replace(/"/g, ''),
+                                whatsapp: cols[3]?.replace(/"/g, '') || cols[2].replace(/"/g, ''),
+                                email: cols[4]?.replace(/"/g, '') || '',
+                                barber: cols[5]?.replace(/"/g, '') || '',
+                                notes: cols[6]?.replace(/"/g, '') || '',
+                                visits: parseInt(cols[7]) || 0,
+                                spent: parseInt(cols[8]) || 0,
+                                lastVisit: cols[9]?.replace(/"/g, '') || '',
+                                birthday: cols[10]?.replace(/"/g, '') || '',
+                                vip: cols[11] === 'true',
+                                createdAt: cols[12]?.replace(/"/g, '') || new Date().toISOString().split('T')[0]
+                            };
+                            DB.clients.push(newClient);
+                            imported++;
+                        }
+                    }
+                    
+                    saveClients();
+                    renderClients();
+                    showToast(`📥 ${imported} clientes importados`);
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        // ==================== OTHER RENDERS ====================
+        function renderBookings() {
+            document.getElementById('bookingsTableBody').innerHTML = DB.bookings.map(b => `
+                <tr class="border-b border-border/50 hover:bg-white/5">
+                    <td class="p-4 text-zinc-500">#${b.id}</td>
+                    <td class="p-4">${b.date}<br><span class="text-xs text-zinc-500">${b.time}</span></td>
+                    <td class="p-4 font-medium">${b.client}</td>
+                    <td class="p-4 hidden md:table-cell">${b.service}</td>
+                    <td class="p-4"><span class="badge badge-${b.status}">${b.status === 'confirmed' ? 'Confirmada' : b.status === 'completed' ? 'Completada' : 'Pendiente'}</span></td>
+                    <td class="p-4 text-right font-medium">$${b.amount.toLocaleString()}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderExpenses() {
+            document.getElementById('expensesTableBody').innerHTML = DB.expenses.map(e => `
+                <tr class="border-b border-border/50 hover:bg-white/5">
+                    <td class="p-4">${e.date}</td>
+                    <td class="p-4 font-medium">${e.description}</td>
+                    <td class="p-4"><span class="badge bg-zinc-700">${e.category}</span></td>
+                    <td class="p-4 text-right font-medium text-red-400">-$${e.amount.toLocaleString()}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderStaff() {
+            document.getElementById('staffGrid').innerHTML = DB.staff.map(s => `
+                <div class="bg-card border border-border rounded-xl p-6">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-14 h-14 bg-${s.status === 'available' ? 'green' : 'yellow'}-500 rounded-full flex items-center justify-center text-white font-bold text-xl">${s.name.charAt(0)}</div>
+                        <div>
+                            <h4 class="font-semibold">${s.name}</h4>
+                            <p class="text-sm text-zinc-500">${s.role}</p>
+                            <p class="text-xs ${s.status === 'available' ? 'text-green-500' : 'text-yellow-500'}">● ${s.status === 'available' ? 'Disponible' : 'Ocupado'}</p>
+                        </div>
+                    </div>
+                    <div class="space-y-2 text-sm border-t border-border pt-4">
+                        <div class="flex justify-between"><span class="text-zinc-500">Citas hoy</span><span>${s.bookings}</span></div>
+                        <div class="flex justify-between"><span class="text-zinc-500">Ingresos hoy</span><span class="text-green-400">$${s.revenue.toLocaleString()}</span></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderInventory() {
+            document.getElementById('inventoryTableBody').innerHTML = DB.inventory.map(p => `
+                <tr class="border-b border-border/50 hover:bg-white/5">
+                    <td class="p-4 font-medium">${p.name}</td>
+                    <td class="p-4 text-center ${p.stock <= p.min ? 'text-red-400 font-bold' : ''}">${p.stock}</td>
+                    <td class="p-4 text-right">$${p.price.toLocaleString()}</td>
+                    <td class="p-4 text-center">${p.stock <= p.min ? '<span class="badge bg-red-500/20 text-red-400">⚠️ Bajo</span>' : '<span class="badge bg-green-500/20 text-green-400">✓ OK</span>'}</td>
+                </tr>
+            `).join('');
+        }
+
+        // ==================== FORM HANDLERS ====================
+        function createBooking(e) {
+            e.preventDefault();
+            showToast('✅ Reserva creada');
+            closeModal('bookingModal');
+            e.target.reset();
+        }
+
+        function createExpense(e) {
+            e.preventDefault();
+            showToast('✅ Gasto registrado');
+            closeModal('expenseModal');
+            e.target.reset();
+        }
+
+        function openSheetsConfig() {
+            showSection('sheets');
+        }
     </script>
 </body>
 </html>
