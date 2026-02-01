@@ -3,1567 +3,631 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jermaine Barber's | La Mejor Barbería de Cartagena</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Jermaine Barber's | Barbería Premium en Cartagena</title>
+    <meta name="description" content="La mejor barbería de Cartagena. Reserva tu cita online. Cortes, fades, barbas y más.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        gold: '#D4AF37',
-                        'gold-light': '#F4E4BC',
-                        dark: '#0A0A0A',
-                        darker: '#141414',
-                    },
-                    fontFamily: {
-                        'display': ['Bebas Neue', 'sans-serif'],
-                        'body': ['Space Grotesk', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+    <script>tailwind.config={theme:{extend:{colors:{gold:'#D4AF37',dark:'#09090b'}}}}</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Space Grotesk', sans-serif; }
-        .font-display { font-family: 'Bebas Neue', sans-serif; }
-        
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #141414; }
-        ::-webkit-scrollbar-thumb { background: #D4AF37; border-radius: 4px; }
-        
-        /* Chat animations */
-        @keyframes messageIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .message-in { animation: messageIn 0.3s ease; }
-        
-        @keyframes typing {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
-        }
-        .typing-dot { animation: typing 1.4s infinite; }
-        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-        
-        /* Floating chat button */
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(212,175,55,0.4); }
-            50% { box-shadow: 0 0 0 15px rgba(212,175,55,0); }
-        }
-        .chat-pulse { animation: pulse 2s infinite; }
-        
-        /* Glass effect */
-        .glass {
-            background: rgba(20,20,20,0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(212,175,55,0.2);
-        }
-        
-        /* Language toggle */
-        .lang-es, .lang-en { display: none; }
-        body.es .lang-es { display: block; }
-        body.en .lang-en { display: block; }
-        body.es .lang-es-inline { display: inline; }
-        body.en .lang-en-inline { display: inline; }
-        body.es .lang-en-inline { display: none; }
-        body.en .lang-es-inline { display: none; }
-        body.es .lang-es-flex { display: flex; }
-        body.en .lang-en-flex { display: flex; }
-        body.es .lang-en-flex { display: none; }
-        body.en .lang-es-flex { display: none; }
+        body { font-family: 'Inter', sans-serif; }
+        .font-display { font-family: 'Playfair Display', serif; }
+        .glass { background: rgba(0,0,0,0.7); backdrop-filter: blur(20px); }
+        .gold-gradient { background: linear-gradient(135deg, #D4AF37 0%, #F4E4A6 50%, #D4AF37 100%); }
+        .text-gradient { background: linear-gradient(135deg, #D4AF37, #F4E4A6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .service-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(212,175,55,0.15); }
+        .btn-gold { background: linear-gradient(135deg, #D4AF37 0%, #c9a432 100%); transition: all 0.3s; }
+        .btn-gold:hover { transform: scale(1.02); box-shadow: 0 10px 30px rgba(212,175,55,0.3); }
+        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+        .float { animation: float 3s ease-in-out infinite; }
+        .booking-step { transition: all 0.3s; }
+        .booking-step.active { border-color: #D4AF37; background: rgba(212,175,55,0.1); }
+        input:focus, select:focus { outline: none; border-color: #D4AF37; }
+        /* Hide scrollbar but allow scroll */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="bg-dark text-white es">
-    <!-- Navigation -->
-    <nav class="fixed top-0 left-0 w-full z-50 glass">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <a href="#" class="font-display text-2xl tracking-wider text-gold">JERMAINE BARBER'S</a>
-            <div class="hidden md:flex items-center gap-8">
-                <a href="#services" class="text-sm hover:text-gold transition">
-                    <span class="lang-es-inline">Servicios</span>
-                    <span class="lang-en-inline">Services</span>
-                </a>
-                <a href="#booking" class="text-sm hover:text-gold transition">
-                    <span class="lang-es-inline">Reservar</span>
-                    <span class="lang-en-inline">Book</span>
-                </a>
-                <a href="#shop" class="text-sm hover:text-gold transition">
-                    <span class="lang-es-inline">Tienda</span>
-                    <span class="lang-en-inline">Shop</span>
-                </a>
-                <a href="#location" class="text-sm hover:text-gold transition">
-                    <span class="lang-es-inline">Ubicación</span>
-                    <span class="lang-en-inline">Location</span>
-                </a>
-                <button onclick="toggleLang()" class="px-4 py-2 border border-gold text-gold text-xs tracking-widest hover:bg-gold hover:text-dark transition">
-                    EN / ES
-                </button>
-            </div>
-            <button onclick="toggleMobileMenu()" class="md:hidden text-gold">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                </svg>
-            </button>
-        </div>
-        <!-- Mobile Menu -->
-        <div id="mobileMenu" class="hidden md:hidden px-4 pb-4">
-            <a href="#services" class="block py-2 text-sm hover:text-gold">
-                <span class="lang-es-inline">Servicios</span><span class="lang-en-inline">Services</span>
-            </a>
-            <a href="#booking" class="block py-2 text-sm hover:text-gold">
-                <span class="lang-es-inline">Reservar</span><span class="lang-en-inline">Book</span>
-            </a>
-            <a href="#shop" class="block py-2 text-sm hover:text-gold">
-                <span class="lang-es-inline">Tienda</span><span class="lang-en-inline">Shop</span>
-            </a>
-            <a href="#location" class="block py-2 text-sm hover:text-gold">
-                <span class="lang-es-inline">Ubicación</span><span class="lang-en-inline">Location</span>
-            </a>
-        </div>
-    </nav>
+<body class="bg-dark text-white">
 
-    <!-- Hero Section -->
-    <section class="min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
-        <div class="absolute inset-0 bg-gradient-to-br from-gold/10 via-transparent to-transparent"></div>
-        <div class="max-w-7xl mx-auto px-4 text-center relative z-10">
-            <p class="text-gold text-sm tracking-[0.3em] mb-6">
-                <span class="lang-es-inline">★★★★★ 5.0 EN GOOGLE • 591 REVIEWS</span>
-                <span class="lang-en-inline">★★★★★ 5.0 ON GOOGLE • 591 REVIEWS</span>
-            </p>
-            <h1 class="font-display text-6xl md:text-8xl lg:text-9xl leading-none mb-6">
-                <span class="lang-es-inline">LA MEJOR<br><span class="text-gold">BARBERÍA</span><br>DE CARTAGENA</span>
-                <span class="lang-en-inline">CARTAGENA'S<br><span class="text-gold">BEST</span><br>BARBERSHOP</span>
+    <!-- HEADER -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-3">
+                <div class="w-10 h-10 gold-gradient rounded-lg flex items-center justify-center text-dark font-bold text-lg">JB</div>
+                <span class="font-display text-xl hidden sm:block">JERMAINE BARBER'S</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-8 text-sm">
+                <a href="#servicios" class="hover:text-gold transition">Servicios</a>
+                <a href="#equipo" class="hover:text-gold transition">Equipo</a>
+                <a href="#galeria" class="hover:text-gold transition">Galería</a>
+                <a href="#contacto" class="hover:text-gold transition">Contacto</a>
+            </nav>
+            <a href="#reservar" class="btn-gold text-dark font-semibold px-5 py-2.5 rounded-full text-sm">
+                Reservar Cita
+            </a>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="min-h-screen flex items-center justify-center relative overflow-hidden pt-16">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1920')] bg-cover bg-center opacity-30"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-dark via-dark/80 to-dark"></div>
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
+            <p class="text-gold text-sm tracking-[0.3em] mb-4 uppercase">Barbería Premium en Cartagena</p>
+            <h1 class="font-display text-5xl sm:text-7xl lg:text-8xl mb-6">
+                <span class="text-gradient">JERMAINE</span><br>
+                <span class="text-white">BARBER'S</span>
             </h1>
-            <p class="text-gray-400 max-w-xl mx-auto mb-10 text-lg">
-                <span class="lang-es-inline">Cortes de precisión, afeitados clásicos, y ahora servicios completos de belleza. Reserva 24/7 con nuestra IA.</span>
-                <span class="lang-en-inline">Precision cuts, classic shaves, and now complete beauty services. Book 24/7 with our AI.</span>
+            <p class="text-zinc-400 text-lg sm:text-xl mb-10 max-w-2xl mx-auto">
+                Donde el estilo se encuentra con la precisión. Más de 591 reseñas 5 estrellas en Google.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <button onclick="openBooking()" class="px-8 py-4 bg-gold text-dark font-semibold hover:bg-gold-light transition">
-                    <span class="lang-es-inline">RESERVAR AHORA</span>
-                    <span class="lang-en-inline">BOOK NOW</span>
-                </button>
-                <button onclick="openChat()" class="px-8 py-4 border border-white hover:bg-white hover:text-dark transition">
-                    <span class="lang-es-inline">💬 HABLAR CON SOFIA</span>
-                    <span class="lang-en-inline">💬 CHAT WITH SOFIA</span>
-                </button>
+                <a href="#reservar" class="btn-gold text-dark font-bold px-10 py-4 rounded-full text-lg">
+                    📅 Reservar Ahora
+                </a>
+                <a href="https://wa.me/573181326952" target="_blank" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-10 py-4 rounded-full text-lg transition flex items-center justify-center gap-2">
+                    💬 WhatsApp
+                </a>
             </div>
+            <div class="mt-12 flex items-center justify-center gap-8 text-sm">
+                <div class="text-center">
+                    <p class="text-3xl font-bold text-gold">5.0</p>
+                    <p class="text-zinc-500">★★★★★</p>
+                </div>
+                <div class="w-px h-12 bg-white/20"></div>
+                <div class="text-center">
+                    <p class="text-3xl font-bold">591+</p>
+                    <p class="text-zinc-500">Reseñas</p>
+                </div>
+                <div class="w-px h-12 bg-white/20"></div>
+                <div class="text-center">
+                    <p class="text-3xl font-bold">5+</p>
+                    <p class="text-zinc-500">Años</p>
+                </div>
+            </div>
+        </div>
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+            <svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
         </div>
     </section>
 
-    <!-- Services Section -->
-    <section id="services" class="py-20 bg-darker">
-        <div class="max-w-7xl mx-auto px-4">
-            <p class="text-gold text-sm tracking-[0.3em] mb-4">
-                <span class="lang-es-inline">NUESTROS SERVICIOS</span>
-                <span class="lang-en-inline">OUR SERVICES</span>
-            </p>
-            <h2 class="font-display text-5xl md:text-6xl mb-12">
-                <span class="lang-es-inline">TODO LO QUE<br>NECESITAS</span>
-                <span class="lang-en-inline">EVERYTHING<br>YOU NEED</span>
-            </h2>
-            
-            <!-- Service Categories -->
-            <div class="flex flex-wrap gap-4 mb-10">
-                <button onclick="filterServices('all')" class="service-filter active px-6 py-2 border border-gold text-gold hover:bg-gold hover:text-dark transition" data-filter="all">
-                    <span class="lang-es-inline">Todos</span>
-                    <span class="lang-en-inline">All</span>
-                </button>
-                <button onclick="filterServices('barber')" class="service-filter px-6 py-2 border border-gray-600 text-gray-400 hover:border-gold hover:text-gold transition" data-filter="barber">
-                    <span class="lang-es-inline">Barbería</span>
-                    <span class="lang-en-inline">Barber</span>
-                </button>
-                <button onclick="filterServices('hair')" class="service-filter px-6 py-2 border border-gray-600 text-gray-400 hover:border-gold hover:text-gold transition" data-filter="hair">
-                    <span class="lang-es-inline">Cabello</span>
-                    <span class="lang-en-inline">Hair</span>
-                </button>
-                <button onclick="filterServices('nails')" class="service-filter px-6 py-2 border border-gray-600 text-gray-400 hover:border-gold hover:text-gold transition" data-filter="nails">
-                    <span class="lang-es-inline">Uñas</span>
-                    <span class="lang-en-inline">Nails</span>
-                </button>
-                <button onclick="filterServices('spa')" class="service-filter px-6 py-2 border border-gray-600 text-gray-400 hover:border-gold hover:text-gold transition" data-filter="spa">
-                    <span class="lang-es-inline">Spa</span>
-                    <span class="lang-en-inline">Spa</span>
-                </button>
+    <!-- SERVICIOS -->
+    <section id="servicios" class="py-20 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <p class="text-gold text-sm tracking-widest mb-3">NUESTROS SERVICIOS</p>
+                <h2 class="font-display text-4xl sm:text-5xl">Servicios Premium</h2>
             </div>
-
-            <!-- Services Grid -->
-            <div id="servicesGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Barber Services -->
-                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="barber" onclick="selectService('corte-clasico', 25000, 'Corte Clásico')">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="text-xl font-semibold">
-                                <span class="lang-es-inline">Corte Clásico</span>
-                                <span class="lang-en-inline">Classic Cut</span>
-                            </h3>
-                            <p class="text-gray-400 text-sm">45 min</p>
-                        </div>
-                        <span class="text-gold font-display text-2xl">$25K</span>
-                    </div>
-                    <p class="text-gray-400 text-sm">
-                        <span class="lang-es-inline">Corte tradicional con tijeras o máquina, incluye lavado y estilo.</span>
-                        <span class="lang-en-inline">Traditional cut with scissors or clippers, includes wash and style.</span>
-                    </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="service-card bg-zinc-900/50 border border-white/10 rounded-2xl p-6 transition cursor-pointer" onclick="selectService('Corte Clásico', 25000)">
+                    <div class="text-4xl mb-4">✂️</div>
+                    <h3 class="font-semibold text-lg mb-2">Corte Clásico</h3>
+                    <p class="text-zinc-500 text-sm mb-4">El corte tradicional perfeccionado</p>
+                    <p class="text-gold font-bold text-xl">$25,000</p>
                 </div>
-
-                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="barber" onclick="selectService('fade', 30000, 'Fade / Degradado')">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="text-xl font-semibold">Fade / Degradado</h3>
-                            <p class="text-gray-400 text-sm">50 min</p>
-                        </div>
-                        <span class="text-gold font-display text-2xl">$30K</span>
-                    </div>
-                    <p class="text-gray-400 text-sm">
-                        <span class="lang-es-inline">Low, mid o high fade con diseño personalizado.</span>
-                        <span class="lang-en-inline">Low, mid or high fade with custom design.</span>
-                    </p>
+                <div class="service-card bg-zinc-900/50 border border-white/10 rounded-2xl p-6 transition cursor-pointer" onclick="selectService('Fade', 30000)">
+                    <div class="text-4xl mb-4">💈</div>
+                    <h3 class="font-semibold text-lg mb-2">Fade</h3>
+                    <p class="text-zinc-500 text-sm mb-4">Degradado suave y preciso</p>
+                    <p class="text-gold font-bold text-xl">$30,000</p>
                 </div>
-
-                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="barber" onclick="selectService('barba', 15000, 'Arreglo de Barba')">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="text-xl font-semibold">
-                                <span class="lang-es-inline">Arreglo de Barba</span>
-                                <span class="lang-en-inline">Beard Trim</span>
-                            </h3>
-                            <p class="text-gray-400 text-sm">25 min</p>
-                        </div>
-                        <span class="text-gold font-display text-2xl">$15K</span>
-                    </div>
-                    <p class="text-gray-400 text-sm">
-                        <span class="lang-es-inline">Recorte, perfilado y diseño de barba con navaja.</span>
-                        <span class="lang-en-inline">Trim, shaping and beard design with straight razor.</span>
-                    </p>
+                <div class="service-card bg-zinc-900/50 border border-white/10 rounded-2xl p-6 transition cursor-pointer" onclick="selectService('Barba', 15000)">
+                    <div class="text-4xl mb-4">🧔</div>
+                    <h3 class="font-semibold text-lg mb-2">Barba</h3>
+                    <p class="text-zinc-500 text-sm mb-4">Perfilado y tratamiento de barba</p>
+                    <p class="text-gold font-bold text-xl">$15,000</p>
                 </div>
-
-                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="barber" onclick="selectService('afeitado', 20000, 'Afeitado Clásico')">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="text-xl font-semibold">
-                                <span class="lang-es-inline">Afeitado Clásico</span>
-                                <span class="lang-en-inline">Classic Shave</span>
-                            </h3>
-                            <p class="text-gray-400 text-sm">35 min</p>
-                        </div>
-                        <span class="text-gold font-display text-2xl">$20K</span>
-                    </div>
-                    <p class="text-gray-400 text-sm">
-                        <span class="lang-es-inline">Afeitado con navaja, toalla caliente y tratamiento facial.</span>
-                        <span class="lang-en-inline">Straight razor shave with hot towel and facial treatment.</span>
-                    </p>
+                <div class="service-card bg-zinc-900/50 border border-gold/50 rounded-2xl p-6 transition cursor-pointer relative overflow-hidden" onclick="selectService('Combo', 35000)">
+                    <div class="absolute top-3 right-3 bg-gold text-dark text-xs font-bold px-2 py-1 rounded-full">POPULAR</div>
+                    <div class="text-4xl mb-4">⭐</div>
+                    <h3 class="font-semibold text-lg mb-2">Combo</h3>
+                    <p class="text-zinc-500 text-sm mb-4">Corte + Barba completo</p>
+                    <p class="text-gold font-bold text-xl">$35,000</p>
                 </div>
-
-                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="barber" onclick="selectService('combo', 35000, 'Combo Corte + Barba')">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="text-xl font-semibold">
-                                <span class="lang-es-inline">Combo Corte + Barba</span>
-                                <span class="lang-en-inline">Cut + Beard Combo</span>
-                            </h3>
-                            <p class="text-gray-400 text-sm">1h 10min</p>
-                        </div>
-                        <span class="text-gold font-display text-2xl">$35K</span>
-                    </div>
-                    <p class="text-gray-400 text-sm">
-                        <span class="lang-es-inline">Corte completo más arreglo de barba. El favorito.</span>
-                        <span class="lang-en-inline">Full cut plus beard trim. The favorite.</span>
-                    </p>
+                <div class="service-card bg-zinc-900/50 border border-white/10 rounded-2xl p-6 transition cursor-pointer" onclick="selectService('Diseño', 35000)">
+                    <div class="text-4xl mb-4">🎨</div>
+                    <h3 class="font-semibold text-lg mb-2">Diseño</h3>
+                    <p class="text-zinc-500 text-sm mb-4">Arte y creatividad en tu corte</p>
+                    <p class="text-gold font-bold text-xl">$35,000</p>
                 </div>
-
-                <!-- Hair Services -->
-                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="hair" onclick="selectService('tinte', 80000, 'Tinte Completo')">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="text-xl font-semibold">
-                                <span class="lang-es-inline">Tinte Completo</span>
-                                <span class="lang-en-inline">Full Color</span>
-                            </h3>
-                            <p class="text-gray-400 text-sm">2h</p>
-                        </div>
-                        <span class="text-gold font-display text-2xl">$80K</span>
-                    </div>
-                    <p class="text-gray-400 text-sm">
-                        <span class="lang-es-inline">Coloración profesional con productos de alta calidad.</span>
-                        <span class="lang-en-inline">Professional coloring with high-quality products.</span>
-                    </p>
+                <div class="service-card bg-zinc-900/50 border border-white/10 rounded-2xl p-6 transition cursor-pointer" onclick="selectService('Afeitado Clásico', 20000)">
+                    <div class="text-4xl mb-4">🪒</div>
+                    <h3 class="font-semibold text-lg mb-2">Afeitado Clásico</h3>
+                    <p class="text-zinc-500 text-sm mb-4">Con navaja y toalla caliente</p>
+                    <p class="text-gold font-bold text-xl">$20,000</p>
                 </div>
-
-                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="hair" onclick="selectService('mechas', 120000, 'Mechas / Highlights')">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="text-xl font-semibold">Mechas / Highlights</h3>
-                            <p class="text-gray-400 text-sm">3h</p>
-                        </div>
-                        <span class="text-gold font-display text-2xl">$120K</span>
-                    </div>
-                    <p class="text-gray-400 text-sm">
-                        <span class="lang-es-inline">Mechas californianas, balayage o babylights.</span>
-                        <span class="lang-en-inline">Californian highlights, balayage or babylights.</span>
-                    </p>
+                <div class="service-card bg-zinc-900/50 border border-white/10 rounded-2xl p-6 transition cursor-pointer" onclick="selectService('Corte Niño', 20000)">
+                    <div class="text-4xl mb-4">👦</div>
+                    <h3 class="font-semibold text-lg mb-2">Corte Niño</h3>
+                    <p class="text-zinc-500 text-sm mb-4">Para los pequeños de la casa</p>
+                    <p class="text-gold font-bold text-xl">$20,000</p>
                 </div>
-
-                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="hair" onclick="selectService('tratamiento', 50000, 'Tratamiento Capilar')">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="text-xl font-semibold">
-                                <span class="lang-es-inline">Tratamiento Capilar</span>
-                                <span class="lang-en-inline">Hair Treatment</span>
-                            </h3>
-                            <p class="text-gray-400 text-sm">45 min</p>
-                        </div>
-                        <span class="text-gold font-display text-2xl">$50K</span>
-                    </div>
-                    <p class="text-gray-400 text-sm">
-                        <span class="lang-es-inline">Hidratación profunda, keratina o botox capilar.</span>
-                        <span class="lang-en-inline">Deep hydration, keratin or hair botox.</span>
-                    </p>
-                </div>
-
-                <!-- Nails Services -->
-                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="nails" onclick="selectService('manicure', 25000, 'Manicure Clásico')">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="text-xl font-semibold">
-                                <span class="lang-es-inline">Manicure Clásico</span>
-                                <span class="lang-en-inline">Classic Manicure</span>
-                            </h3>
-                            <p class="text-gray-400 text-sm">40 min</p>
-                        </div>
-                        <span class="text-gold font-display text-2xl">$25K</span>
-                    </div>
-                    <p class="text-gray-400 text-sm">
-                        <span class="lang-es-inline">Limpieza, limado, cutículas y esmalte tradicional.</span>
-                        <span class="lang-en-inline">Cleaning, filing, cuticles and traditional polish.</span>
-                    </p>
-                </div>
-
-                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="nails" onclick="selectService('manicure-gel', 45000, 'Manicure Semipermanente')">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="text-xl font-semibold">
-                                <span class="lang-es-inline">Manicure Semipermanente</span>
-                                <span class="lang-en-inline">Gel Manicure</span>
-                            </h3>
-                            <p class="text-gray-400 text-sm">1h</p>
-                        </div>
-                        <span class="text-gold font-display text-2xl">$45K</span>
-                    </div>
-                    <p class="text-gray-400 text-sm">
-                        <span class="lang-es-inline">Esmalte en gel con lámpara UV. Dura 3 semanas.</span>
-                        <span class="lang-en-inline">Gel polish with UV lamp. Lasts 3 weeks.</span>
-                    </p>
-                </div>
-
-                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="nails" onclick="selectService('pedicure', 35000, 'Pedicure Completo')">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="text-xl font-semibold">
-                                <span class="lang-es-inline">Pedicure Completo</span>
-                                <span class="lang-en-inline">Full Pedicure</span>
-                            </h3>
-                            <p class="text-gray-400 text-sm">1h</p>
-                        </div>
-                        <span class="text-gold font-display text-2xl">$35K</span>
-                    </div>
-                    <p class="text-gray-400 text-sm">
-                        <span class="lang-es-inline">Spa de pies, exfoliación, masaje y esmalte.</span>
-                        <span class="lang-en-inline">Foot spa, exfoliation, massage and polish.</span>
-                    </p>
-                </div>
-
-                <!-- Spa Services -->
-                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="spa" onclick="selectService('facial', 60000, 'Facial Profundo')">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="text-xl font-semibold">
-                                <span class="lang-es-inline">Facial Profundo</span>
-                                <span class="lang-en-inline">Deep Facial</span>
-                            </h3>
-                            <p class="text-gray-400 text-sm">1h</p>
-                        </div>
-                        <span class="text-gold font-display text-2xl">$60K</span>
-                    </div>
-                    <p class="text-gray-400 text-sm">
-                        <span class="lang-es-inline">Limpieza facial, mascarilla, vapor y masaje.</span>
-                        <span class="lang-en-inline">Facial cleansing, mask, steam and massage.</span>
-                    </p>
-                </div>
-
-                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="spa" onclick="selectService('masaje', 70000, 'Masaje Relajante')">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="text-xl font-semibold">
-                                <span class="lang-es-inline">Masaje Relajante</span>
-                                <span class="lang-en-inline">Relaxing Massage</span>
-                            </h3>
-                            <p class="text-gray-400 text-sm">1h</p>
-                        </div>
-                        <span class="text-gold font-display text-2xl">$70K</span>
-                    </div>
-                    <p class="text-gray-400 text-sm">
-                        <span class="lang-es-inline">Masaje de cuerpo completo con aceites esenciales.</span>
-                        <span class="lang-en-inline">Full body massage with essential oils.</span>
-                    </p>
-                </div>
-
-                <div class="service-card glass p-6 hover:border-gold transition cursor-pointer" data-category="spa" onclick="selectService('cejas', 12000, 'Diseño de Cejas')">
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="text-xl font-semibold">
-                                <span class="lang-es-inline">Diseño de Cejas</span>
-                                <span class="lang-en-inline">Eyebrow Design</span>
-                            </h3>
-                            <p class="text-gray-400 text-sm">20 min</p>
-                        </div>
-                        <span class="text-gold font-display text-2xl">$12K</span>
-                    </div>
-                    <p class="text-gray-400 text-sm">
-                        <span class="lang-es-inline">Depilación con cera o hilo. Perfilado perfecto.</span>
-                        <span class="lang-en-inline">Wax or thread removal. Perfect shaping.</span>
-                    </p>
+                <div class="service-card bg-zinc-900/50 border border-white/10 rounded-2xl p-6 transition cursor-pointer" onclick="selectService('Cejas', 10000)">
+                    <div class="text-4xl mb-4">👁️</div>
+                    <h3 class="font-semibold text-lg mb-2">Cejas</h3>
+                    <p class="text-zinc-500 text-sm mb-4">Perfilado de cejas</p>
+                    <p class="text-gold font-bold text-xl">$10,000</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Booking Section -->
-    <section id="booking" class="py-20 bg-dark">
-        <div class="max-w-7xl mx-auto px-4">
-            <p class="text-gold text-sm tracking-[0.3em] mb-4">
-                <span class="lang-es-inline">RESERVA TU CITA</span>
-                <span class="lang-en-inline">BOOK YOUR APPOINTMENT</span>
-            </p>
-            <h2 class="font-display text-5xl md:text-6xl mb-12">
-                <span class="lang-es-inline">ELIGE TU<br>MOMENTO</span>
-                <span class="lang-en-inline">CHOOSE YOUR<br>TIME</span>
-            </h2>
-
-            <div class="grid lg:grid-cols-2 gap-10">
-                <!-- Calendar -->
-                <div class="glass p-6 rounded-lg">
-                    <div class="flex justify-between items-center mb-6">
-                        <button onclick="prevMonth()" class="text-gold hover:text-gold-light">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                            </svg>
-                        </button>
-                        <h3 id="currentMonth" class="text-xl font-semibold"></h3>
-                        <button onclick="nextMonth()" class="text-gold hover:text-gold-light">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="grid grid-cols-7 gap-2 text-center mb-4">
-                        <span class="text-gray-500 text-sm lang-es-inline">Dom</span>
-                        <span class="text-gray-500 text-sm lang-en-inline hidden">Sun</span>
-                        <span class="text-gray-500 text-sm lang-es-inline">Lun</span>
-                        <span class="text-gray-500 text-sm lang-en-inline hidden">Mon</span>
-                        <span class="text-gray-500 text-sm lang-es-inline">Mar</span>
-                        <span class="text-gray-500 text-sm lang-en-inline hidden">Tue</span>
-                        <span class="text-gray-500 text-sm lang-es-inline">Mié</span>
-                        <span class="text-gray-500 text-sm lang-en-inline hidden">Wed</span>
-                        <span class="text-gray-500 text-sm lang-es-inline">Jue</span>
-                        <span class="text-gray-500 text-sm lang-en-inline hidden">Thu</span>
-                        <span class="text-gray-500 text-sm lang-es-inline">Vie</span>
-                        <span class="text-gray-500 text-sm lang-en-inline hidden">Fri</span>
-                        <span class="text-gray-500 text-sm lang-es-inline">Sáb</span>
-                        <span class="text-gray-500 text-sm lang-en-inline hidden">Sat</span>
-                    </div>
-                    <div id="calendarDays" class="grid grid-cols-7 gap-2"></div>
+    <!-- EQUIPO -->
+    <section id="equipo" class="py-20 px-4 bg-zinc-900/30">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <p class="text-gold text-sm tracking-widest mb-3">CONOCE AL EQUIPO</p>
+                <h2 class="font-display text-4xl sm:text-5xl">Nuestros Barberos</h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                <div class="text-center">
+                    <div class="w-32 h-32 mx-auto mb-4 rounded-full bg-gradient-to-br from-gold to-yellow-600 flex items-center justify-center text-dark text-5xl font-bold">C</div>
+                    <h3 class="font-semibold text-xl">Carlos</h3>
+                    <p class="text-gold text-sm">Barbero Senior</p>
+                    <p class="text-zinc-500 text-sm mt-2">Especialista en Fades</p>
                 </div>
-
-                <!-- Time Slots & Summary -->
-                <div>
-                    <div class="glass p-6 rounded-lg mb-6">
-                        <h3 class="text-lg font-semibold mb-4">
-                            <span class="lang-es-inline">Horarios Disponibles</span>
-                            <span class="lang-en-inline">Available Times</span>
-                        </h3>
-                        <div id="timeSlots" class="grid grid-cols-3 gap-3">
-                            <!-- Time slots will be populated by JS -->
-                        </div>
-                    </div>
-
-                    <!-- Booking Summary -->
-                    <div class="glass p-6 rounded-lg">
-                        <h3 class="text-lg font-semibold mb-4">
-                            <span class="lang-es-inline">Resumen de Reserva</span>
-                            <span class="lang-en-inline">Booking Summary</span>
-                        </h3>
-                        <div id="bookingSummary" class="space-y-3 text-gray-400">
-                            <p>
-                                <span class="lang-es-inline">Selecciona un servicio y fecha</span>
-                                <span class="lang-en-inline">Select a service and date</span>
-                            </p>
-                        </div>
-                        <button id="confirmBooking" onclick="confirmBooking()" class="w-full mt-6 py-4 bg-gold text-dark font-semibold hover:bg-gold-light transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                            <span class="lang-es-inline">CONFIRMAR RESERVA</span>
-                            <span class="lang-en-inline">CONFIRM BOOKING</span>
-                        </button>
-                    </div>
+                <div class="text-center">
+                    <div class="w-32 h-32 mx-auto mb-4 rounded-full bg-gradient-to-br from-gold to-yellow-600 flex items-center justify-center text-dark text-5xl font-bold">M</div>
+                    <h3 class="font-semibold text-xl">Miguel</h3>
+                    <p class="text-gold text-sm">Barbero</p>
+                    <p class="text-zinc-500 text-sm mt-2">Experto en Diseños</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-32 h-32 mx-auto mb-4 rounded-full bg-gradient-to-br from-gold to-yellow-600 flex items-center justify-center text-dark text-5xl font-bold">A</div>
+                    <h3 class="font-semibold text-xl">Andrés</h3>
+                    <p class="text-gold text-sm">Barbero</p>
+                    <p class="text-zinc-500 text-sm mt-2">Maestro de Barbas</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Shop Section -->
-    <section id="shop" class="py-20 bg-darker">
-        <div class="max-w-7xl mx-auto px-4">
-            <p class="text-gold text-sm tracking-[0.3em] mb-4">
-                <span class="lang-es-inline">NUESTRA TIENDA</span>
-                <span class="lang-en-inline">OUR SHOP</span>
-            </p>
-            <h2 class="font-display text-5xl md:text-6xl mb-12">
-                <span class="lang-es-inline">PRODUCTOS<br>PREMIUM</span>
-                <span class="lang-en-inline">PREMIUM<br>PRODUCTS</span>
-            </h2>
-
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Product 1 -->
-                <div class="glass p-4 rounded-lg group">
-                    <div class="aspect-square bg-gradient-to-br from-gold/20 to-transparent rounded-lg mb-4 flex items-center justify-center">
-                        <span class="text-6xl">🧴</span>
-                    </div>
-                    <h3 class="font-semibold mb-1">Pomada Mate</h3>
-                    <p class="text-gray-400 text-sm mb-3">
-                        <span class="lang-es-inline">Fijación fuerte, acabado natural</span>
-                        <span class="lang-en-inline">Strong hold, natural finish</span>
-                    </p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gold font-display text-xl">$45K</span>
-                        <button onclick="addToCart('pomada', 45000)" class="px-4 py-2 bg-gold text-dark text-sm hover:bg-gold-light transition">
-                            <span class="lang-es-inline">Agregar</span>
-                            <span class="lang-en-inline">Add</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Product 2 -->
-                <div class="glass p-4 rounded-lg group">
-                    <div class="aspect-square bg-gradient-to-br from-gold/20 to-transparent rounded-lg mb-4 flex items-center justify-center">
-                        <span class="text-6xl">🪒</span>
-                    </div>
-                    <h3 class="font-semibold mb-1">Aceite para Barba</h3>
-                    <p class="text-gray-400 text-sm mb-3">
-                        <span class="lang-es-inline">Hidrata y da brillo</span>
-                        <span class="lang-en-inline">Moisturizes and shines</span>
-                    </p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gold font-display text-xl">$55K</span>
-                        <button onclick="addToCart('aceite', 55000)" class="px-4 py-2 bg-gold text-dark text-sm hover:bg-gold-light transition">
-                            <span class="lang-es-inline">Agregar</span>
-                            <span class="lang-en-inline">Add</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Product 3 -->
-                <div class="glass p-4 rounded-lg group">
-                    <div class="aspect-square bg-gradient-to-br from-gold/20 to-transparent rounded-lg mb-4 flex items-center justify-center">
-                        <span class="text-6xl">✂️</span>
-                    </div>
-                    <h3 class="font-semibold mb-1">Kit de Barbero</h3>
-                    <p class="text-gray-400 text-sm mb-3">
-                        <span class="lang-es-inline">Peine, tijeras y capa</span>
-                        <span class="lang-en-inline">Comb, scissors and cape</span>
-                    </p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gold font-display text-xl">$120K</span>
-                        <button onclick="addToCart('kit', 120000)" class="px-4 py-2 bg-gold text-dark text-sm hover:bg-gold-light transition">
-                            <span class="lang-es-inline">Agregar</span>
-                            <span class="lang-en-inline">Add</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Product 4 -->
-                <div class="glass p-4 rounded-lg group">
-                    <div class="aspect-square bg-gradient-to-br from-gold/20 to-transparent rounded-lg mb-4 flex items-center justify-center">
-                        <span class="text-6xl">💆</span>
-                    </div>
-                    <h3 class="font-semibold mb-1">Shampoo Anticaída</h3>
-                    <p class="text-gray-400 text-sm mb-3">
-                        <span class="lang-es-inline">Fortalece y previene</span>
-                        <span class="lang-en-inline">Strengthens and prevents</span>
-                    </p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gold font-display text-xl">$65K</span>
-                        <button onclick="addToCart('shampoo', 65000)" class="px-4 py-2 bg-gold text-dark text-sm hover:bg-gold-light transition">
-                            <span class="lang-es-inline">Agregar</span>
-                            <span class="lang-en-inline">Add</span>
-                        </button>
-                    </div>
-                </div>
+    <!-- SISTEMA DE RESERVAS -->
+    <section id="reservar" class="py-20 px-4">
+        <div class="max-w-2xl mx-auto">
+            <div class="text-center mb-10">
+                <p class="text-gold text-sm tracking-widest mb-3">RESERVA TU CITA</p>
+                <h2 class="font-display text-4xl sm:text-5xl">Agenda Online</h2>
             </div>
 
-            <!-- Cart Summary (floating) -->
-            <div id="cartFloat" class="hidden fixed bottom-24 right-6 glass p-4 rounded-lg z-40 min-w-[250px]">
-                <h4 class="font-semibold mb-3">
-                    <span class="lang-es-inline">🛒 Tu Carrito</span>
-                    <span class="lang-en-inline">🛒 Your Cart</span>
-                </h4>
-                <div id="cartItems" class="space-y-2 text-sm"></div>
-                <div class="border-t border-gray-700 mt-3 pt-3 flex justify-between font-semibold">
-                    <span>Total:</span>
-                    <span id="cartTotal" class="text-gold">$0</span>
-                </div>
-                <button onclick="checkout()" class="w-full mt-3 py-2 bg-gold text-dark text-sm font-semibold hover:bg-gold-light transition">
-                    <span class="lang-es-inline">Pagar</span>
-                    <span class="lang-en-inline">Checkout</span>
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Location Section -->
-    <section id="location" class="py-20 bg-dark">
-        <div class="max-w-7xl mx-auto px-4">
-            <p class="text-gold text-sm tracking-[0.3em] mb-4">
-                <span class="lang-es-inline">ENCUÉNTRANOS</span>
-                <span class="lang-en-inline">FIND US</span>
-            </p>
-            <h2 class="font-display text-5xl md:text-6xl mb-12">
-                <span class="lang-es-inline">EN EL CORAZÓN<br>DEL CENTRO</span>
-                <span class="lang-en-inline">IN THE HEART<br>OF DOWNTOWN</span>
-            </h2>
-
-            <div class="grid lg:grid-cols-2 gap-10">
-                <!-- Map -->
-                <div class="aspect-video lg:aspect-auto lg:h-[400px] rounded-lg overflow-hidden">
-                    <iframe 
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3924.123456789!2d-75.5511!3d10.4236!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8ef62f9e43e1d5c5%3A0x1234567890abcdef!2sJermaine%20Barber&#39;s!5e0!3m2!1ses!2sco!4v1234567890"
-                        width="100%" 
-                        height="100%" 
-                        style="border:0;" 
-                        allowfullscreen="" 
-                        loading="lazy"
-                        class="grayscale hover:grayscale-0 transition duration-500">
-                    </iframe>
+            <div class="bg-zinc-900/50 border border-white/10 rounded-3xl p-6 sm:p-8">
+                <!-- Progress Steps -->
+                <div class="flex items-center justify-between mb-8">
+                    <div class="flex items-center gap-2">
+                        <div id="step1Indicator" class="w-8 h-8 rounded-full bg-gold text-dark flex items-center justify-center font-bold text-sm">1</div>
+                        <span class="text-sm hidden sm:block">Servicio</span>
+                    </div>
+                    <div class="flex-1 h-px bg-white/20 mx-2"></div>
+                    <div class="flex items-center gap-2">
+                        <div id="step2Indicator" class="w-8 h-8 rounded-full bg-zinc-700 text-white flex items-center justify-center font-bold text-sm">2</div>
+                        <span class="text-sm hidden sm:block">Fecha</span>
+                    </div>
+                    <div class="flex-1 h-px bg-white/20 mx-2"></div>
+                    <div class="flex items-center gap-2">
+                        <div id="step3Indicator" class="w-8 h-8 rounded-full bg-zinc-700 text-white flex items-center justify-center font-bold text-sm">3</div>
+                        <span class="text-sm hidden sm:block">Datos</span>
+                    </div>
                 </div>
 
-                <!-- Info -->
-                <div class="space-y-8">
-                    <div class="glass p-6 rounded-lg">
-                        <h3 class="text-gold text-sm tracking-widest mb-3">
-                            <span class="lang-es-inline">DIRECCIÓN</span>
-                            <span class="lang-en-inline">ADDRESS</span>
-                        </h3>
-                        <p class="text-lg">Calle 6 #2-26, Edificio Granada</p>
-                        <p class="text-gray-400">Local 2A, frente al Hotel Almirante</p>
-                        <p class="text-gray-400">Cartagena de Indias, Bolívar</p>
-                        <a href="https://maps.google.com/?q=Jermaine+Barbers+Cartagena" target="_blank" class="inline-block mt-4 text-gold hover:text-gold-light transition">
-                            <span class="lang-es-inline">Ver en Google Maps →</span>
-                            <span class="lang-en-inline">View on Google Maps →</span>
-                        </a>
+                <!-- Step 1: Servicio -->
+                <div id="bookingStep1" class="booking-step">
+                    <h3 class="font-semibold text-lg mb-4">¿Qué servicio deseas?</h3>
+                    <div class="grid grid-cols-2 gap-3 mb-6">
+                        <button type="button" onclick="chooseService('Corte Clásico', 25000)" class="service-btn p-4 border border-white/20 rounded-xl text-left hover:border-gold transition" data-service="Corte Clásico">
+                            <span class="text-2xl">✂️</span>
+                            <p class="font-medium mt-1">Corte Clásico</p>
+                            <p class="text-gold text-sm">$25,000</p>
+                        </button>
+                        <button type="button" onclick="chooseService('Fade', 30000)" class="service-btn p-4 border border-white/20 rounded-xl text-left hover:border-gold transition" data-service="Fade">
+                            <span class="text-2xl">💈</span>
+                            <p class="font-medium mt-1">Fade</p>
+                            <p class="text-gold text-sm">$30,000</p>
+                        </button>
+                        <button type="button" onclick="chooseService('Barba', 15000)" class="service-btn p-4 border border-white/20 rounded-xl text-left hover:border-gold transition" data-service="Barba">
+                            <span class="text-2xl">🧔</span>
+                            <p class="font-medium mt-1">Barba</p>
+                            <p class="text-gold text-sm">$15,000</p>
+                        </button>
+                        <button type="button" onclick="chooseService('Combo', 35000)" class="service-btn p-4 border border-gold/50 rounded-xl text-left hover:border-gold transition bg-gold/5" data-service="Combo">
+                            <span class="text-2xl">⭐</span>
+                            <p class="font-medium mt-1">Combo</p>
+                            <p class="text-gold text-sm">$35,000</p>
+                        </button>
+                        <button type="button" onclick="chooseService('Diseño', 35000)" class="service-btn p-4 border border-white/20 rounded-xl text-left hover:border-gold transition" data-service="Diseño">
+                            <span class="text-2xl">🎨</span>
+                            <p class="font-medium mt-1">Diseño</p>
+                            <p class="text-gold text-sm">$35,000</p>
+                        </button>
+                        <button type="button" onclick="chooseService('Afeitado', 20000)" class="service-btn p-4 border border-white/20 rounded-xl text-left hover:border-gold transition" data-service="Afeitado">
+                            <span class="text-2xl">🪒</span>
+                            <p class="font-medium mt-1">Afeitado</p>
+                            <p class="text-gold text-sm">$20,000</p>
+                        </button>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm text-zinc-400 mb-2">¿Tienes preferencia de barbero?</label>
+                        <select id="bookingBarber" class="w-full bg-dark border border-white/20 rounded-xl px-4 py-3">
+                            <option value="">Sin preferencia</option>
+                            <option value="Carlos">Carlos - Especialista en Fades</option>
+                            <option value="Miguel">Miguel - Experto en Diseños</option>
+                            <option value="Andrés">Andrés - Maestro de Barbas</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Step 2: Fecha y Hora -->
+                <div id="bookingStep2" class="booking-step hidden">
+                    <h3 class="font-semibold text-lg mb-4">Elige fecha y hora</h3>
+                    <div class="mb-4">
+                        <label class="block text-sm text-zinc-400 mb-2">Fecha</label>
+                        <input type="date" id="bookingDate" min="" class="w-full bg-dark border border-white/20 rounded-xl px-4 py-3">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm text-zinc-400 mb-2">Hora disponible</label>
+                        <div class="grid grid-cols-4 gap-2" id="timeSlots">
+                            <!-- Generated by JS -->
+                        </div>
+                    </div>
+                    <button type="button" onclick="goToStep(1)" class="text-zinc-400 hover:text-white transition">← Volver</button>
+                </div>
+
+                <!-- Step 3: Datos del Cliente -->
+                <div id="bookingStep3" class="booking-step hidden">
+                    <h3 class="font-semibold text-lg mb-4">Tus datos</h3>
+                    <div class="space-y-4 mb-6">
+                        <div>
+                            <label class="block text-sm text-zinc-400 mb-2">Nombre completo *</label>
+                            <input type="text" id="bookingName" required placeholder="Tu nombre" class="w-full bg-dark border border-white/20 rounded-xl px-4 py-3">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-zinc-400 mb-2">WhatsApp *</label>
+                            <input type="tel" id="bookingPhone" required placeholder="+57 300 123 4567" class="w-full bg-dark border border-white/20 rounded-xl px-4 py-3">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-zinc-400 mb-2">Notas (opcional)</label>
+                            <textarea id="bookingNotes" rows="2" placeholder="Alguna indicación especial..." class="w-full bg-dark border border-white/20 rounded-xl px-4 py-3 resize-none"></textarea>
+                        </div>
                     </div>
 
-                    <div class="glass p-6 rounded-lg">
-                        <h3 class="text-gold text-sm tracking-widest mb-3">
-                            <span class="lang-es-inline">HORARIOS</span>
-                            <span class="lang-en-inline">HOURS</span>
-                        </h3>
-                        <div class="space-y-2">
+                    <!-- Resumen -->
+                    <div class="bg-gold/10 border border-gold/30 rounded-xl p-4 mb-6">
+                        <h4 class="font-semibold mb-3 text-gold">📋 Resumen de tu cita</h4>
+                        <div class="space-y-2 text-sm">
                             <div class="flex justify-between">
-                                <span class="lang-es-inline">Lunes - Viernes</span>
-                                <span class="lang-en-inline">Monday - Friday</span>
-                                <span>9:00 AM - 8:00 PM</span>
+                                <span class="text-zinc-400">Servicio:</span>
+                                <span id="summaryService">-</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="lang-es-inline">Sábado</span>
-                                <span class="lang-en-inline">Saturday</span>
-                                <span>9:00 AM - 6:00 PM</span>
+                                <span class="text-zinc-400">Barbero:</span>
+                                <span id="summaryBarber">-</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="lang-es-inline">Domingo</span>
-                                <span class="lang-en-inline">Sunday</span>
-                                <span class="lang-es-inline">Cerrado</span>
-                                <span class="lang-en-inline">Closed</span>
+                                <span class="text-zinc-400">Fecha:</span>
+                                <span id="summaryDate">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-zinc-400">Hora:</span>
+                                <span id="summaryTime">-</span>
+                            </div>
+                            <div class="flex justify-between pt-2 border-t border-gold/30">
+                                <span class="font-semibold">Total:</span>
+                                <span class="font-bold text-gold" id="summaryPrice">-</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="glass p-6 rounded-lg">
-                        <h3 class="text-gold text-sm tracking-widest mb-3">
-                            <span class="lang-es-inline">CONTACTO</span>
-                            <span class="lang-en-inline">CONTACT</span>
-                        </h3>
-                        <div class="space-y-3">
-                            <a href="tel:+573181326952" class="flex items-center gap-3 hover:text-gold transition">
-                                📞 +57 318 132 6952
-                            </a>
-                            <a href="https://wa.me/573181326952" class="flex items-center gap-3 hover:text-gold transition">
-                                💬 WhatsApp
-                            </a>
-                            <a href="https://instagram.com/jermainebarbers" target="_blank" class="flex items-center gap-3 hover:text-gold transition">
-                                📷 @jermainebarbers
-                            </a>
-                        </div>
+                    <div class="flex gap-3">
+                        <button type="button" onclick="goToStep(2)" class="flex-1 py-3 border border-white/20 rounded-xl hover:border-gold transition">← Volver</button>
+                        <button type="button" onclick="submitBooking()" class="flex-1 btn-gold text-dark font-bold py-3 rounded-xl">
+                            ✓ Confirmar Cita
+                        </button>
                     </div>
+                </div>
+
+                <!-- Confirmación -->
+                <div id="bookingConfirmation" class="hidden text-center py-8">
+                    <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">✓</div>
+                    <h3 class="font-display text-3xl mb-4">¡Cita Confirmada!</h3>
+                    <p class="text-zinc-400 mb-6">Te hemos enviado los detalles por WhatsApp</p>
+                    <div class="bg-zinc-800 rounded-xl p-4 text-left max-w-sm mx-auto mb-6">
+                        <div class="space-y-2 text-sm" id="confirmationDetails"></div>
+                    </div>
+                    <a href="https://wa.me/573181326952" target="_blank" class="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-full transition">
+                        💬 Chatear por WhatsApp
+                    </a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="py-10 bg-darker border-t border-gray-800">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="font-display text-2xl text-gold tracking-wider mb-4">JERMAINE BARBER'S</p>
-            <p class="text-gray-500 text-sm">
-                <span class="lang-es-inline">© 2026 Todos los derechos reservados • Powered by MachineMind</span>
-                <span class="lang-en-inline">© 2026 All rights reserved • Powered by MachineMind</span>
-            </p>
+    <!-- UBICACIÓN -->
+    <section id="contacto" class="py-20 px-4 bg-zinc-900/30">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <p class="text-gold text-sm tracking-widest mb-3">VISÍTANOS</p>
+                <h2 class="font-display text-4xl sm:text-5xl">Nuestra Ubicación</h2>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-zinc-900/50 border border-white/10 rounded-2xl p-8">
+                    <h3 class="font-semibold text-xl mb-6">Información de Contacto</h3>
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-gold/20 rounded-xl flex items-center justify-center text-gold">📍</div>
+                            <div>
+                                <p class="font-medium">Dirección</p>
+                                <p class="text-zinc-400">Cartagena, Colombia</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-gold/20 rounded-xl flex items-center justify-center text-gold">📞</div>
+                            <div>
+                                <p class="font-medium">WhatsApp</p>
+                                <a href="https://wa.me/573181326952" class="text-gold hover:underline">+57 318 132 6952</a>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-gold/20 rounded-xl flex items-center justify-center text-gold">🕐</div>
+                            <div>
+                                <p class="font-medium">Horarios</p>
+                                <p class="text-zinc-400">Lun - Vie: 9:00 AM - 8:00 PM</p>
+                                <p class="text-zinc-400">Sábados: 9:00 AM - 6:00 PM</p>
+                                <p class="text-red-400">Domingos: Cerrado</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-8 flex gap-4">
+                        <a href="https://wa.me/573181326952" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl text-center transition">💬 WhatsApp</a>
+                        <a href="https://www.google.com/maps" target="_blank" class="flex-1 border border-white/20 hover:border-gold py-3 rounded-xl text-center transition">📍 Google Maps</a>
+                    </div>
+                </div>
+                <div class="bg-zinc-800 rounded-2xl overflow-hidden h-80 lg:h-auto">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d125408.08398839498!2d-75.5748890!3d10.3910485!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8ef625c2a5c7bf17%3A0xf1d7bce005e7e025!2sCartagena%2C%20Bol%C3%ADvar!5e0!3m2!1sen!2sco!4v1706726429243!5m2!1sen!2sco" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-12 px-4 border-t border-white/10">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="w-16 h-16 gold-gradient rounded-2xl flex items-center justify-center mx-auto mb-4 text-dark font-bold text-2xl">JB</div>
+            <p class="font-display text-2xl mb-4">JERMAINE BARBER'S</p>
+            <p class="text-zinc-500 mb-6">La mejor experiencia de barbería en Cartagena</p>
+            <div class="flex justify-center gap-6 mb-8">
+                <a href="https://instagram.com" target="_blank" class="text-zinc-400 hover:text-gold transition">Instagram</a>
+                <a href="https://facebook.com" target="_blank" class="text-zinc-400 hover:text-gold transition">Facebook</a>
+                <a href="https://wa.me/573181326952" target="_blank" class="text-zinc-400 hover:text-gold transition">WhatsApp</a>
+            </div>
+            <p class="text-zinc-600 text-sm">© 2026 Jermaine Barber's. Todos los derechos reservados.</p>
+            <p class="text-zinc-700 text-xs mt-2">Powered by <span class="text-gold">MachineMind AI</span></p>
         </div>
     </footer>
 
-    <!-- Sofia AI Chatbot -->
-    <div id="chatWidget" class="fixed bottom-6 right-6 z-50">
-        <!-- WhatsApp Direct Button (Secondary) -->
-        <a href="https://wa.me/573181326952?text=Hola%20Jermaine%20Barber's%2C%20quiero%20información" 
-           target="_blank"
-           id="whatsappDirect" 
-           class="hidden absolute bottom-20 right-0 w-14 h-14 bg-green-500 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition">
-            <svg class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-            </svg>
-        </a>
-
-        <!-- Chat Button -->
-        <button id="chatButton" onclick="toggleChat()" class="w-16 h-16 bg-gold rounded-full flex items-center justify-center shadow-lg chat-pulse hover:bg-gold-light transition relative">
-            <span class="text-2xl" id="chatIcon">💬</span>
-            <span id="chatBadge" class="hidden absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-xs flex items-center justify-center">1</span>
-        </button>
-
-        <!-- Chat Window -->
-        <div id="chatWindow" class="hidden absolute bottom-20 right-0 w-[400px] max-w-[calc(100vw-2rem)] glass rounded-2xl overflow-hidden shadow-2xl">
-            <!-- Chat Header -->
-            <div class="bg-gradient-to-r from-green-600 to-green-500 p-4 flex items-center gap-3">
-                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center overflow-hidden">
-                    <span class="text-2xl">💈</span>
-                </div>
-                <div class="flex-1">
-                    <h4 class="font-semibold text-white">Jermaine Barber's</h4>
-                    <p class="text-white/80 text-xs flex items-center gap-1">
-                        <span class="w-2 h-2 bg-green-300 rounded-full animate-pulse"></span>
-                        <span class="lang-es-inline">Sofia AI • Responde al instante</span>
-                        <span class="lang-en-inline">Sofia AI • Replies instantly</span>
-                    </p>
-                </div>
-                <button onclick="toggleChat()" class="text-white/70 hover:text-white">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Chat Messages -->
-            <div id="chatMessages" class="h-[350px] overflow-y-auto p-4 space-y-4 bg-[#0B141A]" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;60&quot; height=&quot;60&quot; viewBox=&quot;0 0 60 60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cg fill=&quot;none&quot; fill-rule=&quot;evenodd&quot;%3E%3Cg fill=&quot;%23ffffff&quot; fill-opacity=&quot;0.02&quot;%3E%3Cpath d=&quot;M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z&quot;/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');">
-                <!-- Welcome message -->
-                <div class="flex gap-3 message-in">
-                    <div class="w-8 h-8 bg-gold rounded-full flex items-center justify-center flex-shrink-0 text-sm">💈</div>
-                    <div class="bg-[#1F2C34] rounded-2xl rounded-tl-none p-3 max-w-[85%] shadow">
-                        <p class="text-sm">
-                            <span class="lang-es-inline">¡Hola! 👋 Soy <strong>Sofia</strong>, la asistente virtual de Jermaine Barber's.</span>
-                            <span class="lang-en-inline">Hi! 👋 I'm <strong>Sofia</strong>, Jermaine Barber's virtual assistant.</span>
-                        </p>
-                        <p class="text-sm mt-2 text-gray-300">
-                            <span class="lang-es-inline">Puedo ayudarte con reservas, precios, horarios y más. ¿Qué necesitas?</span>
-                            <span class="lang-en-inline">I can help with bookings, prices, hours and more. What do you need?</span>
-                        </p>
-                        <p class="text-[10px] text-gray-500 mt-2 text-right">
-                            <span class="lang-es-inline">Ahora</span>
-                            <span class="lang-en-inline">Now</span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quick Replies -->
-            <div id="quickReplies" class="px-4 py-3 bg-[#0B141A] border-t border-gray-800 flex flex-wrap gap-2">
-                <button onclick="sendQuickReply('reservar')" class="px-4 py-2 text-xs bg-[#1F2C34] text-white rounded-full hover:bg-green-600 transition border border-gray-700">
-                    📅 <span class="lang-es-inline">Reservar</span><span class="lang-en-inline">Book</span>
-                </button>
-                <button onclick="sendQuickReply('precios')" class="px-4 py-2 text-xs bg-[#1F2C34] text-white rounded-full hover:bg-green-600 transition border border-gray-700">
-                    💰 <span class="lang-es-inline">Precios</span><span class="lang-en-inline">Prices</span>
-                </button>
-                <button onclick="sendQuickReply('horarios')" class="px-4 py-2 text-xs bg-[#1F2C34] text-white rounded-full hover:bg-green-600 transition border border-gray-700">
-                    🕐 <span class="lang-es-inline">Horarios</span><span class="lang-en-inline">Hours</span>
-                </button>
-                <button onclick="sendQuickReply('ubicacion')" class="px-4 py-2 text-xs bg-[#1F2C34] text-white rounded-full hover:bg-green-600 transition border border-gray-700">
-                    📍 <span class="lang-es-inline">Ubicación</span><span class="lang-en-inline">Location</span>
-                </button>
-                <button onclick="openWhatsAppBooking()" class="px-4 py-2 text-xs bg-green-600 text-white rounded-full hover:bg-green-700 transition">
-                    💬 WhatsApp
-                </button>
-            </div>
-
-            <!-- Chat Input -->
-            <div class="p-3 bg-[#1F2C34]">
-                <div class="flex gap-2 items-center">
-                    <input 
-                        type="text" 
-                        id="chatInput" 
-                        placeholder="Escribe un mensaje..."
-                        class="flex-1 bg-[#2A3942] border-none rounded-full px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                        onkeypress="if(event.key==='Enter')sendMessage()"
-                    >
-                    <button onclick="sendMessage()" class="w-11 h-11 bg-green-500 rounded-full flex items-center justify-center hover:bg-green-600 transition flex-shrink-0">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Continue on WhatsApp Banner -->
-            <div class="p-3 bg-gradient-to-r from-green-600 to-green-500">
-                <a href="https://wa.me/573181326952?text=Hola%2C%20vengo%20de%20la%20página%20web" 
-                   target="_blank"
-                   class="flex items-center justify-center gap-2 text-white text-sm font-medium hover:underline">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                    </svg>
-                    <span class="lang-es-inline">Continuar en WhatsApp</span>
-                    <span class="lang-en-inline">Continue on WhatsApp</span>
-                    <span>→</span>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- WhatsApp Floating Action Button (Mobile) -->
-    <a href="https://wa.me/573181326952?text=Hola%2C%20quiero%20reservar%20una%20cita" 
-       target="_blank"
-       class="md:hidden fixed bottom-24 right-6 z-40 w-14 h-14 bg-green-500 rounded-full flex items-center justify-center shadow-lg hover:bg-green-600 transition">
-        <svg class="w-7 h-7 text-white" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-        </svg>
-    </a>
-
-    <!-- Booking Modal -->
-    <div id="bookingModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-        <div class="glass rounded-2xl max-w-md w-full p-6">
-            <h3 class="font-display text-3xl text-gold mb-4">
-                <span class="lang-es-inline">¡RESERVA CONFIRMADA!</span>
-                <span class="lang-en-inline">BOOKING CONFIRMED!</span>
-            </h3>
-            <div id="bookingDetails" class="space-y-3 mb-6"></div>
-            <p class="text-gray-400 text-sm mb-6">
-                <span class="lang-es-inline">Te enviaremos un recordatorio por WhatsApp 24 horas antes de tu cita.</span>
-                <span class="lang-en-inline">We'll send you a WhatsApp reminder 24 hours before your appointment.</span>
-            </p>
-            <button onclick="closeBookingModal()" class="w-full py-3 bg-gold text-dark font-semibold hover:bg-gold-light transition">
-                <span class="lang-es-inline">CERRAR</span>
-                <span class="lang-en-inline">CLOSE</span>
-            </button>
-        </div>
+    <!-- TOAST -->
+    <div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-green-500 text-white px-6 py-4 rounded-xl z-50 shadow-lg">
+        <span id="toastMessage">OK</span>
     </div>
 
     <script>
-        // ================== STATE MANAGEMENT ==================
-        const state = {
-            selectedService: null,
-            selectedDate: null,
-            selectedTime: null,
-            selectedBarber: 'any',
-            cart: [],
-            currentMonth: new Date(),
-            clients: JSON.parse(localStorage.getItem('jermaine_clients') || '[]'),
-            bookings: JSON.parse(localStorage.getItem('jermaine_bookings') || '[]'),
-            lang: 'es'
+        // ==================== BOOKING STATE ====================
+        const booking = {
+            service: '',
+            price: 0,
+            barber: '',
+            date: '',
+            time: '',
+            name: '',
+            phone: '',
+            notes: ''
         };
 
-        // ================== LANGUAGE TOGGLE ==================
-        function toggleLang() {
-            const body = document.body;
-            if (body.classList.contains('es')) {
-                body.classList.remove('es');
-                body.classList.add('en');
-                state.lang = 'en';
-            } else {
-                body.classList.remove('en');
-                body.classList.add('es');
-                state.lang = 'es';
-            }
-        }
-
-        function toggleMobileMenu() {
-            document.getElementById('mobileMenu').classList.toggle('hidden');
-        }
-
-        // ================== SERVICES FILTER ==================
-        function filterServices(category) {
-            const cards = document.querySelectorAll('.service-card');
-            const buttons = document.querySelectorAll('.service-filter');
+        // ==================== INIT ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set min date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('bookingDate').min = today;
+            document.getElementById('bookingDate').value = today;
             
-            buttons.forEach(btn => {
-                btn.classList.remove('border-gold', 'text-gold');
-                btn.classList.add('border-gray-600', 'text-gray-400');
-            });
-            event.target.classList.remove('border-gray-600', 'text-gray-400');
-            event.target.classList.add('border-gold', 'text-gold');
-
-            cards.forEach(card => {
-                if (category === 'all' || card.dataset.category === category) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
-
-        function selectService(id, price, name) {
-            state.selectedService = { id, price, name };
-            updateBookingSummary();
-            document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // ================== CALENDAR ==================
-        function renderCalendar() {
-            const year = state.currentMonth.getFullYear();
-            const month = state.currentMonth.getMonth();
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const today = new Date();
-
-            const monthNames = state.lang === 'es' 
-                ? ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
-                : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-            document.getElementById('currentMonth').textContent = `${monthNames[month]} ${year}`;
-
-            let html = '';
-            for (let i = 0; i < firstDay; i++) {
-                html += '<div></div>';
-            }
-
-            for (let day = 1; day <= daysInMonth; day++) {
-                const date = new Date(year, month, day);
-                const isToday = date.toDateString() === today.toDateString();
-                const isPast = date < today && !isToday;
-                const isSunday = date.getDay() === 0;
-                const isSelected = state.selectedDate && date.toDateString() === state.selectedDate.toDateString();
-
-                let classes = 'p-2 text-center rounded cursor-pointer transition ';
-                if (isPast || isSunday) {
-                    classes += 'text-gray-600 cursor-not-allowed';
-                } else if (isSelected) {
-                    classes += 'bg-gold text-dark';
-                } else if (isToday) {
-                    classes += 'border border-gold text-gold hover:bg-gold hover:text-dark';
-                } else {
-                    classes += 'hover:bg-gray-800';
-                }
-
-                html += `<div class="${classes}" onclick="${!isPast && !isSunday ? `selectDate(${year}, ${month}, ${day})` : ''}">${day}</div>`;
-            }
-
-            document.getElementById('calendarDays').innerHTML = html;
-        }
-
-        function prevMonth() {
-            state.currentMonth.setMonth(state.currentMonth.getMonth() - 1);
-            renderCalendar();
-        }
-
-        function nextMonth() {
-            state.currentMonth.setMonth(state.currentMonth.getMonth() + 1);
-            renderCalendar();
-        }
-
-        function selectDate(year, month, day) {
-            state.selectedDate = new Date(year, month, day);
-            renderCalendar();
-            renderTimeSlots();
-            updateBookingSummary();
-        }
-
-        // ================== TIME SLOTS ==================
-        function renderTimeSlots() {
-            const times = ['9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30'];
+            // Generate time slots
+            generateTimeSlots();
             
-            // Simulate some booked slots
-            const bookedTimes = ['10:00', '14:30', '16:00'];
+            // Date change listener
+            document.getElementById('bookingDate').addEventListener('change', generateTimeSlots);
+        });
 
-            let html = '';
-            times.forEach(time => {
-                const isBooked = bookedTimes.includes(time);
-                const isSelected = state.selectedTime === time;
-                
-                let classes = 'p-2 text-center text-sm rounded transition ';
-                if (isBooked) {
-                    classes += 'bg-gray-800 text-gray-600 cursor-not-allowed line-through';
-                } else if (isSelected) {
-                    classes += 'bg-gold text-dark cursor-pointer';
-                } else {
-                    classes += 'border border-gray-700 hover:border-gold hover:text-gold cursor-pointer';
+        // ==================== SERVICE SELECTION ====================
+        function selectService(service, price) {
+            booking.service = service;
+            booking.price = price;
+            document.getElementById('reservar').scrollIntoView({ behavior: 'smooth' });
+            
+            // Highlight selected service
+            document.querySelectorAll('.service-btn').forEach(btn => {
+                btn.classList.remove('border-gold', 'bg-gold/10');
+                btn.classList.add('border-white/20');
+                if (btn.dataset.service === service) {
+                    btn.classList.add('border-gold', 'bg-gold/10');
+                    btn.classList.remove('border-white/20');
                 }
+            });
+        }
 
-                html += `<div class="${classes}" onclick="${!isBooked ? `selectTime('${time}')` : ''}">${time}</div>`;
+        function chooseService(service, price) {
+            booking.service = service;
+            booking.price = price;
+            
+            // Highlight selected
+            document.querySelectorAll('.service-btn').forEach(btn => {
+                btn.classList.remove('border-gold', 'bg-gold/10');
+                btn.classList.add('border-white/20');
+                if (btn.dataset.service === service) {
+                    btn.classList.add('border-gold', 'bg-gold/10');
+                    btn.classList.remove('border-white/20');
+                }
             });
 
-            document.getElementById('timeSlots').innerHTML = html;
+            // Auto advance after short delay
+            setTimeout(() => goToStep(2), 300);
+        }
+
+        // ==================== TIME SLOTS ====================
+        function generateTimeSlots() {
+            const container = document.getElementById('timeSlots');
+            const times = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30'];
+            
+            // Simulate some taken slots
+            const taken = ['10:00', '11:30', '15:00'];
+            
+            container.innerHTML = times.map(time => {
+                const isTaken = taken.includes(time);
+                return `
+                    <button type="button" 
+                        onclick="${isTaken ? '' : `selectTime('${time}')`}" 
+                        class="time-slot py-2 rounded-lg text-sm font-medium transition ${isTaken ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed line-through' : 'bg-dark border border-white/20 hover:border-gold'}"
+                        ${isTaken ? 'disabled' : ''}>
+                        ${time}
+                    </button>
+                `;
+            }).join('');
         }
 
         function selectTime(time) {
-            state.selectedTime = time;
-            renderTimeSlots();
-            updateBookingSummary();
+            booking.time = time;
+            
+            // Highlight selected
+            document.querySelectorAll('.time-slot').forEach(btn => {
+                btn.classList.remove('border-gold', 'bg-gold/20');
+                if (btn.textContent.trim() === time) {
+                    btn.classList.add('border-gold', 'bg-gold/20');
+                }
+            });
+
+            // Auto advance
+            setTimeout(() => goToStep(3), 300);
         }
 
-        // ================== BOOKING SUMMARY ==================
-        function updateBookingSummary() {
-            const summary = document.getElementById('bookingSummary');
-            const btn = document.getElementById('confirmBooking');
+        // ==================== NAVIGATION ====================
+        function goToStep(step) {
+            // Validate before advancing
+            if (step === 2 && !booking.service) {
+                showToast('Por favor selecciona un servicio', 'error');
+                return;
+            }
+            if (step === 3) {
+                booking.date = document.getElementById('bookingDate').value;
+                booking.barber = document.getElementById('bookingBarber').value || 'Sin preferencia';
+                if (!booking.time) {
+                    showToast('Por favor selecciona una hora', 'error');
+                    return;
+                }
+            }
 
-            if (!state.selectedService) {
-                summary.innerHTML = `<p class="text-gray-400">${state.lang === 'es' ? 'Selecciona un servicio y fecha' : 'Select a service and date'}</p>`;
-                btn.disabled = true;
+            // Hide all steps
+            document.querySelectorAll('.booking-step').forEach(el => el.classList.add('hidden'));
+            
+            // Show target step
+            document.getElementById(`bookingStep${step}`).classList.remove('hidden');
+            
+            // Update indicators
+            for (let i = 1; i <= 3; i++) {
+                const indicator = document.getElementById(`step${i}Indicator`);
+                if (i <= step) {
+                    indicator.classList.remove('bg-zinc-700');
+                    indicator.classList.add('bg-gold', 'text-dark');
+                } else {
+                    indicator.classList.add('bg-zinc-700');
+                    indicator.classList.remove('bg-gold', 'text-dark');
+                }
+            }
+
+            // Update summary on step 3
+            if (step === 3) {
+                updateSummary();
+            }
+        }
+
+        function updateSummary() {
+            document.getElementById('summaryService').textContent = booking.service;
+            document.getElementById('summaryBarber').textContent = booking.barber;
+            document.getElementById('summaryDate').textContent = formatDate(booking.date);
+            document.getElementById('summaryTime').textContent = booking.time;
+            document.getElementById('summaryPrice').textContent = '$' + booking.price.toLocaleString('es-CO');
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr + 'T12:00:00');
+            return date.toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' });
+        }
+
+        // ==================== SUBMIT BOOKING ====================
+        function submitBooking() {
+            booking.name = document.getElementById('bookingName').value;
+            booking.phone = document.getElementById('bookingPhone').value;
+            booking.notes = document.getElementById('bookingNotes').value;
+
+            if (!booking.name || !booking.phone) {
+                showToast('Por favor completa todos los campos', 'error');
                 return;
             }
 
-            let html = `
-                <div class="flex justify-between">
-                    <span>${state.lang === 'es' ? 'Servicio' : 'Service'}:</span>
-                    <span class="text-white">${state.selectedService.name}</span>
-                </div>
-                <div class="flex justify-between">
-                    <span>${state.lang === 'es' ? 'Precio' : 'Price'}:</span>
-                    <span class="text-gold">$${state.selectedService.price.toLocaleString()} COP</span>
-                </div>
-            `;
-
-            if (state.selectedDate) {
-                const dateStr = state.selectedDate.toLocaleDateString(state.lang === 'es' ? 'es-CO' : 'en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-                html += `
-                    <div class="flex justify-between">
-                        <span>${state.lang === 'es' ? 'Fecha' : 'Date'}:</span>
-                        <span class="text-white">${dateStr}</span>
-                    </div>
-                `;
-            }
-
-            if (state.selectedTime) {
-                html += `
-                    <div class="flex justify-between">
-                        <span>${state.lang === 'es' ? 'Hora' : 'Time'}:</span>
-                        <span class="text-white">${state.selectedTime}</span>
-                    </div>
-                `;
-            }
-
-            summary.innerHTML = html;
-            btn.disabled = !(state.selectedService && state.selectedDate && state.selectedTime);
-        }
-
-        // ================== BOOKING CONFIRMATION ==================
-        function confirmBooking() {
-            const booking = {
+            // Save to localStorage (will be synced to admin)
+            const bookings = JSON.parse(localStorage.getItem('jermaine_bookings') || '[]');
+            const newBooking = {
                 id: Date.now(),
-                service: state.selectedService,
-                date: state.selectedDate.toISOString(),
-                time: state.selectedTime,
-                barber: state.selectedBarber,
+                ...booking,
+                status: 'pendiente',
                 createdAt: new Date().toISOString()
             };
+            bookings.push(newBooking);
+            localStorage.setItem('jermaine_bookings', JSON.stringify(bookings));
 
-            state.bookings.push(booking);
-            localStorage.setItem('jermaine_bookings', JSON.stringify(state.bookings));
+            // Also save as lead
+            const clients = JSON.parse(localStorage.getItem('jermaine_clients') || '[]');
+            const existingClient = clients.find(c => c.phone === booking.phone);
+            if (!existingClient) {
+                clients.push({
+                    id: Date.now(),
+                    name: booking.name,
+                    phone: booking.phone,
+                    barber: booking.barber === 'Sin preferencia' ? '' : booking.barber,
+                    notes: booking.notes,
+                    visits: 0,
+                    source: 'website'
+                });
+                localStorage.setItem('jermaine_clients', JSON.stringify(clients));
+            }
 
-            const dateStr = state.selectedDate.toLocaleDateString(state.lang === 'es' ? 'es-CO' : 'en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+            // Show confirmation
+            document.querySelectorAll('.booking-step').forEach(el => el.classList.add('hidden'));
+            document.getElementById('bookingConfirmation').classList.remove('hidden');
             
-            // Generate WhatsApp confirmation link
-            const waMessage = state.lang === 'es'
-                ? `Hola Jermaine Barber's! 👋 Quiero confirmar mi reserva:\n\n💈 Servicio: ${state.selectedService.name}\n📅 Fecha: ${dateStr}\n🕐 Hora: ${state.selectedTime}\n💰 Total: $${state.selectedService.price.toLocaleString()} COP\n\n¡Gracias!`
-                : `Hi Jermaine Barber's! 👋 I want to confirm my booking:\n\n💈 Service: ${state.selectedService.name}\n📅 Date: ${dateStr}\n🕐 Time: ${state.selectedTime}\n💰 Total: $${state.selectedService.price.toLocaleString()} COP\n\nThanks!`;
-            
-            const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waMessage)}`;
-
-            // Show confirmation modal
-            const details = document.getElementById('bookingDetails');
-            details.innerHTML = `
-                <div class="glass p-4 rounded-lg space-y-2">
-                    <p><strong>${state.lang === 'es' ? 'Servicio' : 'Service'}:</strong> ${state.selectedService.name}</p>
-                    <p><strong>${state.lang === 'es' ? 'Fecha' : 'Date'}:</strong> ${dateStr}</p>
-                    <p><strong>${state.lang === 'es' ? 'Hora' : 'Time'}:</strong> ${state.selectedTime}</p>
-                    <p class="text-gold font-semibold">Total: $${state.selectedService.price.toLocaleString()} COP</p>
-                </div>
-                <div class="mt-4 p-4 bg-green-900/30 border border-green-500/50 rounded-lg">
-                    <p class="text-sm text-green-300 mb-3">
-                        ${state.lang === 'es' 
-                            ? '👆 Último paso: Confirma tu cita por WhatsApp' 
-                            : '👆 Last step: Confirm your appointment on WhatsApp'}
-                    </p>
-                    <a href="${waLink}" target="_blank" 
-                       class="flex items-center justify-center gap-2 w-full py-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition">
-                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                        </svg>
-                        ${state.lang === 'es' ? 'Confirmar por WhatsApp' : 'Confirm on WhatsApp'}
-                    </a>
-                </div>
+            document.getElementById('confirmationDetails').innerHTML = `
+                <div class="flex justify-between"><span class="text-zinc-400">Servicio:</span><span>${booking.service}</span></div>
+                <div class="flex justify-between"><span class="text-zinc-400">Fecha:</span><span>${formatDate(booking.date)}</span></div>
+                <div class="flex justify-between"><span class="text-zinc-400">Hora:</span><span>${booking.time}</span></div>
+                <div class="flex justify-between"><span class="text-zinc-400">Barbero:</span><span>${booking.barber}</span></div>
+                <div class="flex justify-between pt-2 border-t border-white/10"><span>Total:</span><span class="text-gold font-bold">$${booking.price.toLocaleString('es-CO')}</span></div>
             `;
-            document.getElementById('bookingModal').classList.remove('hidden');
 
-            // Track booking
-            trackEvent('booking_created', { service: state.selectedService.name, date: dateStr, time: state.selectedTime });
-
-            // Reset state
-            state.selectedService = null;
-            state.selectedDate = null;
-            state.selectedTime = null;
-            updateBookingSummary();
-            renderCalendar();
-            renderTimeSlots();
+            showToast('✅ ¡Cita reservada con éxito!');
         }
 
-        function closeBookingModal() {
-            document.getElementById('bookingModal').classList.add('hidden');
+        // ==================== TOAST ====================
+        function showToast(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            t.className = `fixed bottom-6 left-1/2 -translate-x-1/2 px-6 py-4 rounded-xl z-50 shadow-lg ${type === 'error' ? 'bg-red-500' : 'bg-green-500'} text-white`;
+            document.getElementById('toastMessage').textContent = msg;
+            t.classList.remove('hidden');
+            setTimeout(() => t.classList.add('hidden'), 3000);
         }
 
-        function openBooking() {
-            document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // ================== CART ==================
-        function addToCart(product, price) {
-            state.cart.push({ product, price });
-            updateCart();
-        }
-
-        function updateCart() {
-            const cartFloat = document.getElementById('cartFloat');
-            const cartItems = document.getElementById('cartItems');
-            const cartTotal = document.getElementById('cartTotal');
-
-            if (state.cart.length === 0) {
-                cartFloat.classList.add('hidden');
-                return;
-            }
-
-            cartFloat.classList.remove('hidden');
-            
-            const grouped = state.cart.reduce((acc, item) => {
-                acc[item.product] = acc[item.product] || { count: 0, price: item.price };
-                acc[item.product].count++;
-                return acc;
-            }, {});
-
-            let html = '';
-            for (const [product, data] of Object.entries(grouped)) {
-                html += `<div class="flex justify-between text-gray-300">
-                    <span>${product} x${data.count}</span>
-                    <span>$${(data.price * data.count).toLocaleString()}</span>
-                </div>`;
-            }
-            cartItems.innerHTML = html;
-
-            const total = state.cart.reduce((sum, item) => sum + item.price, 0);
-            cartTotal.textContent = `$${total.toLocaleString()}`;
-        }
-
-        function checkout() {
-            alert(state.lang === 'es' ? '¡Gracias por tu compra! Te contactaremos por WhatsApp.' : 'Thank you for your purchase! We\'ll contact you via WhatsApp.');
-            state.cart = [];
-            updateCart();
-        }
-
-        // ================== WHATSAPP INTEGRATION ==================
-        const WHATSAPP_NUMBER = '573181326952'; // Jermaine's WhatsApp
-        
-        function openWhatsAppBooking() {
-            const service = state.selectedService ? state.selectedService.name : '';
-            const date = state.selectedDate ? state.selectedDate.toLocaleDateString() : '';
-            const time = state.selectedTime || '';
-            
-            let message = state.lang === 'es' 
-                ? 'Hola Jermaine Barber\'s! 👋 Quiero reservar una cita.'
-                : 'Hi Jermaine Barber\'s! 👋 I want to book an appointment.';
-            
-            if (service) {
-                message += state.lang === 'es' 
-                    ? `\n\n📋 Servicio: ${service}`
-                    : `\n\n📋 Service: ${service}`;
-            }
-            if (date) {
-                message += state.lang === 'es'
-                    ? `\n📅 Fecha: ${date}`
-                    : `\n📅 Date: ${date}`;
-            }
-            if (time) {
-                message += state.lang === 'es'
-                    ? `\n🕐 Hora: ${time}`
-                    : `\n🕐 Time: ${time}`;
-            }
-            
-            const encoded = encodeURIComponent(message);
-            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`, '_blank');
-        }
-        
-        function openWhatsAppWithMessage(customMessage) {
-            const encoded = encodeURIComponent(customMessage);
-            window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`, '_blank');
-        }
-        
-        function generateWhatsAppLink(service, date, time) {
-            let message = state.lang === 'es'
-                ? `Hola! Quiero confirmar mi reserva:\n\n💈 ${service}\n📅 ${date}\n🕐 ${time}\n\nGracias!`
-                : `Hi! I want to confirm my booking:\n\n💈 ${service}\n📅 ${date}\n🕐 ${time}\n\nThanks!`;
-            return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-        }
-
-        // ================== CHAT ==================
-        function toggleChat() {
-            const window = document.getElementById('chatWindow');
-            window.classList.toggle('hidden');
-            
-            // Track chat opened
-            if (!window.classList.contains('hidden')) {
-                trackEvent('chat_opened');
-            }
-        }
-
-        function openChat() {
-            document.getElementById('chatWindow').classList.remove('hidden');
-        }
-
-        function sendMessage() {
-            const input = document.getElementById('chatInput');
-            const message = input.value.trim();
-            if (!message) return;
-
-            addUserMessage(message);
-            input.value = '';
-
-            // Show typing indicator
-            showTyping();
-
-            // Process with Sofia AI
-            setTimeout(() => {
-                hideTyping();
-                const response = processMessage(message);
-                addBotMessage(response);
-            }, 800 + Math.random() * 700);
-        }
-
-        function sendQuickReply(type) {
-            const messages = {
-                reservar: state.lang === 'es' ? 'Quiero reservar una cita' : 'I want to book an appointment',
-                precios: state.lang === 'es' ? '¿Cuáles son los precios?' : 'What are the prices?',
-                horarios: state.lang === 'es' ? '¿Cuáles son los horarios?' : 'What are the hours?',
-                ubicacion: state.lang === 'es' ? '¿Dónde están ubicados?' : 'Where are you located?'
-            };
-
-            addUserMessage(messages[type]);
-            showTyping();
-
-            setTimeout(() => {
-                hideTyping();
-                const response = processQuickReply(type);
-                addBotMessage(response);
-            }, 600);
-        }
-
-        function addUserMessage(text) {
-            const container = document.getElementById('chatMessages');
-            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            container.innerHTML += `
-                <div class="flex gap-3 justify-end message-in">
-                    <div class="bg-[#005C4B] rounded-2xl rounded-tr-none p-3 max-w-[80%] shadow">
-                        <p class="text-sm">${text}</p>
-                        <p class="text-[10px] text-gray-400 mt-1 text-right">${time} ✓✓</p>
-                    </div>
-                </div>
-            `;
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function addBotMessage(text) {
-            const container = document.getElementById('chatMessages');
-            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            container.innerHTML += `
-                <div class="flex gap-3 message-in">
-                    <div class="w-8 h-8 bg-gold rounded-full flex items-center justify-center flex-shrink-0 text-sm">💈</div>
-                    <div class="bg-[#1F2C34] rounded-2xl rounded-tl-none p-3 max-w-[85%] shadow">
-                        <p class="text-sm">${text}</p>
-                        <p class="text-[10px] text-gray-500 mt-2 text-right">${time}</p>
-                    </div>
-                </div>
-            `;
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function showTyping() {
-            const container = document.getElementById('chatMessages');
-            container.innerHTML += `
-                <div id="typingIndicator" class="flex gap-3 message-in">
-                    <div class="w-8 h-8 bg-gold rounded-full flex items-center justify-center flex-shrink-0 text-sm">💈</div>
-                    <div class="bg-[#1F2C34] rounded-2xl rounded-tl-none p-4 flex gap-1">
-                        <span class="w-2 h-2 bg-gray-500 rounded-full typing-dot"></span>
-                        <span class="w-2 h-2 bg-gray-500 rounded-full typing-dot"></span>
-                        <span class="w-2 h-2 bg-gray-500 rounded-full typing-dot"></span>
-                    </div>
-                </div>
-            `;
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function hideTyping() {
-            const indicator = document.getElementById('typingIndicator');
-            if (indicator) indicator.remove();
-        }
-
-        function processQuickReply(type) {
-            const responses = {
-                reservar: state.lang === 'es' 
-                    ? `¡Perfecto! 📅 Puedes reservar de dos formas:<br><br>
-                       <strong>1. En la web:</strong> Usa el calendario arriba ⬆️<br><br>
-                       <strong>2. Por WhatsApp:</strong> <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola%2C%20quiero%20reservar%20una%20cita" target="_blank" class="text-green-400 hover:underline">Reservar por WhatsApp →</a><br><br>
-                       ¿Qué servicio te interesa? 💈`
-                    : `Perfect! 📅 You can book two ways:<br><br>
-                       <strong>1. On the web:</strong> Use the calendar above ⬆️<br><br>
-                       <strong>2. Via WhatsApp:</strong> <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hi%2C%20I%20want%20to%20book%20an%20appointment" target="_blank" class="text-green-400 hover:underline">Book on WhatsApp →</a><br><br>
-                       What service interests you? 💈`,
-                
-                precios: state.lang === 'es'
-                    ? `💈 <strong>BARBERÍA</strong><br>
-                       • Corte Clásico: $25,000<br>
-                       • Fade/Degradado: $30,000<br>
-                       • Barba: $15,000<br>
-                       • Corte + Barba: $35,000<br>
-                       • Afeitado Clásico: $20,000<br><br>
-                       💅 <strong>UÑAS</strong><br>
-                       • Manicure: $25,000<br>
-                       • Semipermanente: $45,000<br>
-                       • Pedicure: $35,000<br><br>
-                       💆 <strong>SPA</strong><br>
-                       • Facial: $60,000<br>
-                       • Masaje: $70,000<br><br>
-                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola%2C%20quiero%20reservar" target="_blank" class="text-green-400 hover:underline">📲 Reservar por WhatsApp</a>`
-                    : `💈 <strong>BARBER</strong><br>
-                       • Classic Cut: $25,000<br>
-                       • Fade: $30,000<br>
-                       • Beard: $15,000<br>
-                       • Cut + Beard: $35,000<br>
-                       • Classic Shave: $20,000<br><br>
-                       💅 <strong>NAILS</strong><br>
-                       • Manicure: $25,000<br>
-                       • Gel: $45,000<br>
-                       • Pedicure: $35,000<br><br>
-                       💆 <strong>SPA</strong><br>
-                       • Facial: $60,000<br>
-                       • Massage: $70,000<br><br>
-                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hi%2C%20I%20want%20to%20book" target="_blank" class="text-green-400 hover:underline">📲 Book on WhatsApp</a>`,
-                
-                horarios: state.lang === 'es'
-                    ? `🕐 <strong>HORARIOS</strong><br><br>
-                       📅 Lunes - Viernes: 9AM - 8PM<br>
-                       📅 Sábado: 9AM - 6PM<br>
-                       📅 Domingo: Cerrado<br><br>
-                       💡 <em>Tip: Los mejores horarios sin espera son entre semana de 2-4 PM</em><br><br>
-                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola%2C%20%C2%BFtienen%20disponibilidad%20hoy%3F" target="_blank" class="text-green-400 hover:underline">📲 Consultar disponibilidad</a>`
-                    : `🕐 <strong>HOURS</strong><br><br>
-                       📅 Monday - Friday: 9AM - 8PM<br>
-                       📅 Saturday: 9AM - 6PM<br>
-                       📅 Sunday: Closed<br><br>
-                       💡 <em>Tip: Best times without wait are weekdays 2-4 PM</em><br><br>
-                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hi%2C%20do%20you%20have%20availability%20today%3F" target="_blank" class="text-green-400 hover:underline">📲 Check availability</a>`,
-                
-                ubicacion: state.lang === 'es'
-                    ? `📍 <strong>UBICACIÓN</strong><br><br>
-                       Calle 6 #2-26, Edificio Granada<br>
-                       Local 2A, frente al Hotel Almirante<br>
-                       Centro Histórico, Cartagena<br><br>
-                       🚶 A 2 min de la Torre del Reloj<br>
-                       🚕 Fácil acceso en taxi<br><br>
-                       <a href="https://maps.google.com/?q=Jermaine+Barbers+Cartagena" target="_blank" class="text-green-400 hover:underline">🗺️ Ver en Google Maps</a><br>
-                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola%2C%20voy%20para%20all%C3%A1%2C%20%C2%BFc%C3%B3mo%20llego%3F" target="_blank" class="text-green-400 hover:underline">📲 Pedir indicaciones</a>`
-                    : `📍 <strong>LOCATION</strong><br><br>
-                       Calle 6 #2-26, Edificio Granada<br>
-                       Local 2A, across from Hotel Almirante<br>
-                       Historic Center, Cartagena<br><br>
-                       🚶 2 min from Clock Tower<br>
-                       🚕 Easy taxi access<br><br>
-                       <a href="https://maps.google.com/?q=Jermaine+Barbers+Cartagena" target="_blank" class="text-green-400 hover:underline">🗺️ View on Google Maps</a><br>
-                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hi%2C%20I%27m%20heading%20there%2C%20how%20do%20I%20get%20there%3F" target="_blank" class="text-green-400 hover:underline">📲 Ask for directions</a>`
-            };
-            return responses[type];
-        }
-
-        function processMessage(message) {
-            const msg = message.toLowerCase();
-            
-            // Booking intents
-            if (msg.includes('reserv') || msg.includes('cita') || msg.includes('book') || msg.includes('appointment') || msg.includes('agendar')) {
-                return processQuickReply('reservar');
-            }
-            
-            // Price intents
-            if (msg.includes('precio') || msg.includes('cost') || msg.includes('cuanto') || msg.includes('price') || msg.includes('how much') || msg.includes('tarifa')) {
-                return processQuickReply('precios');
-            }
-            
-            // Hours intents
-            if (msg.includes('horario') || msg.includes('hora') || msg.includes('abren') || msg.includes('cierran') || msg.includes('hour') || msg.includes('open') || msg.includes('close') || msg.includes('disponib')) {
-                return processQuickReply('horarios');
-            }
-            
-            // Location intents
-            if (msg.includes('donde') || msg.includes('direccion') || msg.includes('ubicacion') || msg.includes('llegar') || msg.includes('where') || msg.includes('location') || msg.includes('address') || msg.includes('mapa')) {
-                return processQuickReply('ubicacion');
-            }
-            
-            // Service-specific queries
-            if (msg.includes('fade') || msg.includes('degradado')) {
-                return state.lang === 'es'
-                    ? `💈 <strong>FADE / DEGRADADO</strong><br><br>
-                       Precio: $30,000 COP<br>
-                       Duración: ~50 min<br><br>
-                       Incluye: Low, mid o high fade con diseño personalizado, lavado y estilo.<br><br>
-                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola%2C%20quiero%20un%20fade" target="_blank" class="text-green-400 hover:underline">📲 Reservar Fade</a>`
-                    : `💈 <strong>FADE</strong><br><br>
-                       Price: $30,000 COP<br>
-                       Duration: ~50 min<br><br>
-                       Includes: Low, mid or high fade with custom design, wash and style.<br><br>
-                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hi%2C%20I%20want%20a%20fade" target="_blank" class="text-green-400 hover:underline">📲 Book Fade</a>`;
-            }
-            
-            if (msg.includes('barba') || msg.includes('beard')) {
-                return state.lang === 'es'
-                    ? `🧔 <strong>SERVICIOS DE BARBA</strong><br><br>
-                       • Arreglo de Barba: $15,000 (25 min)<br>
-                       • Afeitado Clásico: $20,000 (35 min)<br>
-                       • Combo Corte+Barba: $35,000 (1h 10min)<br><br>
-                       El afeitado incluye navaja, toalla caliente y tratamiento facial 🔥<br><br>
-                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola%2C%20quiero%20servicio%20de%20barba" target="_blank" class="text-green-400 hover:underline">📲 Reservar</a>`
-                    : `🧔 <strong>BEARD SERVICES</strong><br><br>
-                       • Beard Trim: $15,000 (25 min)<br>
-                       • Classic Shave: $20,000 (35 min)<br>
-                       • Cut+Beard Combo: $35,000 (1h 10min)<br><br>
-                       Shave includes straight razor, hot towel and facial treatment 🔥<br><br>
-                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hi%2C%20I%20want%20beard%20service" target="_blank" class="text-green-400 hover:underline">📲 Book</a>`;
-            }
-            
-            if (msg.includes('uña') || msg.includes('manicur') || msg.includes('pedicur') || msg.includes('nail')) {
-                return state.lang === 'es'
-                    ? `💅 <strong>SERVICIOS DE UÑAS</strong><br><br>
-                       • Manicure Clásico: $25,000 (40 min)<br>
-                       • Manicure Semipermanente: $45,000 (1h)<br>
-                       • Pedicure Completo: $35,000 (1h)<br><br>
-                       El semipermanente dura hasta 3 semanas ✨<br><br>
-                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola%2C%20quiero%20manicure%2Fpedicure" target="_blank" class="text-green-400 hover:underline">📲 Reservar</a>`
-                    : `💅 <strong>NAIL SERVICES</strong><br><br>
-                       • Classic Manicure: $25,000 (40 min)<br>
-                       • Gel Manicure: $45,000 (1h)<br>
-                       • Full Pedicure: $35,000 (1h)<br><br>
-                       Gel lasts up to 3 weeks ✨<br><br>
-                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hi%2C%20I%20want%20manicure%2Fpedicure" target="_blank" class="text-green-400 hover:underline">📲 Book</a>`;
-            }
-            
-            if (msg.includes('masaje') || msg.includes('massage') || msg.includes('spa') || msg.includes('facial') || msg.includes('relaj')) {
-                return state.lang === 'es'
-                    ? `💆 <strong>SERVICIOS SPA</strong><br><br>
-                       • Facial Profundo: $60,000 (1h)<br>
-                       • Masaje Relajante: $70,000 (1h)<br>
-                       • Diseño de Cejas: $12,000 (20 min)<br><br>
-                       Perfecto para después de un buen corte 😌<br><br>
-                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola%2C%20quiero%20un%20servicio%20de%20spa" target="_blank" class="text-green-400 hover:underline">📲 Reservar</a>`
-                    : `💆 <strong>SPA SERVICES</strong><br><br>
-                       • Deep Facial: $60,000 (1h)<br>
-                       • Relaxing Massage: $70,000 (1h)<br>
-                       • Eyebrow Design: $12,000 (20 min)<br><br>
-                       Perfect after a good cut 😌<br><br>
-                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hi%2C%20I%20want%20a%20spa%20service" target="_blank" class="text-green-400 hover:underline">📲 Book</a>`;
-            }
-            
-            if (msg.includes('producto') || msg.includes('product') || msg.includes('comprar') || msg.includes('buy') || msg.includes('pomada') || msg.includes('aceite') || msg.includes('shampoo')) {
-                return state.lang === 'es'
-                    ? `🛒 <strong>PRODUCTOS</strong><br><br>
-                       • Pomada Mate: $45,000<br>
-                       • Aceite para Barba: $55,000<br>
-                       • Kit de Barbero: $120,000<br>
-                       • Shampoo Anticaída: $65,000<br><br>
-                       Puedes comprarlos en el local o reservar para recoger 📦<br><br>
-                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola%2C%20quiero%20comprar%20productos" target="_blank" class="text-green-400 hover:underline">📲 Consultar disponibilidad</a>`
-                    : `🛒 <strong>PRODUCTS</strong><br><br>
-                       • Matte Pomade: $45,000<br>
-                       • Beard Oil: $55,000<br>
-                       • Barber Kit: $120,000<br>
-                       • Anti-Hair Loss Shampoo: $65,000<br><br>
-                       Buy in store or reserve for pickup 📦<br><br>
-                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hi%2C%20I%20want%20to%20buy%20products" target="_blank" class="text-green-400 hover:underline">📲 Check availability</a>`;
-            }
-            
-            // Greetings
-            if (msg.includes('hola') || msg.includes('hi') || msg.includes('hello') || msg.includes('buenos') || msg.includes('buenas') || msg.includes('hey')) {
-                return state.lang === 'es'
-                    ? `¡Hola! 😊 Bienvenido a Jermaine Barber's.<br><br>Soy Sofia, tu asistente. ¿En qué puedo ayudarte?<br><br>
-                       • 💈 Reservar cita<br>
-                       • 💰 Ver precios<br>
-                       • 🕐 Consultar horarios<br>
-                       • 📍 Cómo llegar`
-                    : `Hello! 😊 Welcome to Jermaine Barber's.<br><br>I'm Sofia, your assistant. How can I help?<br><br>
-                       • 💈 Book appointment<br>
-                       • 💰 See prices<br>
-                       • 🕐 Check hours<br>
-                       • 📍 Get directions`;
-            }
-            
-            // Thanks
-            if (msg.includes('gracias') || msg.includes('thank') || msg.includes('genial') || msg.includes('perfecto') || msg.includes('great')) {
-                return state.lang === 'es'
-                    ? `¡Con mucho gusto! 🙌<br><br>Si necesitas algo más, aquí estoy. ¡Te esperamos en Jermaine Barber's! 💈<br><br>
-                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola" target="_blank" class="text-green-400 hover:underline">📲 Escribirnos por WhatsApp</a>`
-                    : `You're welcome! 🙌<br><br>If you need anything else, I'm here. See you at Jermaine Barber's! 💈<br><br>
-                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hi" target="_blank" class="text-green-400 hover:underline">📲 Message us on WhatsApp</a>`;
-            }
-            
-            // Human request
-            if (msg.includes('humano') || msg.includes('persona') || msg.includes('human') || msg.includes('real person') || msg.includes('hablar con')) {
-                return state.lang === 'es'
-                    ? `¡Claro! Te conecto con el equipo de Jermaine's directamente 👇<br><br>
-                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola%2C%20quiero%20hablar%20con%20alguien%20del%20equipo" target="_blank" class="text-green-400 hover:underline font-semibold">📲 Hablar con el equipo →</a><br><br>
-                       O llama al: <a href="tel:+573181326952" class="text-green-400">+57 318 132 6952</a>`
-                    : `Of course! Let me connect you with the Jermaine's team directly 👇<br><br>
-                       <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hi%2C%20I%20want%20to%20talk%20to%20someone%20from%20the%20team" target="_blank" class="text-green-400 hover:underline font-semibold">📲 Talk to the team →</a><br><br>
-                       Or call: <a href="tel:+573181326952" class="text-green-400">+57 318 132 6952</a>`;
-            }
-            
-            // Default response with WhatsApp fallback
-            return state.lang === 'es'
-                ? `No estoy segura de entender tu pregunta 🤔<br><br>Puedo ayudarte con:<br>
-                   • Reservas y citas<br>
-                   • Precios de servicios<br>
-                   • Horarios<br>
-                   • Ubicación y cómo llegar<br>
-                   • Productos<br><br>
-                   O si prefieres, escríbenos directamente:<br>
-                   <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola%2C%20tengo%20una%20pregunta" target="_blank" class="text-green-400 hover:underline font-semibold">📲 Chatear en WhatsApp →</a>`
-                : `I'm not sure I understand your question 🤔<br><br>I can help with:<br>
-                   • Bookings and appointments<br>
-                   • Service prices<br>
-                   • Hours<br>
-                   • Location and directions<br>
-                   • Products<br><br>
-                   Or if you prefer, message us directly:<br>
-                   <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hi%2C%20I%20have%20a%20question" target="_blank" class="text-green-400 hover:underline font-semibold">📲 Chat on WhatsApp →</a>`;
-        }
-        
-        // Track events (for analytics)
-        function trackEvent(eventName, data = {}) {
-            console.log('Event:', eventName, data);
-            // TODO: Send to analytics when backend is ready
-        }
-
-        // ================== INITIALIZATION ==================
-        document.addEventListener('DOMContentLoaded', () => {
-            renderCalendar();
-            renderTimeSlots();
+        // ==================== SMOOTH SCROLL ====================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
         });
     </script>
 </body>

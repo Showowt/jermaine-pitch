@@ -3,1187 +3,300 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jermaine Barber's | Panel de Administración</title>
+    <title>Jermaine Admin Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>tailwind.config={theme:{extend:{colors:{gold:'#D4AF37',dark:'#09090b',card:'#18181b',border:'#27272a'}}}}</script>
     <style>
-        * { font-family: 'Inter', system-ui, sans-serif; }
         .sidebar-item.active{background:linear-gradient(90deg,rgba(212,175,55,0.15) 0%,transparent 100%);border-left:3px solid #D4AF37;color:#D4AF37}
         .badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:500}
-        .badge-confirmada{background:rgba(34,197,94,0.15);color:#22c55e}
-        .badge-pendiente{background:rgba(234,179,8,0.15);color:#eab308}
-        .badge-completada{background:rgba(59,130,246,0.15);color:#3b82f6}
-        .badge-vip{background:rgba(168,85,247,0.15);color:#a855f7}
-        .badge-cancelada{background:rgba(239,68,68,0.15);color:#ef4444}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-        .animate-pulse{animation:pulse 2s cubic-bezier(0.4,0,0.6,1) infinite}
-        .glass{background:rgba(24,24,27,0.8);backdrop-filter:blur(12px)}
-        .commission-card{background:linear-gradient(135deg,rgba(212,175,55,0.1) 0%,rgba(24,24,27,1) 100%)}
+        .badge-confirmed{background:rgba(34,197,94,0.15);color:#22c55e}
+        .badge-pending{background:rgba(234,179,8,0.15);color:#eab308}
+        .badge-completed{background:rgba(59,130,246,0.15);color:#3b82f6}
     </style>
 </head>
-<body class="bg-dark text-white">
-
-    <!-- PANTALLA DE INICIO DE SESIÓN -->
+<body class="bg-dark text-white font-sans">
+    <!-- LOGIN -->
     <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
         <div class="w-full max-w-md">
             <div class="text-center mb-8">
-                <div class="w-24 h-24 bg-gold rounded-2xl flex items-center justify-center mx-auto mb-4 text-dark text-5xl font-bold shadow-lg shadow-gold/20">JB</div>
+                <div class="w-20 h-20 bg-gold rounded-2xl flex items-center justify-center mx-auto mb-4 text-dark text-4xl font-bold">JB</div>
                 <h1 class="text-4xl text-gold tracking-wider font-bold">JERMAINE ADMIN</h1>
                 <p class="text-zinc-500 text-sm mt-2">Panel de Administración</p>
             </div>
             <div class="bg-card border border-border rounded-2xl p-8">
-                <form onsubmit="handleLogin(event)" class="space-y-4">
-                    <div>
-                        <label class="block text-sm text-zinc-400 mb-2">Correo Electrónico</label>
-                        <input type="email" id="loginEmail" value="admin@jermaine.com" required class="w-full bg-dark border border-border rounded-xl px-4 py-3.5 focus:outline-none focus:border-gold">
-                    </div>
-                    <div>
-                        <label class="block text-sm text-zinc-400 mb-2">Contraseña</label>
-                        <input type="password" id="loginPass" value="admin123" required class="w-full bg-dark border border-border rounded-xl px-4 py-3.5 focus:outline-none focus:border-gold">
-                    </div>
+                <form onsubmit="handleLogin(event)">
+                    <div class="mb-5"><label class="block text-sm text-zinc-400 mb-2">Usuario</label><input type="text" id="loginUser" value="jermaine" class="w-full bg-dark border border-border rounded-xl px-4 py-3.5 focus:outline-none focus:border-gold text-white"></div>
+                    <div class="mb-6"><label class="block text-sm text-zinc-400 mb-2">Contraseña</label><input type="password" id="loginPass" value="barber2026" class="w-full bg-dark border border-border rounded-xl px-4 py-3.5 focus:outline-none focus:border-gold text-white"></div>
                     <button type="submit" class="w-full bg-gold text-dark font-semibold py-4 rounded-xl hover:opacity-90 transition text-lg">Ingresar</button>
                 </form>
-                <p class="text-center text-zinc-600 text-xs mt-6">Demo: admin@jermaine.com / admin123</p>
+                <p class="text-center text-zinc-600 text-xs mt-6">Demo: jermaine / barber2026</p>
             </div>
         </div>
     </div>
 
-    <!-- PANEL PRINCIPAL -->
+    <!-- DASHBOARD -->
     <div id="dashboard" class="hidden">
-        <!-- Encabezado -->
-        <header class="fixed top-0 left-0 right-0 h-16 glass border-b border-border z-50 flex items-center justify-between px-4 lg:px-6">
+        <header class="fixed top-0 left-0 right-0 h-16 bg-dark/95 backdrop-blur border-b border-border z-50 flex items-center justify-between px-6">
             <div class="flex items-center gap-4">
-                <button onclick="toggleSidebar()" class="lg:hidden p-2 hover:bg-white/10 rounded-lg">☰</button>
+                <button onclick="toggleSidebar()" class="lg:hidden p-2">☰</button>
                 <div class="w-9 h-9 bg-gold rounded-lg flex items-center justify-center text-dark font-bold">JB</div>
                 <span class="text-xl font-bold hidden sm:block">JERMAINE ADMIN</span>
             </div>
-            <div class="flex items-center gap-3">
-                <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-card border border-border rounded-full">
-                    <span class="text-zinc-400 text-xs">Hoy:</span>
-                    <span class="text-gold text-xs font-medium" id="headerDate">1 Feb 2026</span>
-                </div>
-                <button onclick="handleLogout()" class="p-2 hover:bg-white/10 rounded-lg text-zinc-400 hover:text-red-400" title="Cerrar Sesión">🚪</button>
+            <div class="flex items-center gap-4">
+                <div class="w-9 h-9 bg-gold rounded-full flex items-center justify-center text-dark font-bold">J</div>
+                <button onclick="handleLogout()" class="text-zinc-400 hover:text-red-500">🚪</button>
             </div>
         </header>
 
-        <!-- Barra Lateral -->
         <aside id="sidebar" class="fixed left-0 top-16 bottom-0 w-64 bg-card border-r border-border transform -translate-x-full lg:translate-x-0 transition-transform z-40 overflow-y-auto p-3">
             <div class="text-xs text-zinc-500 uppercase px-3 py-2">Principal</div>
-            <button onclick="showSection('overview')" data-section="overview" class="sidebar-item active w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">📊 Panel Principal</button>
+            <button onclick="showSection('overview')" data-section="overview" class="sidebar-item active w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">📊 Dashboard</button>
             <button onclick="showSection('bookings')" data-section="bookings" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">📅 Reservas</button>
             <button onclick="showSection('clients')" data-section="clients" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">👥 Clientes</button>
-            
-            <div class="text-xs text-zinc-500 uppercase px-3 py-2 mt-4">💈 Barberos</div>
-            <button onclick="showSection('commissions')" data-section="commissions" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">💰 Comisiones <span class="ml-auto text-green-400 text-xs font-bold">50%</span></button>
-            <button onclick="showSection('daily')" data-section="daily" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">📋 Cortes del Día</button>
-            <button onclick="showSection('staff')" data-section="staff" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">✂️ Equipo</button>
-            
             <div class="text-xs text-zinc-500 uppercase px-3 py-2 mt-4">Finanzas</div>
-            <button onclick="showSection('finances')" data-section="finances" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">📈 Estado Financiero</button>
+            <button onclick="showSection('finances')" data-section="finances" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">📈 P&L</button>
             <button onclick="showSection('expenses')" data-section="expenses" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">🧾 Gastos</button>
-            
-            <div class="text-xs text-zinc-500 uppercase px-3 py-2 mt-4">Sistema</div>
+            <button onclick="showSection('cashflow')" data-section="cashflow" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">💰 Flujo Caja</button>
+            <div class="text-xs text-zinc-500 uppercase px-3 py-2 mt-4">Operaciones</div>
+            <button onclick="showSection('staff')" data-section="staff" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">✂️ Empleados</button>
             <button onclick="showSection('inventory')" data-section="inventory" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">📦 Inventario</button>
-            <button onclick="showSection('chatbot')" data-section="chatbot" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">🤖 Sofia IA</button>
-            <button onclick="showSection('settings')" data-section="settings" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">⚙️ Configuración</button>
-            
-            <!-- Botón Rápido Registrar Corte -->
-            <div class="mt-6 p-4 space-y-2">
-                <button onclick="openModal('quickCutModal')" class="w-full bg-gold text-dark font-semibold py-3 rounded-xl hover:opacity-90 transition flex items-center justify-center gap-2">
-                    ✂️ Registrar Corte
-                </button>
-                <button onclick="openModal('quickAddModal')" class="w-full bg-card border border-border text-white font-medium py-2.5 rounded-xl hover:border-gold transition flex items-center justify-center gap-2 text-sm">
-                    + Nuevo Cliente
-                </button>
-            </div>
+            <button onclick="showSection('availability')" data-section="availability" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">🕐 Disponibilidad</button>
+            <div class="text-xs text-zinc-500 uppercase px-3 py-2 mt-4">Sistema</div>
+            <button onclick="showSection('gallery')" data-section="gallery" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">🖼️ Galería</button>
+            <button onclick="showSection('chatbot')" data-section="chatbot" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">🤖 Sofia AI</button>
+            <button onclick="showSection('settings')" data-section="settings" class="sidebar-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-sm hover:bg-white/5 mb-1">⚙️ Config</button>
+            <div class="mt-6 p-4 bg-gold/10 rounded-xl border border-gold/20"><p class="text-xs text-zinc-400 mb-1">Ingresos Hoy</p><p class="text-2xl font-bold text-gold">$485,000</p><p class="text-xs text-green-500">↑ 12%</p></div>
         </aside>
 
         <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-30 lg:hidden hidden"></div>
 
-        <!-- Contenido Principal -->
         <main class="lg:ml-64 pt-16 min-h-screen p-4 lg:p-6">
-            
-            <!-- PANEL PRINCIPAL -->
+            <!-- OVERVIEW -->
             <section id="section-overview">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                    <div>
-                        <h1 class="text-2xl font-bold">Buenos días, Jermaine 👋</h1>
-                        <p class="text-zinc-500">Sábado, 1 de Febrero 2026</p>
-                    </div>
-                </div>
-                
-                <!-- KPIs -->
+                <div class="mb-6"><h1 class="text-2xl font-bold">Buenos días, Jermaine 👋</h1><p class="text-zinc-500">Jueves, 30 de Enero 2026</p></div>
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                    <div class="bg-card border border-border rounded-xl p-5">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="w-10 h-10 bg-green-500/15 rounded-lg flex items-center justify-center text-green-500">💵</div>
-                            <span class="text-green-500 text-xs">↑ 12%</span>
-                        </div>
-                        <p class="text-zinc-400 text-xs">Ingresos Hoy</p>
-                        <p class="text-xl font-bold" id="kpiRevenueToday">$0</p>
-                    </div>
-                    <div class="bg-card border border-border rounded-xl p-5">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="w-10 h-10 bg-blue-500/15 rounded-lg flex items-center justify-center text-blue-500">✂️</div>
-                        </div>
-                        <p class="text-zinc-400 text-xs">Cortes Hoy</p>
-                        <p class="text-xl font-bold" id="kpiCutsToday">0</p>
-                    </div>
-                    <div class="bg-card border border-border rounded-xl p-5">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="w-10 h-10 bg-gold/15 rounded-lg flex items-center justify-center text-gold">💰</div>
-                        </div>
-                        <p class="text-zinc-400 text-xs">Comisiones Hoy</p>
-                        <p class="text-xl font-bold text-gold" id="kpiCommissionsToday">$0</p>
-                    </div>
-                    <div class="bg-card border border-border rounded-xl p-5">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="w-10 h-10 bg-purple-500/15 rounded-lg flex items-center justify-center text-purple-500">👥</div>
-                        </div>
-                        <p class="text-zinc-400 text-xs">Barberos Activos</p>
-                        <p class="text-xl font-bold" id="kpiBarbersActive">3</p>
-                    </div>
+                    <div class="bg-card border border-border rounded-xl p-5"><div class="w-10 h-10 bg-green-500/15 rounded-lg flex items-center justify-center text-green-500 mb-3">💵</div><p class="text-zinc-400 text-xs">Ingresos Hoy</p><p class="text-xl font-bold">$485,000</p></div>
+                    <div class="bg-card border border-border rounded-xl p-5"><div class="w-10 h-10 bg-blue-500/15 rounded-lg flex items-center justify-center text-blue-500 mb-3">📅</div><p class="text-zinc-400 text-xs">Citas Hoy</p><p class="text-xl font-bold">14 / 18</p></div>
+                    <div class="bg-card border border-border rounded-xl p-5"><div class="w-10 h-10 bg-purple-500/15 rounded-lg flex items-center justify-center text-purple-500 mb-3">👥</div><p class="text-zinc-400 text-xs">Clientes Nuevos</p><p class="text-xl font-bold">47</p></div>
+                    <div class="bg-card border border-border rounded-xl p-5"><div class="w-10 h-10 bg-gold/15 rounded-lg flex items-center justify-center text-gold mb-3">⭐</div><p class="text-zinc-400 text-xs">Rating</p><p class="text-xl font-bold">5.0 / 591</p></div>
                 </div>
-
-                <!-- Resumen de Barberos Hoy -->
-                <div class="bg-card border border-border rounded-xl p-5 mb-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-semibold">💈 Resumen de Barberos - Hoy</h3>
-                        <button onclick="showSection('commissions')" class="text-gold text-sm hover:underline">Ver detalle →</button>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="barberSummaryToday"></div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-card border border-border rounded-xl p-5"><h3 class="font-semibold mb-4">Ingresos vs Gastos</h3><canvas id="revenueChart" height="180"></canvas></div>
+                    <div class="bg-card border border-border rounded-xl p-5"><h3 class="font-semibold mb-4">Servicios Populares</h3><canvas id="servicesChart" height="180"></canvas></div>
                 </div>
-
-                <!-- Últimos Cortes -->
-                <div class="bg-card border border-border rounded-xl p-5">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="font-semibold">✂️ Últimos Cortes Registrados</h3>
-                        <button onclick="showSection('daily')" class="text-gold text-sm hover:underline">Ver todos →</button>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 bg-card border border-border rounded-xl p-5">
+                        <h3 class="font-semibold mb-4">Citas de Hoy</h3>
+                        <table class="w-full text-sm"><thead><tr class="text-zinc-500 text-xs border-b border-border"><th class="text-left pb-3">Hora</th><th class="text-left pb-3">Cliente</th><th class="text-left pb-3">Servicio</th><th class="text-left pb-3">Estado</th><th class="text-right pb-3">Monto</th></tr></thead><tbody id="todayAppointments"></tbody></table>
                     </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
-                            <thead>
-                                <tr class="text-zinc-500 text-xs border-b border-border">
-                                    <th class="text-left pb-3">Hora</th>
-                                    <th class="text-left pb-3">Cliente</th>
-                                    <th class="text-left pb-3">Servicio</th>
-                                    <th class="text-left pb-3">Barbero</th>
-                                    <th class="text-right pb-3">Total</th>
-                                    <th class="text-right pb-3">Comisión</th>
-                                </tr>
-                            </thead>
-                            <tbody id="recentCutsTable"></tbody>
-                        </table>
+                    <div class="space-y-4">
+                        <h3 class="font-semibold">Acciones</h3>
+                        <button onclick="openModal('bookingModal')" class="w-full bg-gold/10 border border-gold/30 rounded-xl p-4 text-left hover:bg-gold/20">➕ Nueva Reserva</button>
+                        <button onclick="openModal('expenseModal')" class="w-full bg-card border border-border rounded-xl p-4 text-left hover:border-red-500/50">🧾 Registrar Gasto</button>
+                        <button onclick="openModal('incomeModal')" class="w-full bg-card border border-border rounded-xl p-4 text-left hover:border-green-500/50">💰 Registrar Venta</button>
+                        <button onclick="showSection('gallery')" class="w-full bg-card border border-border rounded-xl p-4 text-left hover:border-purple-500/50">📸 Subir Fotos</button>
                     </div>
                 </div>
             </section>
 
-            <!-- COMISIONES DE BARBEROS -->
-            <section id="section-commissions" class="hidden">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                    <div>
-                        <h1 class="text-2xl font-bold">💰 Comisiones de Barberos</h1>
-                        <p class="text-zinc-500">Los barberos ganan el <span class="text-gold font-bold">50%</span> de cada servicio</p>
-                    </div>
-                    <div class="flex gap-3">
-                        <select id="commissionPeriod" onchange="updateCommissions()" class="bg-card border border-border rounded-lg px-4 py-2.5">
-                            <option value="today">Hoy</option>
-                            <option value="week">Esta Semana</option>
-                            <option value="month">Este Mes</option>
-                        </select>
-                        <button onclick="exportCommissions()" class="px-4 py-2.5 bg-card border border-border rounded-lg hover:border-gold transition">
-                            📤 Exportar
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Resumen Total -->
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                    <div class="bg-green-500/10 border border-green-500/30 rounded-xl p-5">
-                        <p class="text-green-400 text-xs">Total Servicios</p>
-                        <p class="text-2xl font-bold text-green-400" id="commTotalServices">$0</p>
-                    </div>
-                    <div class="bg-gold/10 border border-gold/30 rounded-xl p-5">
-                        <p class="text-gold text-xs">Total Comisiones (50%)</p>
-                        <p class="text-2xl font-bold text-gold" id="commTotalCommissions">$0</p>
-                    </div>
-                    <div class="bg-blue-500/10 border border-blue-500/30 rounded-xl p-5">
-                        <p class="text-blue-400 text-xs">Ganancia Barbería (50%)</p>
-                        <p class="text-2xl font-bold text-blue-400" id="commShopEarnings">$0</p>
-                    </div>
-                    <div class="bg-card border border-border rounded-xl p-5">
-                        <p class="text-zinc-400 text-xs">Total Cortes</p>
-                        <p class="text-2xl font-bold" id="commTotalCuts">0</p>
-                    </div>
-                </div>
-
-                <!-- Tarjetas de Barberos -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="barberCommissionCards"></div>
-
-                <!-- Tabla Detallada -->
-                <div class="bg-card border border-border rounded-xl p-5 mt-6">
-                    <h3 class="font-semibold mb-4">📋 Detalle de Comisiones por Barbero</h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
-                            <thead>
-                                <tr class="text-zinc-500 text-xs border-b border-border">
-                                    <th class="text-left pb-3">Barbero</th>
-                                    <th class="text-center pb-3">Cortes</th>
-                                    <th class="text-right pb-3">Total Servicios</th>
-                                    <th class="text-center pb-3">% Comisión</th>
-                                    <th class="text-right pb-3">A Pagar</th>
-                                </tr>
-                            </thead>
-                            <tbody id="commissionDetailTable"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- CORTES DEL DÍA -->
-            <section id="section-daily" class="hidden">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                    <div>
-                        <h1 class="text-2xl font-bold">📋 Cortes del Día</h1>
-                        <p class="text-zinc-500">Registro de todos los servicios completados</p>
-                    </div>
-                    <div class="flex gap-3">
-                        <input type="date" id="dailyDate" onchange="loadDailyCuts()" class="bg-card border border-border rounded-lg px-4 py-2.5">
-                        <button onclick="openModal('quickCutModal')" class="px-5 py-2.5 bg-gold text-dark font-semibold rounded-lg">
-                            ✂️ Registrar Corte
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Filtro por Barbero -->
-                <div class="bg-card border border-border rounded-xl p-4 mb-6">
-                    <div class="flex flex-wrap gap-2">
-                        <button onclick="filterDailyByBarber('all')" class="barber-filter active px-4 py-2 rounded-lg bg-gold text-dark font-medium text-sm" data-barber="all">
-                            Todos
-                        </button>
-                        <button onclick="filterDailyByBarber('Carlos')" class="barber-filter px-4 py-2 rounded-lg bg-dark border border-border text-sm hover:border-gold" data-barber="Carlos">
-                            Carlos
-                        </button>
-                        <button onclick="filterDailyByBarber('Miguel')" class="barber-filter px-4 py-2 rounded-lg bg-dark border border-border text-sm hover:border-gold" data-barber="Miguel">
-                            Miguel
-                        </button>
-                        <button onclick="filterDailyByBarber('Andrés')" class="barber-filter px-4 py-2 rounded-lg bg-dark border border-border text-sm hover:border-gold" data-barber="Andrés">
-                            Andrés
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Resumen Rápido -->
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6" id="dailySummaryCards"></div>
-
-                <!-- Tabla de Cortes -->
-                <div class="bg-card border border-border rounded-xl overflow-hidden">
-                    <table class="w-full text-sm">
-                        <thead class="bg-dark/50">
-                            <tr class="text-zinc-400 text-xs">
-                                <th class="text-left p-4">Hora</th>
-                                <th class="text-left p-4">Cliente</th>
-                                <th class="text-left p-4">Servicio</th>
-                                <th class="text-left p-4">Barbero</th>
-                                <th class="text-right p-4">Total</th>
-                                <th class="text-right p-4">Comisión 50%</th>
-                                <th class="text-center p-4">Método</th>
-                                <th class="text-center p-4">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="dailyCutsTable"></tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- EQUIPO / STAFF -->
-            <section id="section-staff" class="hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <div>
-                        <h1 class="text-2xl font-bold">✂️ Equipo de Barberos</h1>
-                        <p class="text-zinc-500">Gestiona tu equipo y sus datos</p>
-                    </div>
-                    <button onclick="openModal('addBarberModal')" class="px-5 py-2.5 bg-gold text-dark font-semibold rounded-lg">
-                        + Agregar Barbero
-                    </button>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="staffGrid"></div>
-            </section>
-
-            <!-- RESERVAS -->
+            <!-- BOOKINGS -->
             <section id="section-bookings" class="hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <h1 class="text-2xl font-bold">📅 Reservas</h1>
-                    <button onclick="openModal('bookingModal')" class="px-5 py-2.5 bg-gold text-dark font-semibold rounded-lg">➕ Nueva Reserva</button>
-                </div>
-                <div class="bg-card border border-border rounded-xl overflow-hidden">
-                    <table class="w-full text-sm">
-                        <thead class="bg-dark/50">
-                            <tr class="text-zinc-400 text-xs">
-                                <th class="text-left p-4">Fecha/Hora</th>
-                                <th class="text-left p-4">Cliente</th>
-                                <th class="text-left p-4">Servicio</th>
-                                <th class="text-left p-4">Barbero</th>
-                                <th class="text-left p-4">Estado</th>
-                                <th class="text-center p-4">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="bookingsTableBody"></tbody>
-                    </table>
-                </div>
+                <div class="flex justify-between items-center mb-6"><div><h1 class="text-2xl font-bold">Reservas</h1></div><button onclick="openModal('bookingModal')" class="px-5 py-2.5 bg-gold text-dark font-semibold rounded-lg">➕ Nueva</button></div>
+                <div class="bg-card border border-border rounded-xl overflow-hidden"><table class="w-full text-sm"><thead class="bg-dark/50"><tr class="text-zinc-400 text-xs"><th class="text-left p-4">ID</th><th class="text-left p-4">Fecha</th><th class="text-left p-4">Cliente</th><th class="text-left p-4">Servicio</th><th class="text-left p-4">Estado</th><th class="text-right p-4">Monto</th></tr></thead><tbody id="bookingsTableBody"></tbody></table></div>
             </section>
 
-            <!-- CLIENTES -->
+            <!-- CLIENTS -->
             <section id="section-clients" class="hidden">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                    <h1 class="text-2xl font-bold">👥 Clientes</h1>
-                    <button onclick="openModal('quickAddModal')" class="px-5 py-2.5 bg-gold text-dark font-semibold rounded-lg">➕ Nuevo Cliente</button>
-                </div>
-                <div class="bg-card border border-border rounded-xl p-4 mb-6">
-                    <input type="text" id="clientSearch" placeholder="Buscar por nombre o teléfono..." oninput="filterClients()" class="w-full bg-dark border border-border rounded-lg px-4 py-3 focus:outline-none focus:border-gold">
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="clientsGrid"></div>
+                <div class="flex justify-between items-center mb-6"><h1 class="text-2xl font-bold">Clientes CRM</h1><button onclick="openModal('clientModal')" class="px-5 py-2.5 bg-gold text-dark font-semibold rounded-lg">➕ Nuevo</button></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="clientsGrid"></div>
             </section>
 
-            <!-- FINANZAS -->
+            <!-- FINANCES -->
             <section id="section-finances" class="hidden">
-                <h1 class="text-2xl font-bold mb-6">📈 Estado Financiero</h1>
+                <h1 class="text-2xl font-bold mb-6">Centro Financiero (P&L)</h1>
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                    <div class="bg-green-500/10 border border-green-500/30 rounded-xl p-5">
-                        <p class="text-green-400 text-xs">Ingresos del Mes</p>
-                        <p class="text-2xl font-bold text-green-400">$12.4M</p>
-                    </div>
-                    <div class="bg-gold/10 border border-gold/30 rounded-xl p-5">
-                        <p class="text-gold text-xs">Comisiones Pagadas</p>
-                        <p class="text-2xl font-bold text-gold">$6.2M</p>
-                    </div>
-                    <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-5">
-                        <p class="text-red-400 text-xs">Otros Gastos</p>
-                        <p class="text-2xl font-bold text-red-400">$2.1M</p>
-                    </div>
-                    <div class="bg-blue-500/10 border border-blue-500/30 rounded-xl p-5">
-                        <p class="text-blue-400 text-xs">Utilidad Neta</p>
-                        <p class="text-2xl font-bold text-blue-400">$4.1M</p>
-                    </div>
+                    <div class="bg-green-500/10 border border-green-500/30 rounded-xl p-5"><p class="text-green-400 text-xs">Ingresos</p><p class="text-2xl font-bold text-green-400">$12.4M</p></div>
+                    <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-5"><p class="text-red-400 text-xs">Gastos</p><p class="text-2xl font-bold text-red-400">$4.2M</p></div>
+                    <div class="bg-gold/10 border border-gold/30 rounded-xl p-5"><p class="text-gold text-xs">Utilidad</p><p class="text-2xl font-bold text-gold">$8.2M</p></div>
+                    <div class="bg-card border border-border rounded-xl p-5"><p class="text-zinc-400 text-xs">Caja</p><p class="text-2xl font-bold">$15.8M</p></div>
                 </div>
                 <div class="bg-card border border-border rounded-xl p-6">
-                    <h3 class="font-semibold mb-4">Desglose</h3>
-                    <div class="space-y-3" id="financeBreakdown"></div>
+                    <h3 class="font-semibold mb-4">Estado de Resultados - Enero</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between py-2 border-b border-border"><span>Servicios</span><span class="text-green-400">$10,850,000</span></div>
+                        <div class="flex justify-between py-2 border-b border-border"><span>Productos</span><span class="text-green-400">$1,550,000</span></div>
+                        <div class="flex justify-between py-2 border-b border-border font-bold"><span>TOTAL INGRESOS</span><span class="text-green-400">$12,400,000</span></div>
+                        <div class="flex justify-between py-2"><span class="text-zinc-500">(-) Nómina</span><span class="text-red-400">-$2,500,000</span></div>
+                        <div class="flex justify-between py-2"><span class="text-zinc-500">(-) Arriendo</span><span class="text-red-400">-$800,000</span></div>
+                        <div class="flex justify-between py-2"><span class="text-zinc-500">(-) Insumos</span><span class="text-red-400">-$450,000</span></div>
+                        <div class="flex justify-between py-2"><span class="text-zinc-500">(-) Servicios</span><span class="text-red-400">-$280,000</span></div>
+                        <div class="flex justify-between py-2 border-b border-border"><span class="text-zinc-500">(-) Otros</span><span class="text-red-400">-$170,000</span></div>
+                        <div class="flex justify-between py-3 font-bold text-lg bg-gold/10 -mx-6 px-6 rounded-lg"><span>UTILIDAD NETA</span><span class="text-gold">$8,200,000</span></div>
+                    </div>
                 </div>
             </section>
 
-            <!-- GASTOS -->
+            <!-- EXPENSES -->
             <section id="section-expenses" class="hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <h1 class="text-2xl font-bold">🧾 Gastos</h1>
-                    <button onclick="openModal('expenseModal')" class="px-5 py-2.5 bg-red-500 text-white font-semibold rounded-lg">➕ Nuevo Gasto</button>
-                </div>
-                <div class="bg-card border border-border rounded-xl overflow-hidden">
-                    <table class="w-full text-sm">
-                        <thead class="bg-dark/50"><tr class="text-zinc-400 text-xs"><th class="text-left p-4">Fecha</th><th class="text-left p-4">Descripción</th><th class="text-left p-4">Categoría</th><th class="text-right p-4">Monto</th></tr></thead>
-                        <tbody id="expensesTableBody"></tbody>
-                    </table>
-                </div>
+                <div class="flex justify-between items-center mb-6"><h1 class="text-2xl font-bold">Gastos</h1><button onclick="openModal('expenseModal')" class="px-5 py-2.5 bg-red-500 text-white font-semibold rounded-lg">➕ Nuevo</button></div>
+                <div class="bg-card border border-border rounded-xl overflow-hidden"><table class="w-full text-sm"><thead class="bg-dark/50"><tr class="text-zinc-400 text-xs"><th class="text-left p-4">Fecha</th><th class="text-left p-4">Descripción</th><th class="text-left p-4">Categoría</th><th class="text-right p-4">Monto</th></tr></thead><tbody id="expensesTableBody"></tbody></table></div>
             </section>
 
-            <!-- INVENTARIO -->
+            <!-- CASHFLOW -->
+            <section id="section-cashflow" class="hidden">
+                <h1 class="text-2xl font-bold mb-6">Flujo de Caja</h1>
+                <div class="grid grid-cols-3 gap-6 mb-6">
+                    <div class="bg-green-500/10 border border-green-500/30 rounded-xl p-6"><p class="text-zinc-400 text-sm">Entradas</p><p class="text-3xl font-bold text-green-400">$12.4M</p></div>
+                    <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-6"><p class="text-zinc-400 text-sm">Salidas</p><p class="text-3xl font-bold text-red-400">$4.2M</p></div>
+                    <div class="bg-gold/10 border border-gold/30 rounded-xl p-6"><p class="text-zinc-400 text-sm">Flujo Neto</p><p class="text-3xl font-bold text-gold">+$8.2M</p></div>
+                </div>
+                <div class="bg-card border border-border rounded-xl p-6"><canvas id="cashflowChart" height="200"></canvas></div>
+            </section>
+
+            <!-- STAFF -->
+            <section id="section-staff" class="hidden">
+                <h1 class="text-2xl font-bold mb-6">Empleados</h1>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="staffGrid"></div>
+            </section>
+
+            <!-- INVENTORY -->
             <section id="section-inventory" class="hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <h1 class="text-2xl font-bold">📦 Inventario</h1>
-                    <button class="px-5 py-2.5 bg-gold text-dark font-semibold rounded-lg">➕ Nuevo Producto</button>
-                </div>
-                <div class="bg-card border border-border rounded-xl overflow-hidden">
-                    <table class="w-full text-sm">
-                        <thead class="bg-dark/50"><tr class="text-zinc-400 text-xs"><th class="text-left p-4">Producto</th><th class="text-center p-4">Stock</th><th class="text-right p-4">Precio</th><th class="text-center p-4">Estado</th></tr></thead>
-                        <tbody id="inventoryTableBody"></tbody>
-                    </table>
-                </div>
+                <h1 class="text-2xl font-bold mb-6">Inventario</h1>
+                <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mb-6">⚠️ 3 productos con bajo stock</div>
+                <div class="bg-card border border-border rounded-xl overflow-hidden"><table class="w-full text-sm"><thead class="bg-dark/50"><tr class="text-zinc-400 text-xs"><th class="text-left p-4">Producto</th><th class="text-left p-4">Categoría</th><th class="text-center p-4">Stock</th><th class="text-right p-4">Precio</th><th class="text-center p-4">Estado</th></tr></thead><tbody id="inventoryTableBody"></tbody></table></div>
+            </section>
+
+            <!-- AVAILABILITY -->
+            <section id="section-availability" class="hidden">
+                <h1 class="text-2xl font-bold mb-6">Disponibilidad</h1>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="barberStatus"></div>
+            </section>
+
+            <!-- GALLERY -->
+            <section id="section-gallery" class="hidden">
+                <div class="flex justify-between items-center mb-6"><h1 class="text-2xl font-bold">Galería</h1><div class="flex gap-3"><button onclick="connectGoogleDrive()" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">📁 Google Drive</button><button onclick="uploadPhotos()" class="px-4 py-2 bg-gold text-dark rounded-lg text-sm font-semibold">📸 Subir</button></div></div>
+                <div class="border-2 border-dashed border-border rounded-xl p-12 text-center mb-6 hover:border-gold cursor-pointer" onclick="uploadPhotos()">📤 Arrastra fotos o haz clic</div>
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4" id="galleryGrid"></div>
             </section>
 
             <!-- CHATBOT -->
             <section id="section-chatbot" class="hidden">
-                <h1 class="text-2xl font-bold mb-6">🤖 Sofia IA</h1>
+                <h1 class="text-2xl font-bold mb-6">Sofia AI</h1>
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                     <div class="bg-card border border-border rounded-xl p-5"><p class="text-zinc-400 text-xs">Conversaciones</p><p class="text-2xl font-bold">847</p></div>
                     <div class="bg-card border border-border rounded-xl p-5"><p class="text-zinc-400 text-xs">Reservas vía Chat</p><p class="text-2xl font-bold text-green-400">234</p></div>
-                    <div class="bg-card border border-border rounded-xl p-5"><p class="text-zinc-400 text-xs">Tasa de Resolución</p><p class="text-2xl font-bold text-gold">94%</p></div>
+                    <div class="bg-card border border-border rounded-xl p-5"><p class="text-zinc-400 text-xs">Resolución</p><p class="text-2xl font-bold text-gold">94%</p></div>
                     <div class="bg-card border border-border rounded-xl p-5"><p class="text-zinc-400 text-xs">Escaladas</p><p class="text-2xl font-bold">51</p></div>
+                </div>
+                <div class="bg-card border border-border rounded-xl p-6 mb-6">
+                    <div class="flex justify-between mb-4"><h3 class="font-semibold">Base de Conocimiento</h3><button onclick="addKnowledge()" class="text-gold text-sm">+ Agregar</button></div>
+                    <div class="space-y-3" id="knowledgeBase"></div>
                 </div>
             </section>
 
-            <!-- CONFIGURACIÓN -->
+            <!-- SETTINGS -->
             <section id="section-settings" class="hidden">
-                <h1 class="text-2xl font-bold mb-6">⚙️ Configuración</h1>
+                <h1 class="text-2xl font-bold mb-6">Configuración</h1>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div class="bg-card border border-border rounded-xl p-6">
-                        <h3 class="font-semibold mb-4">Información del Negocio</h3>
+                        <h3 class="font-semibold mb-4">Negocio</h3>
                         <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm text-zinc-400 mb-2">Nombre</label>
-                                <input type="text" value="Jermaine Barber's" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
-                            </div>
-                            <div>
-                                <label class="block text-sm text-zinc-400 mb-2">WhatsApp</label>
-                                <input type="text" value="+57 318 132 6952" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
-                            </div>
-                            <button class="w-full py-3 bg-gold text-dark font-semibold rounded-lg">Guardar</button>
+                            <div><label class="block text-sm text-zinc-400 mb-2">Nombre</label><input type="text" value="Jermaine Barber's" class="w-full bg-dark border border-border rounded-lg px-4 py-3"></div>
+                            <div><label class="block text-sm text-zinc-400 mb-2">WhatsApp</label><input type="text" value="+57 318 132 6952" class="w-full bg-dark border border-border rounded-lg px-4 py-3"></div>
                         </div>
                     </div>
                     <div class="bg-card border border-border rounded-xl p-6">
-                        <h3 class="font-semibold mb-4">Configuración de Comisiones</h3>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm text-zinc-400 mb-2">Porcentaje de Comisión</label>
-                                <div class="flex items-center gap-4">
-                                    <input type="number" id="commissionRate" value="50" min="0" max="100" class="w-24 bg-dark border border-border rounded-lg px-4 py-3 text-center">
-                                    <span class="text-zinc-400">%</span>
-                                </div>
-                                <p class="text-xs text-zinc-500 mt-2">El barbero recibe este porcentaje de cada servicio</p>
-                            </div>
-                            <button onclick="saveCommissionRate()" class="w-full py-3 bg-gold text-dark font-semibold rounded-lg">Guardar Configuración</button>
-                        </div>
+                        <h3 class="font-semibold mb-4">Logo</h3>
+                        <div class="flex items-center gap-6"><div class="w-20 h-20 bg-gold rounded-2xl flex items-center justify-center text-dark text-4xl font-bold">JB</div><button class="px-4 py-2 bg-gold text-dark rounded-lg text-sm">Subir Logo</button></div>
                     </div>
                 </div>
             </section>
         </main>
     </div>
 
-    <!-- MODAL REGISTRAR CORTE -->
-    <div id="quickCutModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-        <div class="bg-card border border-border rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
-            <div class="sticky top-0 bg-card border-b border-border p-6 flex justify-between items-center">
-                <h3 class="text-xl font-semibold">✂️ Registrar Corte</h3>
-                <button onclick="closeModal('quickCutModal')" class="text-zinc-400 hover:text-white text-2xl">&times;</button>
-            </div>
-            <form onsubmit="saveCut(event)" class="p-6 space-y-4">
-                <div>
-                    <label class="block text-sm text-zinc-400 mb-2">Barbero *</label>
-                    <select id="cutBarber" required class="w-full bg-dark border border-border rounded-lg px-4 py-3 focus:outline-none focus:border-gold">
-                        <option value="">Seleccionar barbero...</option>
-                        <option value="Carlos">Carlos</option>
-                        <option value="Miguel">Miguel</option>
-                        <option value="Andrés">Andrés</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm text-zinc-400 mb-2">Servicio *</label>
-                    <select id="cutService" required onchange="updateCutPrice()" class="w-full bg-dark border border-border rounded-lg px-4 py-3 focus:outline-none focus:border-gold">
-                        <option value="">Seleccionar servicio...</option>
-                        <option value="Corte Clásico" data-price="25000">Corte Clásico - $25,000</option>
-                        <option value="Fade" data-price="30000">Fade - $30,000</option>
-                        <option value="Barba" data-price="15000">Barba - $15,000</option>
-                        <option value="Combo (Corte + Barba)" data-price="35000">Combo (Corte + Barba) - $35,000</option>
-                        <option value="Afeitado Clásico" data-price="20000">Afeitado Clásico - $20,000</option>
-                        <option value="Diseño" data-price="35000">Diseño - $35,000</option>
-                        <option value="Corte Niño" data-price="20000">Corte Niño - $20,000</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm text-zinc-400 mb-2">Cliente (opcional)</label>
-                    <input type="text" id="cutClient" placeholder="Nombre del cliente" class="w-full bg-dark border border-border rounded-lg px-4 py-3 focus:outline-none focus:border-gold">
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm text-zinc-400 mb-2">Precio *</label>
-                        <input type="number" id="cutPrice" required placeholder="0" class="w-full bg-dark border border-border rounded-lg px-4 py-3 focus:outline-none focus:border-gold">
-                    </div>
-                    <div>
-                        <label class="block text-sm text-zinc-400 mb-2">Método de Pago</label>
-                        <select id="cutPayment" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
-                            <option value="Efectivo">Efectivo</option>
-                            <option value="Nequi">Nequi</option>
-                            <option value="Daviplata">Daviplata</option>
-                            <option value="Tarjeta">Tarjeta</option>
-                            <option value="Transferencia">Transferencia</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <!-- Preview de Comisión -->
-                <div class="bg-gold/10 border border-gold/30 rounded-xl p-4">
-                    <div class="flex justify-between items-center">
-                        <span class="text-zinc-400">Total del servicio:</span>
-                        <span class="font-bold" id="cutTotalPreview">$0</span>
-                    </div>
-                    <div class="flex justify-between items-center mt-2">
-                        <span class="text-zinc-400">Comisión barbero (50%):</span>
-                        <span class="font-bold text-gold" id="cutCommissionPreview">$0</span>
-                    </div>
-                    <div class="flex justify-between items-center mt-2">
-                        <span class="text-zinc-400">Ganancia barbería (50%):</span>
-                        <span class="font-bold text-green-400" id="cutShopPreview">$0</span>
-                    </div>
-                </div>
-
-                <div class="flex gap-3 pt-4">
-                    <button type="button" onclick="closeModal('quickCutModal')" class="flex-1 py-3 border border-border rounded-lg hover:bg-dark transition">Cancelar</button>
-                    <button type="submit" class="flex-1 py-3 bg-gold text-dark font-semibold rounded-lg hover:opacity-90 transition">✂️ Registrar Corte</button>
-                </div>
+    <!-- MODALS -->
+    <div id="bookingModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+        <div class="bg-card border border-border rounded-2xl max-w-lg w-full p-6">
+            <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-semibold">Nueva Reserva</h3><button onclick="closeModal('bookingModal')" class="text-zinc-400">✕</button></div>
+            <form onsubmit="createBooking(event)" class="space-y-4">
+                <input type="text" required placeholder="Cliente" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
+                <input type="tel" required placeholder="Teléfono" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
+                <select required class="w-full bg-dark border border-border rounded-lg px-4 py-3"><option value="">Servicio...</option><option>Corte - $25,000</option><option>Fade - $30,000</option><option>Barba - $15,000</option><option>Combo - $35,000</option></select>
+                <div class="grid grid-cols-2 gap-4"><input type="date" required class="w-full bg-dark border border-border rounded-lg px-4 py-3"><input type="time" required class="w-full bg-dark border border-border rounded-lg px-4 py-3"></div>
+                <div class="flex gap-3"><button type="button" onclick="closeModal('bookingModal')" class="flex-1 py-3 border border-border rounded-lg">Cancelar</button><button type="submit" class="flex-1 py-3 bg-gold text-dark font-semibold rounded-lg">Crear</button></div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL AGREGAR CLIENTE -->
-    <div id="quickAddModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-        <div class="bg-card border border-border rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
-            <div class="sticky top-0 bg-card border-b border-border p-6 flex justify-between items-center">
-                <h3 class="text-xl font-semibold">➕ Nuevo Cliente</h3>
-                <button onclick="closeModal('quickAddModal')" class="text-zinc-400 hover:text-white text-2xl">&times;</button>
-            </div>
-            <form onsubmit="saveNewClient(event)" class="p-6 space-y-4">
-                <div>
-                    <label class="block text-sm text-zinc-400 mb-2">Nombre Completo *</label>
-                    <input type="text" id="newClientName" required class="w-full bg-dark border border-border rounded-lg px-4 py-3">
-                </div>
-                <div>
-                    <label class="block text-sm text-zinc-400 mb-2">Teléfono *</label>
-                    <input type="tel" id="newClientPhone" required class="w-full bg-dark border border-border rounded-lg px-4 py-3">
-                </div>
-                <div>
-                    <label class="block text-sm text-zinc-400 mb-2">Barbero Preferido</label>
-                    <select id="newClientBarber" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
-                        <option value="">Sin preferencia</option>
-                        <option value="Carlos">Carlos</option>
-                        <option value="Miguel">Miguel</option>
-                        <option value="Andrés">Andrés</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm text-zinc-400 mb-2">Notas</label>
-                    <textarea id="newClientNotes" rows="2" class="w-full bg-dark border border-border rounded-lg px-4 py-3 resize-none"></textarea>
-                </div>
-                <div class="flex gap-3">
-                    <button type="button" onclick="closeModal('quickAddModal')" class="flex-1 py-3 border border-border rounded-lg">Cancelar</button>
-                    <button type="submit" class="flex-1 py-3 bg-gold text-dark font-semibold rounded-lg">Guardar</button>
-                </div>
+    <div id="expenseModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+        <div class="bg-card border border-border rounded-2xl max-w-lg w-full p-6">
+            <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-semibold">Registrar Gasto</h3><button onclick="closeModal('expenseModal')" class="text-zinc-400">✕</button></div>
+            <form onsubmit="createExpense(event)" class="space-y-4">
+                <input type="text" required placeholder="Descripción" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
+                <select required class="w-full bg-dark border border-border rounded-lg px-4 py-3"><option value="">Categoría...</option><option>Nómina</option><option>Arriendo</option><option>Insumos</option><option>Servicios</option></select>
+                <input type="number" required placeholder="Monto" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
+                <input type="date" required class="w-full bg-dark border border-border rounded-lg px-4 py-3">
+                <div class="flex gap-3"><button type="button" onclick="closeModal('expenseModal')" class="flex-1 py-3 border border-border rounded-lg">Cancelar</button><button type="submit" class="flex-1 py-3 bg-red-500 text-white font-semibold rounded-lg">Registrar</button></div>
             </form>
         </div>
     </div>
 
-    <!-- TOAST -->
-    <div id="toast" class="hidden fixed bottom-6 right-6 bg-green-500 text-white px-6 py-4 rounded-xl z-50 shadow-lg">
-        <span id="toastMessage">OK</span>
+    <div id="incomeModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+        <div class="bg-card border border-border rounded-2xl max-w-lg w-full p-6">
+            <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-semibold">Registrar Ingreso</h3><button onclick="closeModal('incomeModal')" class="text-zinc-400">✕</button></div>
+            <form onsubmit="createIncome(event)" class="space-y-4">
+                <input type="text" required placeholder="Descripción" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
+                <input type="number" required placeholder="Monto" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
+                <div class="flex gap-3"><button type="button" onclick="closeModal('incomeModal')" class="flex-1 py-3 border border-border rounded-lg">Cancelar</button><button type="submit" class="flex-1 py-3 bg-green-500 text-white font-semibold rounded-lg">Registrar</button></div>
+            </form>
+        </div>
     </div>
+
+    <div id="clientModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+        <div class="bg-card border border-border rounded-2xl max-w-lg w-full p-6">
+            <div class="flex justify-between items-center mb-6"><h3 class="text-xl font-semibold">Nuevo Cliente</h3><button onclick="closeModal('clientModal')" class="text-zinc-400">✕</button></div>
+            <form onsubmit="createClient(event)" class="space-y-4">
+                <input type="text" required placeholder="Nombre" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
+                <input type="tel" required placeholder="Teléfono" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
+                <input type="email" placeholder="Email" class="w-full bg-dark border border-border rounded-lg px-4 py-3">
+                <div class="flex gap-3"><button type="button" onclick="closeModal('clientModal')" class="flex-1 py-3 border border-border rounded-lg">Cancelar</button><button type="submit" class="flex-1 py-3 bg-gold text-dark font-semibold rounded-lg">Guardar</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="hidden fixed bottom-6 right-6 bg-green-500 text-white px-6 py-4 rounded-xl z-50">✓ <span id="toastMessage">OK</span></div>
 
     <script>
-        // ==================== CONFIGURACIÓN ====================
-        const CONFIG = {
-            commissionRate: parseFloat(localStorage.getItem('jermaine_commission_rate') || '50') / 100, // 50% default
-            currency: 'COP'
-        };
-
-        // ==================== DATOS ====================
-        const DB = {
-            cuts: JSON.parse(localStorage.getItem('jermaine_cuts') || '[]'),
-            clients: JSON.parse(localStorage.getItem('jermaine_clients') || '[]'),
-            barbers: JSON.parse(localStorage.getItem('jermaine_barbers') || JSON.stringify([
-                {id:1, name:'Carlos', role:'Barbero Senior', phone:'+57 300 111 2222', status:'activo', photo:'C'},
-                {id:2, name:'Miguel', role:'Barbero', phone:'+57 300 333 4444', status:'activo', photo:'M'},
-                {id:3, name:'Andrés', role:'Barbero', phone:'+57 300 555 6666', status:'activo', photo:'A'}
-            ])),
-            bookings: [
-                {id:1,date:'2026-02-01',time:'14:00',client:'Roberto Díaz',service:'Fade',barber:'Carlos',status:'pendiente'},
-                {id:2,date:'2026-02-01',time:'15:00',client:'Luis Martínez',service:'Combo',barber:'Miguel',status:'pendiente'},
-                {id:3,date:'2026-02-01',time:'16:00',client:'Jorge Ruiz',service:'Corte',barber:'Andrés',status:'pendiente'}
-            ],
-            expenses: [
-                {id:1,date:'2026-01-30',description:'Productos capilares',category:'Insumos',amount:450000},
-                {id:2,date:'2026-01-28',description:'Servicios públicos',category:'Servicios',amount:280000},
-                {id:3,date:'2026-01-15',description:'Arriendo enero',category:'Arriendo',amount:800000}
-            ],
-            inventory: [
-                {id:1,name:'Pomada Mate Premium',stock:3,price:45000,min:5},
-                {id:2,name:'Aceite para Barba',stock:2,price:55000,min:5},
-                {id:3,name:'Shampoo Anticaída',stock:8,price:65000,min:5}
-            ]
-        };
-
-        // Inicializar cortes de ejemplo si está vacío
-        if (DB.cuts.length === 0) {
-            const today = new Date().toISOString().split('T')[0];
-            DB.cuts = [
-                {id:1, date:today, time:'09:15', client:'Juan Pérez', service:'Fade', barber:'Carlos', price:30000, payment:'Efectivo'},
-                {id:2, date:today, time:'09:45', client:'Miguel Torres', service:'Combo (Corte + Barba)', barber:'Miguel', price:35000, payment:'Nequi'},
-                {id:3, date:today, time:'10:30', client:'Carlos Ruiz', service:'Corte Clásico', barber:'Andrés', price:25000, payment:'Efectivo'},
-                {id:4, date:today, time:'11:00', client:'David Smith', service:'Fade', barber:'Carlos', price:30000, payment:'Tarjeta'},
-                {id:5, date:today, time:'11:45', client:'Pedro Gómez', service:'Barba', barber:'Miguel', price:15000, payment:'Efectivo'},
-                {id:6, date:today, time:'12:15', client:'Andrés López', service:'Diseño', barber:'Andrés', price:35000, payment:'Nequi'},
-                {id:7, date:today, time:'13:00', client:'Cliente Walk-in', service:'Corte Clásico', barber:'Carlos', price:25000, payment:'Efectivo'}
-            ];
-            saveCuts();
-        }
-
-        if (DB.clients.length === 0) {
-            DB.clients = [
-                {id:1,name:'Juan Pérez',phone:'+57 300 123 4567',barber:'Carlos',notes:'Prefiere fade bajo',visits:12},
-                {id:2,name:'Miguel Torres',phone:'+57 301 234 5678',barber:'Miguel',notes:'',visits:8},
-                {id:3,name:'Carlos Ruiz',phone:'+57 302 345 6789',barber:'',notes:'Cliente VIP',visits:15}
-            ];
-            saveClients();
-        }
-
-        // ==================== PERSISTENCIA ====================
-        function saveCuts() { localStorage.setItem('jermaine_cuts', JSON.stringify(DB.cuts)); }
-        function saveClients() { localStorage.setItem('jermaine_clients', JSON.stringify(DB.clients)); }
-        function saveBarbers() { localStorage.setItem('jermaine_barbers', JSON.stringify(DB.barbers)); }
-
-        // ==================== AUTENTICACIÓN ====================
-        function handleLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const pass = document.getElementById('loginPass').value;
-            if (email === 'admin@jermaine.com' && pass === 'admin123') {
-                localStorage.setItem('jermaine_auth', 'true');
-                document.getElementById('loginScreen').classList.add('hidden');
-                document.getElementById('dashboard').classList.remove('hidden');
-                initDashboard();
-                showToast('✅ ¡Bienvenido!');
-            } else {
-                showToast('❌ Credenciales incorrectas', 'error');
-            }
-        }
-
-        function handleLogout() {
-            localStorage.removeItem('jermaine_auth');
-            location.reload();
-        }
-
-        if (localStorage.getItem('jermaine_auth') === 'true') {
-            document.getElementById('loginScreen').classList.add('hidden');
-            document.getElementById('dashboard').classList.remove('hidden');
-            setTimeout(initDashboard, 100);
-        }
-
-        // ==================== NAVEGACIÓN ====================
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('-translate-x-full');
-            document.getElementById('sidebarOverlay').classList.toggle('hidden');
-        }
-
-        function showSection(s) {
-            document.querySelectorAll('main > section').forEach(x => x.classList.add('hidden'));
-            document.getElementById('section-' + s)?.classList.remove('hidden');
-            document.querySelectorAll('.sidebar-item').forEach(x => {
-                x.classList.remove('active');
-                if (x.dataset.section === s) x.classList.add('active');
-            });
-            if (window.innerWidth < 1024) toggleSidebar();
-            initSection(s);
-        }
-
-        function initSection(s) {
-            switch(s) {
-                case 'commissions': updateCommissions(); break;
-                case 'daily': initDailyView(); break;
-                case 'staff': renderStaff(); break;
-                case 'clients': renderClients(); break;
-                case 'bookings': renderBookings(); break;
-                case 'expenses': renderExpenses(); break;
-                case 'inventory': renderInventory(); break;
-            }
-        }
-
-        // ==================== UTILIDADES ====================
-        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-        
-        function showToast(msg, type = 'success') {
-            const t = document.getElementById('toast');
-            t.className = `fixed bottom-6 right-6 px-6 py-4 rounded-xl z-50 shadow-lg ${type === 'error' ? 'bg-red-500' : 'bg-green-500'} text-white`;
-            document.getElementById('toastMessage').textContent = msg;
-            t.classList.remove('hidden');
-            setTimeout(() => t.classList.add('hidden'), 3000);
-        }
-
-        function formatMoney(n) { return '$' + n.toLocaleString('es-CO'); }
-        function getToday() { return new Date().toISOString().split('T')[0]; }
-
-        // ==================== PANEL PRINCIPAL ====================
-        function initDashboard() {
-            updateKPIs();
-            renderBarberSummary();
-            renderRecentCuts();
-        }
-
-        function updateKPIs() {
-            const today = getToday();
-            const todayCuts = DB.cuts.filter(c => c.date === today);
-            const totalRevenue = todayCuts.reduce((sum, c) => sum + c.price, 0);
-            const totalCommissions = totalRevenue * CONFIG.commissionRate;
-
-            document.getElementById('kpiRevenueToday').textContent = formatMoney(totalRevenue);
-            document.getElementById('kpiCutsToday').textContent = todayCuts.length;
-            document.getElementById('kpiCommissionsToday').textContent = formatMoney(totalCommissions);
-        }
-
-        function renderBarberSummary() {
-            const today = getToday();
-            const todayCuts = DB.cuts.filter(c => c.date === today);
-            const container = document.getElementById('barberSummaryToday');
-            
-            const barberStats = {};
-            DB.barbers.forEach(b => { barberStats[b.name] = { cuts: 0, revenue: 0 }; });
-            todayCuts.forEach(c => {
-                if (barberStats[c.barber]) {
-                    barberStats[c.barber].cuts++;
-                    barberStats[c.barber].revenue += c.price;
-                }
-            });
-
-            container.innerHTML = Object.entries(barberStats).map(([name, stats]) => {
-                const commission = stats.revenue * CONFIG.commissionRate;
-                return `
-                    <div class="bg-dark rounded-xl p-4 border border-border">
-                        <div class="flex items-center gap-3 mb-3">
-                            <div class="w-10 h-10 bg-gold rounded-full flex items-center justify-center text-dark font-bold">${name.charAt(0)}</div>
-                            <div>
-                                <p class="font-semibold">${name}</p>
-                                <p class="text-xs text-zinc-500">${stats.cuts} cortes hoy</p>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-2 text-sm">
-                            <div>
-                                <p class="text-zinc-500 text-xs">Total</p>
-                                <p class="font-medium">${formatMoney(stats.revenue)}</p>
-                            </div>
-                            <div>
-                                <p class="text-zinc-500 text-xs">Comisión</p>
-                                <p class="font-medium text-gold">${formatMoney(commission)}</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function renderRecentCuts() {
-            const tbody = document.getElementById('recentCutsTable');
-            const recent = [...DB.cuts].reverse().slice(0, 5);
-            
-            tbody.innerHTML = recent.map(c => {
-                const commission = c.price * CONFIG.commissionRate;
-                return `
-                    <tr class="border-b border-border/50 hover:bg-white/5">
-                        <td class="py-3">${c.time}</td>
-                        <td class="py-3">${c.client || 'Walk-in'}</td>
-                        <td class="py-3">${c.service}</td>
-                        <td class="py-3"><span class="text-gold">${c.barber}</span></td>
-                        <td class="py-3 text-right">${formatMoney(c.price)}</td>
-                        <td class="py-3 text-right text-gold font-medium">${formatMoney(commission)}</td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        // ==================== REGISTRAR CORTE ====================
-        function updateCutPrice() {
-            const select = document.getElementById('cutService');
-            const option = select.options[select.selectedIndex];
-            const price = parseInt(option.dataset.price) || 0;
-            document.getElementById('cutPrice').value = price;
-            updateCutPreview();
-        }
-
-        function updateCutPreview() {
-            const price = parseInt(document.getElementById('cutPrice').value) || 0;
-            const commission = price * CONFIG.commissionRate;
-            const shop = price - commission;
-            
-            document.getElementById('cutTotalPreview').textContent = formatMoney(price);
-            document.getElementById('cutCommissionPreview').textContent = formatMoney(commission);
-            document.getElementById('cutShopPreview').textContent = formatMoney(shop);
-        }
-
-        document.getElementById('cutPrice')?.addEventListener('input', updateCutPreview);
-
-        function saveCut(e) {
-            e.preventDefault();
-            
-            const now = new Date();
-            const time = now.toTimeString().slice(0, 5);
-            
-            const newCut = {
-                id: Date.now(),
-                date: getToday(),
-                time: time,
-                barber: document.getElementById('cutBarber').value,
-                service: document.getElementById('cutService').value,
-                client: document.getElementById('cutClient').value || 'Walk-in',
-                price: parseInt(document.getElementById('cutPrice').value),
-                payment: document.getElementById('cutPayment').value
-            };
-            
-            DB.cuts.push(newCut);
-            saveCuts();
-            
-            closeModal('quickCutModal');
-            e.target.reset();
-            
-            const commission = newCut.price * CONFIG.commissionRate;
-            showToast(`✂️ Corte registrado! ${newCut.barber} gana ${formatMoney(commission)}`);
-            
-            updateKPIs();
-            renderBarberSummary();
-            renderRecentCuts();
-        }
-
-        // ==================== COMISIONES ====================
-        function updateCommissions() {
-            const period = document.getElementById('commissionPeriod')?.value || 'today';
-            const cuts = filterCutsByPeriod(period);
-            
-            // Calcular totales
-            const totalServices = cuts.reduce((sum, c) => sum + c.price, 0);
-            const totalCommissions = totalServices * CONFIG.commissionRate;
-            const shopEarnings = totalServices - totalCommissions;
-            
-            document.getElementById('commTotalServices').textContent = formatMoney(totalServices);
-            document.getElementById('commTotalCommissions').textContent = formatMoney(totalCommissions);
-            document.getElementById('commShopEarnings').textContent = formatMoney(shopEarnings);
-            document.getElementById('commTotalCuts').textContent = cuts.length;
-
-            // Estadísticas por barbero
-            const barberStats = {};
-            DB.barbers.forEach(b => { barberStats[b.name] = { cuts: 0, revenue: 0 }; });
-            cuts.forEach(c => {
-                if (barberStats[c.barber]) {
-                    barberStats[c.barber].cuts++;
-                    barberStats[c.barber].revenue += c.price;
-                }
-            });
-
-            // Tarjetas de barberos
-            const cardsContainer = document.getElementById('barberCommissionCards');
-            cardsContainer.innerHTML = Object.entries(barberStats).map(([name, stats]) => {
-                const commission = stats.revenue * CONFIG.commissionRate;
-                const avgPerCut = stats.cuts > 0 ? stats.revenue / stats.cuts : 0;
-                return `
-                    <div class="commission-card border border-gold/30 rounded-2xl p-6">
-                        <div class="flex items-center gap-4 mb-4">
-                            <div class="w-16 h-16 bg-gold rounded-full flex items-center justify-center text-dark text-2xl font-bold">${name.charAt(0)}</div>
-                            <div>
-                                <h4 class="text-xl font-bold">${name}</h4>
-                                <p class="text-zinc-500">${stats.cuts} cortes</p>
-                            </div>
-                        </div>
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center py-2 border-b border-border">
-                                <span class="text-zinc-400">Total servicios</span>
-                                <span class="font-medium">${formatMoney(stats.revenue)}</span>
-                            </div>
-                            <div class="flex justify-between items-center py-2 border-b border-border">
-                                <span class="text-zinc-400">Promedio por corte</span>
-                                <span class="font-medium">${formatMoney(avgPerCut)}</span>
-                            </div>
-                            <div class="flex justify-between items-center py-3 bg-gold/10 rounded-xl px-4 -mx-2">
-                                <span class="text-gold font-medium">💰 A PAGAR (50%)</span>
-                                <span class="text-2xl font-bold text-gold">${formatMoney(commission)}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            // Tabla detallada
-            const tableBody = document.getElementById('commissionDetailTable');
-            tableBody.innerHTML = Object.entries(barberStats).map(([name, stats]) => {
-                const commission = stats.revenue * CONFIG.commissionRate;
-                return `
-                    <tr class="border-b border-border/50 hover:bg-white/5">
-                        <td class="py-4 font-medium">${name}</td>
-                        <td class="py-4 text-center">${stats.cuts}</td>
-                        <td class="py-4 text-right">${formatMoney(stats.revenue)}</td>
-                        <td class="py-4 text-center"><span class="badge bg-gold/20 text-gold">${CONFIG.commissionRate * 100}%</span></td>
-                        <td class="py-4 text-right font-bold text-gold">${formatMoney(commission)}</td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        function filterCutsByPeriod(period) {
-            const today = new Date();
-            const todayStr = today.toISOString().split('T')[0];
-            
-            switch(period) {
-                case 'today':
-                    return DB.cuts.filter(c => c.date === todayStr);
-                case 'week':
-                    const weekAgo = new Date(today);
-                    weekAgo.setDate(weekAgo.getDate() - 7);
-                    return DB.cuts.filter(c => new Date(c.date) >= weekAgo);
-                case 'month':
-                    const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-                    return DB.cuts.filter(c => new Date(c.date) >= monthStart);
-                default:
-                    return DB.cuts;
-            }
-        }
-
-        function exportCommissions() {
-            const period = document.getElementById('commissionPeriod').value;
-            const cuts = filterCutsByPeriod(period);
-            
-            const headers = 'Fecha,Hora,Cliente,Servicio,Barbero,Total,Comisión 50%,Método';
-            const rows = cuts.map(c => {
-                const commission = c.price * CONFIG.commissionRate;
-                return `${c.date},${c.time},"${c.client}","${c.service}",${c.barber},${c.price},${commission},${c.payment}`;
-            });
-            
-            const csv = headers + '\n' + rows.join('\n');
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `comisiones_${period}_${getToday()}.csv`;
-            link.click();
-            
-            showToast('📤 Comisiones exportadas');
-        }
-
-        // ==================== CORTES DEL DÍA ====================
-        let currentDailyFilter = 'all';
-
-        function initDailyView() {
-            document.getElementById('dailyDate').value = getToday();
-            loadDailyCuts();
-        }
-
-        function loadDailyCuts() {
-            const date = document.getElementById('dailyDate').value;
-            const cuts = DB.cuts.filter(c => c.date === date);
-            renderDailySummary(cuts);
-            renderDailyCutsTable(cuts);
-        }
-
-        function filterDailyByBarber(barber) {
-            currentDailyFilter = barber;
-            
-            document.querySelectorAll('.barber-filter').forEach(btn => {
-                btn.classList.remove('active', 'bg-gold', 'text-dark');
-                btn.classList.add('bg-dark', 'border', 'border-border');
-            });
-            document.querySelector(`[data-barber="${barber}"]`).classList.remove('bg-dark', 'border', 'border-border');
-            document.querySelector(`[data-barber="${barber}"]`).classList.add('active', 'bg-gold', 'text-dark');
-            
-            loadDailyCuts();
-        }
-
-        function renderDailySummary(cuts) {
-            const filtered = currentDailyFilter === 'all' ? cuts : cuts.filter(c => c.barber === currentDailyFilter);
-            const total = filtered.reduce((sum, c) => sum + c.price, 0);
-            const commissions = total * CONFIG.commissionRate;
-            
-            document.getElementById('dailySummaryCards').innerHTML = `
-                <div class="bg-card border border-border rounded-xl p-4">
-                    <p class="text-zinc-400 text-xs">Total Cortes</p>
-                    <p class="text-2xl font-bold">${filtered.length}</p>
-                </div>
-                <div class="bg-green-500/10 border border-green-500/30 rounded-xl p-4">
-                    <p class="text-green-400 text-xs">Ingresos</p>
-                    <p class="text-2xl font-bold text-green-400">${formatMoney(total)}</p>
-                </div>
-                <div class="bg-gold/10 border border-gold/30 rounded-xl p-4">
-                    <p class="text-gold text-xs">Comisiones</p>
-                    <p class="text-2xl font-bold text-gold">${formatMoney(commissions)}</p>
-                </div>
-                <div class="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
-                    <p class="text-blue-400 text-xs">Barbería</p>
-                    <p class="text-2xl font-bold text-blue-400">${formatMoney(total - commissions)}</p>
-                </div>
-            `;
-        }
-
-        function renderDailyCutsTable(cuts) {
-            const filtered = currentDailyFilter === 'all' ? cuts : cuts.filter(c => c.barber === currentDailyFilter);
-            const tbody = document.getElementById('dailyCutsTable');
-            
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-zinc-500">No hay cortes registrados para esta fecha</td></tr>`;
-                return;
-            }
-            
-            tbody.innerHTML = filtered.map(c => {
-                const commission = c.price * CONFIG.commissionRate;
-                return `
-                    <tr class="border-b border-border/50 hover:bg-white/5">
-                        <td class="p-4">${c.time}</td>
-                        <td class="p-4 font-medium">${c.client}</td>
-                        <td class="p-4">${c.service}</td>
-                        <td class="p-4"><span class="text-gold font-medium">${c.barber}</span></td>
-                        <td class="p-4 text-right">${formatMoney(c.price)}</td>
-                        <td class="p-4 text-right text-gold font-medium">${formatMoney(commission)}</td>
-                        <td class="p-4 text-center"><span class="badge bg-zinc-700">${c.payment}</span></td>
-                        <td class="p-4 text-center">
-                            <button onclick="deleteCut(${c.id})" class="text-red-400 hover:text-red-300">🗑️</button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        function deleteCut(id) {
-            if (!confirm('¿Eliminar este corte?')) return;
-            DB.cuts = DB.cuts.filter(c => c.id !== id);
-            saveCuts();
-            loadDailyCuts();
-            updateKPIs();
-            renderBarberSummary();
-            showToast('🗑️ Corte eliminado');
-        }
-
-        // ==================== EQUIPO ====================
-        function renderStaff() {
-            const today = getToday();
-            const todayCuts = DB.cuts.filter(c => c.date === today);
-            
-            document.getElementById('staffGrid').innerHTML = DB.barbers.map(b => {
-                const barberCuts = todayCuts.filter(c => c.barber === b.name);
-                const revenue = barberCuts.reduce((sum, c) => sum + c.price, 0);
-                const commission = revenue * CONFIG.commissionRate;
-                
-                return `
-                    <div class="bg-card border border-border rounded-xl p-6">
-                        <div class="flex items-center gap-4 mb-4">
-                            <div class="w-16 h-16 bg-gold rounded-full flex items-center justify-center text-dark text-2xl font-bold">${b.photo}</div>
-                            <div>
-                                <h4 class="text-lg font-semibold">${b.name}</h4>
-                                <p class="text-sm text-zinc-500">${b.role}</p>
-                                <p class="text-xs text-green-400">● ${b.status === 'activo' ? 'Activo' : 'Inactivo'}</p>
-                            </div>
-                        </div>
-                        <div class="space-y-2 border-t border-border pt-4">
-                            <div class="flex justify-between text-sm">
-                                <span class="text-zinc-500">Teléfono</span>
-                                <span>${b.phone}</span>
-                            </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-zinc-500">Cortes hoy</span>
-                                <span class="font-medium">${barberCuts.length}</span>
-                            </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-zinc-500">Ingresos hoy</span>
-                                <span class="font-medium">${formatMoney(revenue)}</span>
-                            </div>
-                            <div class="flex justify-between text-sm bg-gold/10 rounded-lg p-2 -mx-2">
-                                <span class="text-gold">Comisión hoy</span>
-                                <span class="font-bold text-gold">${formatMoney(commission)}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // ==================== OTRAS SECCIONES ====================
-        function renderClients() {
-            const search = document.getElementById('clientSearch')?.value.toLowerCase() || '';
-            const filtered = DB.clients.filter(c => c.name.toLowerCase().includes(search) || c.phone.includes(search));
-            
-            document.getElementById('clientsGrid').innerHTML = filtered.map(c => `
-                <div class="bg-card border border-border rounded-xl p-5 hover:border-gold/50 transition">
-                    <div class="flex items-center gap-4 mb-3">
-                        <div class="w-12 h-12 bg-gold rounded-full flex items-center justify-center text-dark font-bold">${c.name.charAt(0)}</div>
-                        <div>
-                            <h4 class="font-semibold">${c.name}</h4>
-                            <p class="text-sm text-zinc-500">${c.phone}</p>
-                        </div>
-                    </div>
-                    <div class="text-sm text-zinc-400">
-                        <p>Barbero: ${c.barber || 'Sin preferencia'}</p>
-                        <p>Visitas: ${c.visits}</p>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function filterClients() { renderClients(); }
-
-        function saveNewClient(e) {
-            e.preventDefault();
-            const newClient = {
-                id: Date.now(),
-                name: document.getElementById('newClientName').value,
-                phone: document.getElementById('newClientPhone').value,
-                barber: document.getElementById('newClientBarber').value,
-                notes: document.getElementById('newClientNotes').value,
-                visits: 0
-            };
-            DB.clients.push(newClient);
-            saveClients();
-            closeModal('quickAddModal');
-            e.target.reset();
-            showToast('✅ Cliente agregado');
-            renderClients();
-        }
-
-        function renderBookings() {
-            const statusMap = {confirmada:'Confirmada',pendiente:'Pendiente',completada:'Completada'};
-            document.getElementById('bookingsTableBody').innerHTML = DB.bookings.map(b => `
-                <tr class="border-b border-border/50 hover:bg-white/5">
-                    <td class="p-4">${b.date}<br><span class="text-xs text-zinc-500">${b.time}</span></td>
-                    <td class="p-4 font-medium">${b.client}</td>
-                    <td class="p-4">${b.service}</td>
-                    <td class="p-4 text-gold">${b.barber}</td>
-                    <td class="p-4"><span class="badge badge-${b.status}">${statusMap[b.status]}</span></td>
-                    <td class="p-4 text-center">
-                        <button onclick="completeBooking(${b.id})" class="text-green-400 hover:underline text-sm">✓ Completar</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function completeBooking(id) {
-            const booking = DB.bookings.find(b => b.id === id);
-            if (!booking) return;
-            
-            // Pre-llenar el modal de corte
-            document.getElementById('cutBarber').value = booking.barber;
-            document.getElementById('cutClient').value = booking.client;
-            
-            // Buscar el servicio correspondiente
-            const serviceSelect = document.getElementById('cutService');
-            for (let opt of serviceSelect.options) {
-                if (opt.value === booking.service || opt.text.includes(booking.service)) {
-                    serviceSelect.value = opt.value;
-                    updateCutPrice();
-                    break;
-                }
-            }
-            
-            openModal('quickCutModal');
-            
-            // Marcar como completada
-            booking.status = 'completada';
-        }
-
-        function renderExpenses() {
-            document.getElementById('expensesTableBody').innerHTML = DB.expenses.map(e => `
-                <tr class="border-b border-border/50">
-                    <td class="p-4">${e.date}</td>
-                    <td class="p-4 font-medium">${e.description}</td>
-                    <td class="p-4"><span class="badge bg-zinc-700">${e.category}</span></td>
-                    <td class="p-4 text-right text-red-400">-${formatMoney(e.amount)}</td>
-                </tr>
-            `).join('');
-        }
-
-        function renderInventory() {
-            document.getElementById('inventoryTableBody').innerHTML = DB.inventory.map(p => `
-                <tr class="border-b border-border/50">
-                    <td class="p-4 font-medium">${p.name}</td>
-                    <td class="p-4 text-center ${p.stock <= p.min ? 'text-red-400 font-bold' : ''}">${p.stock}</td>
-                    <td class="p-4 text-right">${formatMoney(p.price)}</td>
-                    <td class="p-4 text-center">${p.stock <= p.min ? '<span class="badge bg-red-500/20 text-red-400">⚠️ Bajo</span>' : '<span class="badge bg-green-500/20 text-green-400">✓ OK</span>'}</td>
-                </tr>
-            `).join('');
-        }
-
-        function saveCommissionRate() {
-            const rate = document.getElementById('commissionRate').value;
-            localStorage.setItem('jermaine_commission_rate', rate);
-            CONFIG.commissionRate = parseFloat(rate) / 100;
-            showToast(`✅ Comisión actualizada a ${rate}%`);
-        }
+        const DB={bookings:[{id:1,date:'01-30',time:'09:00',client:'Juan Pérez',service:'Fade',barber:'Carlos',status:'completed',amount:30000},{id:2,date:'01-30',time:'09:45',client:'Miguel Torres',service:'Combo',barber:'Miguel',status:'completed',amount:35000},{id:3,date:'01-30',time:'10:30',client:'Carlos Ruiz',service:'Corte',barber:'Andrés',status:'confirmed',amount:25000},{id:4,date:'01-30',time:'11:00',client:'David Smith',service:'Fade',barber:'Carlos',status:'confirmed',amount:30000},{id:5,date:'01-30',time:'11:30',client:'Pedro Gómez',service:'Barba',barber:'Andrés',status:'pending',amount:15000}],clients:[{id:1,name:'Juan Pérez',phone:'+57 300 123',visits:12,spent:420000,loyalty:2},{id:2,name:'Miguel Torres',phone:'+57 301 234',visits:8,spent:280000,loyalty:1},{id:3,name:'Carlos Ruiz',phone:'+57 302 345',visits:15,spent:525000,loyalty:3},{id:4,name:'Pedro Gómez',phone:'+57 303 456',visits:20,spent:700000,loyalty:4}],expenses:[{id:1,date:'01-30',description:'Productos',category:'Insumos',amount:450000},{id:2,date:'01-28',description:'Nómina',category:'Nómina',amount:1250000},{id:3,date:'01-25',description:'Luz',category:'Servicios',amount:180000},{id:4,date:'01-15',description:'Arriendo',category:'Arriendo',amount:800000}],staff:[{id:1,name:'Carlos',role:'Senior',status:'available',bookings:5,revenue:175000},{id:2,name:'Miguel',role:'Barbero',status:'busy',bookings:4,revenue:140000},{id:3,name:'Andrés',role:'Barbero',status:'available',bookings:5,revenue:170000}],inventory:[{id:1,name:'Pomada Mate',category:'Styling',stock:3,price:45000,min:5},{id:2,name:'Aceite Barba',category:'Barba',stock:2,price:55000,min:5},{id:3,name:'Shampoo',category:'Cabello',stock:8,price:65000,min:5},{id:4,name:'Cuchillas',category:'Insumos',stock:1,price:85000,min:3}],knowledge:[{id:1,trigger:'promociones',response:'🎉 20% OFF en Combo esta semana!'},{id:2,trigger:'estacionamiento',response:'🅿️ Parqueadero en Calle 5'},{id:3,trigger:'pago',response:'💳 Efectivo, Nequi, tarjetas'}]};
+        function handleLogin(e){e.preventDefault();const u=document.getElementById('loginUser').value,p=document.getElementById('loginPass').value;if((u==='jermaine'&&p==='barber2026')||(u==='admin'&&p==='admin')){document.getElementById('loginScreen').classList.add('hidden');document.getElementById('dashboard').classList.remove('hidden');localStorage.setItem('jermaine_auth','true');initDashboard();}else alert('Credenciales incorrectas');}
+        function handleLogout(){localStorage.removeItem('jermaine_auth');document.getElementById('dashboard').classList.add('hidden');document.getElementById('loginScreen').classList.remove('hidden');}
+        if(localStorage.getItem('jermaine_auth')==='true'){document.getElementById('loginScreen').classList.add('hidden');document.getElementById('dashboard').classList.remove('hidden');setTimeout(initDashboard,100);}
+        function toggleSidebar(){document.getElementById('sidebar').classList.toggle('-translate-x-full');document.getElementById('sidebarOverlay').classList.toggle('hidden');}
+        function showSection(s){document.querySelectorAll('main>section').forEach(x=>x.classList.add('hidden'));document.getElementById('section-'+s)?.classList.remove('hidden');document.querySelectorAll('.sidebar-item').forEach(x=>{x.classList.remove('active');if(x.dataset.section===s)x.classList.add('active');});if(window.innerWidth<1024)toggleSidebar();initSection(s);}
+        function initSection(s){switch(s){case'bookings':renderBookings();break;case'clients':renderClients();break;case'expenses':renderExpenses();break;case'staff':renderStaff();break;case'inventory':renderInventory();break;case'availability':renderAvailability();break;case'gallery':renderGallery();break;case'chatbot':renderKnowledge();break;case'cashflow':initCashflow();break;}}
+        function openModal(id){document.getElementById(id).classList.remove('hidden');}
+        function closeModal(id){document.getElementById(id).classList.add('hidden');}
+        function showToast(m){const t=document.getElementById('toast');document.getElementById('toastMessage').textContent=m;t.classList.remove('hidden');setTimeout(()=>t.classList.add('hidden'),3000);}
+        function initDashboard(){renderToday();initCharts();}
+        function renderToday(){document.getElementById('todayAppointments').innerHTML=DB.bookings.slice(0,5).map(b=>'<tr class="border-b border-border/50"><td class="py-3">'+b.time+'</td><td class="py-3">'+b.client+'</td><td class="py-3">'+b.service+'</td><td class="py-3"><span class="badge badge-'+b.status+'">'+(b.status==='confirmed'?'Confirmada':b.status==='completed'?'Completada':'Pendiente')+'</span></td><td class="py-3 text-right font-medium">$'+b.amount.toLocaleString()+'</td></tr>').join('');}
+        function initCharts(){const r=document.getElementById('revenueChart');if(r)new Chart(r,{type:'bar',data:{labels:['L','M','X','J','V','S','D'],datasets:[{label:'Ingresos',data:[420,380,450,485,520,680,0],backgroundColor:'rgba(212,175,55,0.8)',borderRadius:6},{label:'Gastos',data:[150,80,120,200,100,150,0],backgroundColor:'rgba(239,68,68,0.6)',borderRadius:6}]},options:{responsive:true,plugins:{legend:{labels:{color:'#a1a1aa'}}},scales:{y:{grid:{color:'#27272a'},ticks:{color:'#a1a1aa'}},x:{grid:{display:false},ticks:{color:'#a1a1aa'}}}}});const s=document.getElementById('servicesChart');if(s)new Chart(s,{type:'doughnut',data:{labels:['Fade','Combo','Corte','Barba','Afeitado'],datasets:[{data:[35,25,20,12,8],backgroundColor:['#D4AF37','#3b82f6','#22c55e','#a855f7','#f97316'],borderWidth:0}]},options:{responsive:true,plugins:{legend:{position:'right',labels:{color:'#a1a1aa'}}}}});}
+        function initCashflow(){const c=document.getElementById('cashflowChart');if(c&&!c.chart){c.chart=new Chart(c,{type:'line',data:{labels:Array.from({length:30},(_,i)=>i+1),datasets:[{label:'Flujo',data:Array.from({length:30},(_,d)=>8000+d*270),borderColor:'#D4AF37',backgroundColor:'rgba(212,175,55,0.1)',fill:true,tension:0.3}]},options:{responsive:true,plugins:{legend:{labels:{color:'#a1a1aa'}}},scales:{y:{grid:{color:'#27272a'},ticks:{color:'#a1a1aa'}},x:{grid:{display:false},ticks:{color:'#a1a1aa'}}}}});}}
+        function renderBookings(){document.getElementById('bookingsTableBody').innerHTML=DB.bookings.map(b=>'<tr class="border-b border-border/50"><td class="p-4">#'+b.id+'</td><td class="p-4">'+b.date+' '+b.time+'</td><td class="p-4">'+b.client+'</td><td class="p-4">'+b.service+'</td><td class="p-4"><span class="badge badge-'+b.status+'">'+(b.status==='confirmed'?'Confirmada':b.status==='completed'?'Completada':'Pendiente')+'</span></td><td class="p-4 text-right">$'+b.amount.toLocaleString()+'</td></tr>').join('');}
+        function renderClients(){document.getElementById('clientsGrid').innerHTML=DB.clients.map(c=>'<div class="bg-card border border-border rounded-xl p-5"><div class="flex items-start gap-4"><div class="w-12 h-12 bg-gold rounded-full flex items-center justify-center text-dark font-semibold">'+c.name.charAt(0)+'</div><div class="flex-1"><h4 class="font-semibold">'+c.name+'</h4><p class="text-sm text-zinc-500">'+c.phone+'</p></div><div class="text-gold">'+'★'.repeat(c.loyalty)+'☆'.repeat(5-c.loyalty)+'</div></div><div class="mt-4 pt-4 border-t border-border grid grid-cols-2 gap-2 text-center text-sm"><div><p class="text-zinc-500">Visitas</p><p class="font-semibold">'+c.visits+'</p></div><div><p class="text-zinc-500">Gastado</p><p class="font-semibold text-green-400">$'+(c.spent/1000).toFixed(0)+'K</p></div></div></div>').join('');}
+        function renderExpenses(){document.getElementById('expensesTableBody').innerHTML=DB.expenses.map(e=>'<tr class="border-b border-border/50"><td class="p-4">'+e.date+'</td><td class="p-4">'+e.description+'</td><td class="p-4"><span class="badge bg-zinc-700">'+e.category+'</span></td><td class="p-4 text-right text-red-400">-$'+e.amount.toLocaleString()+'</td></tr>').join('');}
+        function renderStaff(){document.getElementById('staffGrid').innerHTML=DB.staff.map(s=>'<div class="bg-card border border-border rounded-xl p-6"><div class="flex items-center gap-4 mb-4"><div class="w-14 h-14 bg-'+(s.status==='available'?'green':'yellow')+'-500 rounded-full flex items-center justify-center text-white font-bold text-xl">'+s.name.charAt(0)+'</div><div><h4 class="font-semibold">'+s.name+'</h4><p class="text-sm text-zinc-500">'+s.role+'</p><p class="text-xs '+(s.status==='available'?'text-green-500':'text-yellow-500')+'">● '+(s.status==='available'?'Disponible':'Ocupado')+'</p></div></div><div class="space-y-2 text-sm"><div class="flex justify-between"><span class="text-zinc-500">Citas</span><span>'+s.bookings+'</span></div><div class="flex justify-between"><span class="text-zinc-500">Ingresos</span><span class="text-green-400">$'+s.revenue.toLocaleString()+'</span></div></div></div>').join('');}
+        function renderInventory(){document.getElementById('inventoryTableBody').innerHTML=DB.inventory.map(p=>'<tr class="border-b border-border/50"><td class="p-4">'+p.name+'</td><td class="p-4"><span class="badge bg-zinc-700">'+p.category+'</span></td><td class="p-4 text-center '+(p.stock<=p.min?'text-red-400 font-bold':'')+'">'+p.stock+'</td><td class="p-4 text-right">$'+p.price.toLocaleString()+'</td><td class="p-4 text-center">'+(p.stock<=p.min?'<span class="badge bg-red-500/20 text-red-400">Bajo</span>':'<span class="badge bg-green-500/20 text-green-400">OK</span>')+'</td></tr>').join('');}
+        function renderAvailability(){document.getElementById('barberStatus').innerHTML=DB.staff.map(s=>'<div class="bg-card border border-border rounded-xl p-5"><div class="flex items-center gap-3 mb-4"><div class="w-12 h-12 bg-'+(s.status==='available'?'green':'yellow')+'-500 rounded-full flex items-center justify-center text-white font-bold">'+s.name.charAt(0)+'</div><div><p class="font-semibold">'+s.name+'</p><p class="text-sm '+(s.status==='available'?'text-green-500':'text-yellow-500')+'">● '+(s.status==='available'?'Disponible':'Ocupado')+'</p></div></div><div class="text-sm space-y-1"><div class="flex justify-between"><span class="text-zinc-500">Citas:</span><span>'+s.bookings+'</span></div><div class="flex justify-between"><span class="text-zinc-500">Ingresos:</span><span class="text-green-400">$'+s.revenue.toLocaleString()+'</span></div></div></div>').join('');}
+        function renderGallery(){const e=['💈','✂️','🧔','💇','🪒','💆'];document.getElementById('galleryGrid').innerHTML=e.map(x=>'<div class="aspect-square bg-gold/10 rounded-xl flex items-center justify-center text-4xl border border-border hover:border-gold cursor-pointer">'+x+'</div>').join('');}
+        function renderKnowledge(){document.getElementById('knowledgeBase').innerHTML=DB.knowledge.map(k=>'<div class="bg-dark rounded-xl p-4 border border-border"><p class="text-sm text-zinc-400 mb-1">Trigger: <span class="text-gold">'+k.trigger+'</span></p><p class="text-sm">'+k.response+'</p></div>').join('');}
+        function createBooking(e){e.preventDefault();showToast('✅ Reserva creada');closeModal('bookingModal');e.target.reset();}
+        function createExpense(e){e.preventDefault();showToast('✅ Gasto registrado');closeModal('expenseModal');e.target.reset();}
+        function createIncome(e){e.preventDefault();showToast('✅ Ingreso registrado');closeModal('incomeModal');e.target.reset();}
+        function createClient(e){e.preventDefault();showToast('✅ Cliente guardado');closeModal('clientModal');e.target.reset();}
+        function addKnowledge(){const t=prompt('Palabra clave:');if(!t)return;const r=prompt('Respuesta:');if(!r)return;DB.knowledge.push({id:Date.now(),trigger:t,response:r});renderKnowledge();showToast('✅ Agregado');}
+        function connectGoogleDrive(){showToast('🔗 Conectando...');setTimeout(()=>showToast('✅ Google Drive conectado'),2000);}
+        function uploadPhotos(){const i=document.createElement('input');i.type='file';i.multiple=true;i.accept='image/*';i.onchange=()=>showToast('✅ '+i.files.length+' foto(s) subidas');i.click();}
     </script>
 </body>
 </html>
