@@ -199,7 +199,6 @@
       padding-bottom: clamp(4rem, 8vh, 5rem);
       padding-left: clamp(2rem, 5vw, 6rem);
       padding-right: clamp(2rem, 5vw, 6rem);
-      opacity: 0;
     }
 
     .hero-name-primary {
@@ -286,7 +285,6 @@
       z-index: 2;
       text-align: center;
       padding: 0 clamp(2rem, 8vw, 6rem);
-      opacity: 0;
     }
 
     .statement-text {
@@ -452,7 +450,6 @@
       border-radius: 12px;
       overflow: hidden;
       aspect-ratio: 9 / 16;
-      opacity: 0;
     }
 
     .video-cell video {
@@ -559,23 +556,17 @@
       padding: 0 0.25rem;
     }
 
-    /* Desktop grid */
+    /* Single responsive gallery grid */
     .gallery-grid {
-      display: none;
-    }
-
-    @media (min-width: 1024px) {
-      .gallery-grid {
-        display: grid;
-        grid-template-columns: repeat(12, 1fr);
-        gap: 0.375rem;
-      }
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.25rem;
     }
 
     .gallery-item {
       overflow: hidden;
       border-radius: 4px;
-      opacity: 0;
+      aspect-ratio: 4 / 5;
     }
 
     .gallery-item img {
@@ -591,77 +582,41 @@
     }
 
     .gi-shop-wide {
-      grid-column: 1 / 6;
-      grid-row: 1 / 3;
-    }
-
-    .gi-hero-shave {
-      grid-column: 6 / 9;
-      grid-row: 1 / 2;
-    }
-
-    .gi-team-action {
-      grid-column: 9 / 13;
-      grid-row: 1 / 2;
-    }
-
-    .gi-client-vibes {
-      grid-column: 6 / 10;
-      grid-row: 2 / 3;
-    }
-
-    .gi-shop-detail {
-      grid-column: 10 / 13;
-      grid-row: 2 / 3;
-    }
-
-    /* Maintain aspect ratio for desktop cells */
-    .gallery-grid .gallery-item {
-      min-height: 220px;
-    }
-
-    .gi-shop-wide {
-      min-height: 460px;
-    }
-
-    /* Tablet grid */
-    .gallery-grid-tablet {
-      display: none;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.375rem;
-    }
-
-    @media (min-width: 768px) and (max-width: 1023px) {
-      .gallery-grid-tablet {
-        display: grid;
-      }
-
-      .gallery-grid-tablet .gallery-item {
-        aspect-ratio: 3 / 4;
-        min-height: unset;
-      }
-    }
-
-    /* Mobile grid */
-    .gallery-grid-mobile {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.25rem;
-    }
-
-    @media (min-width: 768px) {
-      .gallery-grid-mobile {
-        display: none;
-      }
-    }
-
-    .gallery-grid-mobile .gallery-item {
-      aspect-ratio: 4 / 5;
-    }
-
-    .gallery-grid-mobile .gi-wide {
       grid-column: 1 / -1;
       aspect-ratio: 16 / 9;
+    }
+
+    .gi-shop-wide img { object-position: center 40%; }
+    .gi-hero-shave img { object-position: center 25%; }
+    .gi-team-action img { object-position: center 30%; }
+    .gi-client-vibes img { object-position: center 20%; }
+    .gi-shop-detail img { object-position: center 30%; }
+    .gi-barber-shave img { object-position: center 15%; }
+
+    @media (min-width: 768px) {
+      .gallery-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 0.375rem;
+      }
+      .gallery-item { aspect-ratio: 3 / 4; }
+      .gi-shop-wide {
+        grid-column: 1 / 3;
+        grid-row: 1 / 3;
+        aspect-ratio: unset;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .gallery-grid {
+        grid-template-columns: repeat(12, 1fr);
+      }
+      .gallery-item { aspect-ratio: unset; min-height: 220px; }
+      .gi-shop-wide { grid-column: 1 / 6; grid-row: 1 / 3; min-height: 460px; aspect-ratio: unset; }
+      .gi-hero-shave { grid-column: 6 / 9; grid-row: 1 / 2; }
+      .gi-team-action { grid-column: 9 / 13; grid-row: 1 / 2; }
+      .gi-client-vibes { grid-column: 6 / 9; grid-row: 2 / 3; }
+      .gi-shop-detail { grid-column: 9 / 11; grid-row: 2 / 3; }
+      .gi-barber-shave { grid-column: 11 / 13; grid-row: 2 / 3; }
     }
 
     /* ============================================================
@@ -688,7 +643,6 @@
     }
 
     .location-text {
-      opacity: 0;
     }
 
     .location-city {
@@ -753,7 +707,6 @@
     }
 
     .location-map {
-      opacity: 0;
     }
 
     .location-map iframe {
@@ -1213,63 +1166,24 @@
       <span data-en>Gallery</span>
     </span>
 
-    <!-- Desktop Grid -->
     <div class="gallery-grid">
       <div class="gallery-item gi-shop-wide">
-        <img src="images/shop-wide.jpg" alt="Barbería Jermaine, vista amplia" loading="lazy">
+        <img src="images/shop-wide.jpg" alt="Jermaine Barber's Bocagrande" loading="lazy">
       </div>
       <div class="gallery-item gi-hero-shave">
-        <img src="images/hero-shave.jpg" alt="Cornrows y fade detalle" loading="lazy">
+        <img src="images/hero-shave.jpg" alt="Cornrows y fade" loading="lazy">
       </div>
       <div class="gallery-item gi-team-action">
         <img src="images/team-action.jpg" alt="Equipo en acción" loading="lazy">
       </div>
       <div class="gallery-item gi-client-vibes">
-        <img src="images/client-vibes.jpg" alt="Cliente en la barbería" loading="lazy">
+        <img src="images/client-vibes.jpg" alt="La experiencia" loading="lazy">
       </div>
       <div class="gallery-item gi-shop-detail">
-        <img src="images/shop-detail.jpg" alt="Detalle del fade" loading="lazy">
+        <img src="images/shop-detail.jpg" alt="Detalle del corte" loading="lazy">
       </div>
-    </div>
-
-    <!-- Tablet Grid -->
-    <div class="gallery-grid-tablet">
-      <div class="gallery-item">
-        <img src="images/shop-wide.jpg" alt="Barbería Jermaine" loading="lazy">
-      </div>
-      <div class="gallery-item">
-        <img src="images/hero-shave.jpg" alt="Cornrows y fade" loading="lazy">
-      </div>
-      <div class="gallery-item">
-        <img src="images/team-action.jpg" alt="Equipo en acción" loading="lazy">
-      </div>
-      <div class="gallery-item">
-        <img src="images/client-vibes.jpg" alt="Cliente en la barbería" loading="lazy">
-      </div>
-      <div class="gallery-item">
-        <img src="images/shop-detail.jpg" alt="Detalle del fade" loading="lazy">
-      </div>
-      <div class="gallery-item">
+      <div class="gallery-item gi-barber-shave">
         <img src="images/barber-shave.jpg" alt="Afeitado clásico" loading="lazy">
-      </div>
-    </div>
-
-    <!-- Mobile Grid -->
-    <div class="gallery-grid-mobile">
-      <div class="gallery-item gi-wide">
-        <img src="images/shop-wide.jpg" alt="Barbería Jermaine" loading="lazy">
-      </div>
-      <div class="gallery-item">
-        <img src="images/hero-shave.jpg" alt="Cornrows y fade" loading="lazy">
-      </div>
-      <div class="gallery-item">
-        <img src="images/team-action.jpg" alt="Equipo en acción" loading="lazy">
-      </div>
-      <div class="gallery-item">
-        <img src="images/client-vibes.jpg" alt="Cliente" loading="lazy">
-      </div>
-      <div class="gallery-item">
-        <img src="images/shop-detail.jpg" alt="Detalle" loading="lazy">
       </div>
     </div>
   </section>
@@ -1473,133 +1387,74 @@
     ============================================================ */
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    if (prefersReduced) {
-      // Show everything immediately
-      document.querySelectorAll('.hero-content, .statement-content, .service-row, .video-cell, .gallery-item, .location-text, .location-map').forEach(el => {
-        el.style.opacity = '1';
-        el.style.transform = 'none';
-      });
-    } else {
+    if (!prefersReduced && typeof gsap !== 'undefined') {
       document.addEventListener('DOMContentLoaded', () => {
         gsap.registerPlugin(ScrollTrigger);
 
         /* --- HERO --- */
+        gsap.set('#hero-content', { opacity: 0, y: 30 });
         gsap.to('#hero-content', {
           opacity: 1,
           y: 0,
           duration: 1.4,
-          delay: 0.8,
+          delay: 0.6,
           ease: 'power3.out',
           clearProps: 'transform'
         });
-        gsap.set('#hero-content', { y: 30 });
 
         /* --- STATEMENT --- */
-        // Parallax on background
         gsap.to('#statement-bg', {
           yPercent: -15,
           ease: 'none',
-          scrollTrigger: {
-            trigger: '#statement',
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: true
-          }
+          scrollTrigger: { trigger: '#statement', start: 'top bottom', end: 'bottom top', scrub: true }
         });
-
-        // Text fade in
+        gsap.set('#statement-content', { opacity: 0 });
         gsap.to('#statement-content', {
-          opacity: 1,
-          duration: 1.2,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '#statement',
-            start: 'top 75%',
-            once: true
-          }
+          opacity: 1, duration: 1.2, ease: 'power3.out',
+          scrollTrigger: { trigger: '#statement', start: 'top 75%', once: true }
         });
 
         /* --- SERVICES --- */
         gsap.utils.toArray('.service-row').forEach((row, i) => {
-          gsap.from(row, {
-            opacity: 0,
-            y: 16,
-            duration: 0.8,
-            delay: i * 0.06,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: row,
-              start: 'top 88%',
-              once: true
-            }
+          gsap.set(row, { opacity: 0, y: 16 });
+          gsap.to(row, {
+            opacity: 1, y: 0, duration: 0.8, delay: i * 0.06, ease: 'power3.out',
+            scrollTrigger: { trigger: row, start: 'top 88%', once: true }
           });
         });
 
         /* --- VIDEOS --- */
         gsap.utils.toArray('.video-cell').forEach((cell, i) => {
+          gsap.set(cell, { opacity: 0, scale: 0.95 });
           gsap.to(cell, {
-            opacity: 1,
-            scale: 1,
-            duration: 0.9,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '#videos',
-              start: 'top 80%',
-              once: true
-            },
-            delay: i * 0.1
+            opacity: 1, scale: 1, duration: 0.9, delay: i * 0.1, ease: 'power3.out',
+            scrollTrigger: { trigger: '#videos', start: 'top 80%', once: true }
           });
-          gsap.set(cell, { scale: 0.95 });
         });
 
         /* --- GALLERY --- */
-        const galleryItems = gsap.utils.toArray('.gallery-item');
-        galleryItems.forEach((item, i) => {
-          gsap.from(item, {
-            opacity: 0,
-            y: 20,
-            duration: 0.9,
-            delay: i * 0.08,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: '#gallery',
-              start: 'top 85%',
-              once: true
-            }
+        gsap.utils.toArray('.gallery-item').forEach((item, i) => {
+          gsap.set(item, { opacity: 0, y: 20 });
+          gsap.to(item, {
+            opacity: 1, y: 0, duration: 0.9, delay: i * 0.08, ease: 'power3.out',
+            scrollTrigger: { trigger: '#gallery', start: 'top 85%', once: true }
           });
-          // Set initial opacity so animation starts from there
-          gsap.set(item, { opacity: 0 });
         });
 
         /* --- LOCATION --- */
+        gsap.set('#location-text', { opacity: 0, y: 24 });
+        gsap.set('#location-map', { opacity: 0, y: 24 });
         gsap.to('#location-text', {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '#location',
-            start: 'top 80%',
-            once: true
-          }
+          opacity: 1, y: 0, duration: 1, ease: 'power3.out',
+          scrollTrigger: { trigger: '#location', start: 'top 80%', once: true }
         });
-        gsap.set('#location-text', { y: 24 });
-
         gsap.to('#location-map', {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          delay: 0.15,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '#location',
-            start: 'top 80%',
-            once: true
-          }
+          opacity: 1, y: 0, duration: 1, delay: 0.15, ease: 'power3.out',
+          scrollTrigger: { trigger: '#location', start: 'top 80%', once: true }
         });
-        gsap.set('#location-map', { y: 24 });
       });
     }
+    /* If GSAP fails or reduced motion — everything stays visible by default (no CSS opacity:0) */
   </script>
 
 </body>
