@@ -28,10 +28,12 @@
     :root {
       --bg: #000000;
       --surface: #0a0a0a;
+      --elevated: #111111;
       --text: #f5f5f7;
       --text-secondary: rgba(245,245,247,0.6);
       --text-tertiary: rgba(245,245,247,0.3);
       --accent: #D4AF37;
+      --accent-dim: rgba(212,175,55,0.15);
       --border: rgba(245,245,247,0.08);
     }
 
@@ -42,16 +44,124 @@
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(245,245,247,0.1) transparent;
     }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(245,245,247,0.1); border-radius: 2px; }
 
     body {
       background: var(--bg);
       overflow-x: hidden;
+      /* Feature 7: Page load fade-in */
+      animation: pageReveal 0.8s ease-out 0.2s both;
+    }
+
+    @keyframes pageReveal {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      body { animation: none; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
     }
 
     /* Language system */
     html[data-lang="es"] [data-en] { display: none !important; }
     html[data-lang="en"] [data-es] { display: none !important; }
+
+    /* ============================================================
+       FEATURE 1 — CUSTOM CURSOR (desktop only)
+    ============================================================ */
+    @media (min-width: 1024px) {
+      body { cursor: none; }
+      a, button, .service-card, [role="button"] { cursor: none; }
+    }
+
+    .cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 8px;
+      height: 8px;
+      background: #ffffff;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      mix-blend-mode: difference;
+      will-change: transform;
+      display: none;
+    }
+
+    .cursor-follower {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.7);
+      background: transparent;
+      pointer-events: none;
+      z-index: 9998;
+      will-change: transform;
+      display: none;
+      transition: border-color 0.2s ease, transform 0.08s ease, width 0.2s ease, height 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cursor-follower .cursor-label {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.8);
+      text-transform: uppercase;
+      display: none;
+      pointer-events: none;
+    }
+
+    @media (min-width: 1024px) {
+      .cursor { display: block; }
+      .cursor-follower { display: flex; }
+    }
+
+    .cursor-follower.cursor-hover {
+      border-color: var(--accent);
+      transform: scale(1.5);
+    }
+
+    .cursor-follower.cursor-view {
+      border-color: rgba(255,255,255,0.9);
+      width: 64px;
+      height: 64px;
+    }
+
+    .cursor-follower.cursor-view .cursor-label {
+      display: block;
+    }
+
+    /* ============================================================
+       FEATURE 2 — SCROLL PROGRESS BAR
+    ============================================================ */
+    #scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(to right, var(--accent), #f0d060);
+      transform: scaleX(0);
+      transform-origin: left center;
+      z-index: 200;
+      pointer-events: none;
+      will-change: transform;
+    }
 
     /* ============================================================
        HEADER
@@ -72,7 +182,7 @@
     }
 
     #site-header.scrolled {
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.85);
       backdrop-filter: saturate(180%) blur(20px);
       -webkit-backdrop-filter: saturate(180%) blur(20px);
     }
@@ -85,9 +195,7 @@
       text-decoration: none;
     }
 
-    .header-brand-short {
-      display: none;
-    }
+    .header-brand-short { display: none; }
 
     .header-right {
       display: flex;
@@ -107,16 +215,16 @@
       color: var(--text-tertiary);
       text-decoration: none;
       transition: color 0.2s ease;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
     }
 
-    .header-nav a:hover {
-      color: var(--text);
-    }
+    .header-nav a:hover { color: var(--text); }
 
     .lang-toggle {
       background: none;
       border: none;
-      cursor: pointer;
       font-size: 12px;
       font-weight: 500;
       color: var(--text-tertiary);
@@ -128,9 +236,7 @@
       align-items: center;
     }
 
-    .lang-toggle:hover {
-      color: var(--text);
-    }
+    .lang-toggle:hover { color: var(--text); }
 
     .header-cta {
       font-size: 13px;
@@ -143,32 +249,27 @@
       align-items: center;
     }
 
-    .header-cta:hover {
-      opacity: 0.8;
-    }
+    .header-cta:hover { opacity: 0.8; }
+
+    /* Feature 5 — button press state */
+    .header-cta:active { transform: scale(0.96); transition: transform 0.08s ease; }
+    .lang-toggle:active { transform: scale(0.96); transition: transform 0.08s ease; }
 
     @media (max-width: 1023px) {
-      .header-nav {
-        display: none;
-      }
-
-      .header-brand-full {
-        display: none;
-      }
-
-      .header-brand-short {
-        display: inline;
-      }
+      .header-nav { display: none; }
+      .header-brand-full { display: none; }
+      .header-brand-short { display: inline; }
     }
 
     /* ============================================================
-       HERO
+       HERO — Atmosphere: Pure black, video is the atmosphere
     ============================================================ */
     #hero {
       position: relative;
       width: 100%;
       height: 100dvh;
       overflow: hidden;
+      background: #000;
     }
 
     #hero-video {
@@ -186,8 +287,8 @@
       background: linear-gradient(
         to top,
         rgba(0,0,0,0.95) 0%,
-        rgba(0,0,0,0.6) 40%,
-        transparent 100%
+        rgba(0,0,0,0.55) 40%,
+        rgba(0,0,0,0.2) 100%
       );
       pointer-events: none;
     }
@@ -229,8 +330,9 @@
       color: var(--text-tertiary);
     }
 
-    .hero-cta {
-      display: inline-block;
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
       margin-top: 32px;
       padding: 14px 36px;
       background: var(--accent);
@@ -240,20 +342,21 @@
       letter-spacing: 0.15em;
       text-transform: uppercase;
       text-decoration: none;
-      border-radius: 0;
       border: none;
-      transition: opacity 0.2s ease;
       min-height: 44px;
-      display: inline-flex;
-      align-items: center;
+      transition: opacity 0.2s ease;
     }
 
-    .hero-cta:hover {
-      opacity: 0.85;
+    .btn-primary:hover { opacity: 0.85; }
+
+    /* Feature 5 — press state */
+    .btn-primary:active {
+      transform: scale(0.96) !important;
+      transition: transform 0.08s ease !important;
     }
 
     /* ============================================================
-       STATEMENT
+       STATEMENT — Atmosphere: photo-driven, no bg override
     ============================================================ */
     #statement {
       position: relative;
@@ -307,16 +410,16 @@
     }
 
     @media (max-width: 767px) {
-      #statement {
-        min-height: 80vh;
-      }
+      #statement { min-height: 80vh; }
     }
 
     /* ============================================================
-       SERVICES
+       SERVICES — Atmosphere: subtle warm glow from top
+       Feature 3 — 3D tilt cards
     ============================================================ */
     #services {
       background: var(--bg);
+      background-image: radial-gradient(ellipse at 50% 0%, rgba(212,175,55,0.04) 0%, transparent 60%);
       padding: clamp(4rem, 10vw, 8rem) clamp(2rem, 5vw, 6rem);
     }
 
@@ -330,93 +433,115 @@
       margin-bottom: 3rem;
     }
 
-    .services-list {
-      max-width: 800px;
+    /* Services card grid */
+    .services-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      max-width: 1200px;
       margin: 0 auto;
     }
 
-    .service-row {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      padding: 1.5rem 0;
-      border-bottom: 1px solid var(--border);
-      text-decoration: none;
-      gap: 2rem;
-      transition: transform 0.3s ease;
-      cursor: pointer;
-    }
-
-    .service-row:first-child {
-      border-top: 1px solid var(--border);
-    }
-
-    .service-row:hover {
-      transform: translateX(8px);
-    }
-
-    .service-left {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .service-name {
-      font-size: clamp(16px, 2.5vw, 22px);
-      font-weight: 400;
-      color: var(--text);
-      display: block;
-      transition: color 0.2s ease;
-      position: relative;
-    }
-
-    .service-row:hover .service-name {
-      color: #fff;
-    }
-
-    .service-name::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      width: 0;
-      height: 1px;
-      background: var(--text);
-      transition: width 0.3s ease;
-    }
-
-    .service-row:hover .service-name::after {
-      width: 100%;
-    }
-
-    .service-desc {
-      display: none;
-      font-size: 13px;
-      font-weight: 400;
-      color: var(--text-tertiary);
-      margin-top: 4px;
-    }
-
-    @media (min-width: 768px) {
-      .service-desc {
-        display: block;
+    @media (min-width: 640px) {
+      .services-grid {
+        grid-template-columns: 1fr 1fr;
       }
     }
 
-    .service-price {
-      font-size: clamp(16px, 2.5vw, 22px);
-      font-weight: 300;
+    @media (min-width: 1024px) {
+      .services-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .service-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      text-decoration: none;
+      display: block;
+      transform-style: preserve-3d;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      will-change: transform;
+      min-height: 44px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(212,175,55,0.03) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .service-card:hover {
+      border-color: rgba(212,175,55,0.2);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(212,175,55,0.05);
+    }
+
+    /* Feature 5 — card press state */
+    .service-card:active {
+      transform: perspective(600px) scale3d(0.97, 0.97, 0.97) !important;
+      transition: transform 0.08s ease !important;
+    }
+
+    .service-card-icon {
+      font-size: 24px;
+      margin-bottom: 1.25rem;
+      display: block;
+      line-height: 1;
+    }
+
+    .service-card-name {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text);
+      display: block;
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+
+    .service-card-desc {
+      font-size: 13px;
+      font-weight: 400;
       color: var(--text-tertiary);
-      white-space: nowrap;
-      flex-shrink: 0;
-      padding-top: 0;
+      display: block;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+
+    .service-card-price {
+      font-size: 20px;
+      font-weight: 300;
+      color: var(--accent);
+      display: block;
+    }
+
+    .service-card-arrow {
+      position: absolute;
+      bottom: 2rem;
+      right: 2rem;
+      width: 20px;
+      height: 20px;
+      color: var(--text-tertiary);
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .service-card:hover .service-card-arrow {
+      color: var(--accent);
+      transform: translate(2px, -2px);
     }
 
     /* ============================================================
-       VIDEO SECTION
+       VIDEO SECTION — Atmosphere: slightly lifted surface
     ============================================================ */
     #videos {
-      background: var(--bg);
-      padding: clamp(4rem, 8vw, 7rem) 0 clamp(4rem, 8vw, 7rem);
+      background: var(--surface);
+      padding: clamp(4rem, 8vw, 7rem) 0;
     }
 
     .videos-eyebrow {
@@ -459,15 +584,14 @@
       display: block;
     }
 
-    /* Center video play button */
     .video-play-btn {
       position: absolute;
       inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
       z-index: 2;
+      min-height: 44px;
     }
 
     .play-triangle {
@@ -481,9 +605,7 @@
       filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
     }
 
-    .video-play-btn:hover .play-triangle {
-      opacity: 0.7;
-    }
+    .video-play-btn:hover .play-triangle { opacity: 0.7; }
 
     /* Mobile video scroll */
     .videos-scroll {
@@ -496,14 +618,10 @@
       padding: 0 10vw;
     }
 
-    .videos-scroll::-webkit-scrollbar {
-      display: none;
-    }
+    .videos-scroll::-webkit-scrollbar { display: none; }
 
     @media (min-width: 1024px) {
-      .videos-scroll {
-        display: none;
-      }
+      .videos-scroll { display: none; }
     }
 
     .video-scroll-cell {
@@ -523,25 +641,21 @@
       display: block;
     }
 
-    .video-scroll-center {
-      position: relative;
-    }
-
     .video-scroll-play {
       position: absolute;
       inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
       z-index: 2;
+      min-height: 44px;
     }
 
     /* ============================================================
-       GALLERY
+       GALLERY — Atmosphere: pure black
     ============================================================ */
     #gallery {
-      background: var(--surface);
+      background: var(--bg);
       padding: clamp(3rem, 6vw, 5rem) clamp(1rem, 2vw, 1.5rem);
     }
 
@@ -556,7 +670,6 @@
       padding: 0 0.25rem;
     }
 
-    /* Single responsive gallery grid */
     .gallery-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -577,16 +690,10 @@
       transition: transform 0.6s ease-out;
     }
 
-    .gallery-item:hover img {
-      transform: scale(1.02);
-    }
+    .gallery-item:hover img { transform: scale(1.02); }
 
-    .gi-shop-wide {
-      grid-column: 1 / -1;
-      aspect-ratio: 16 / 9;
-    }
-
-    .gi-shop-wide img { object-position: center 40%; }
+    .gi-shop-wide { grid-column: 1 / -1; aspect-ratio: 16 / 9; }
+    .gi-shop-wide img  { object-position: center 40%; }
     .gi-hero-shave img { object-position: center 25%; }
     .gi-team-action img { object-position: center 30%; }
     .gi-client-vibes img { object-position: center 20%; }
@@ -594,36 +701,129 @@
     .gi-barber-shave img { object-position: center 15%; }
 
     @media (min-width: 768px) {
-      .gallery-grid {
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 0.375rem;
-      }
+      .gallery-grid { grid-template-columns: 1fr 1fr 1fr; gap: 0.375rem; }
       .gallery-item { aspect-ratio: 3 / 4; }
-      .gi-shop-wide {
-        grid-column: 1 / 3;
-        grid-row: 1 / 3;
-        aspect-ratio: unset;
-      }
+      .gi-shop-wide { grid-column: 1 / 3; grid-row: 1 / 3; aspect-ratio: unset; }
     }
 
     @media (min-width: 1024px) {
-      .gallery-grid {
-        grid-template-columns: repeat(12, 1fr);
-      }
+      .gallery-grid { grid-template-columns: repeat(12, 1fr); }
       .gallery-item { aspect-ratio: unset; min-height: 220px; }
-      .gi-shop-wide { grid-column: 1 / 6; grid-row: 1 / 3; min-height: 460px; aspect-ratio: unset; }
-      .gi-hero-shave { grid-column: 6 / 9; grid-row: 1 / 2; }
-      .gi-team-action { grid-column: 9 / 13; grid-row: 1 / 2; }
-      .gi-client-vibes { grid-column: 6 / 9; grid-row: 2 / 3; }
-      .gi-shop-detail { grid-column: 9 / 11; grid-row: 2 / 3; }
+      .gi-shop-wide    { grid-column: 1 / 6;  grid-row: 1 / 3; min-height: 460px; aspect-ratio: unset; }
+      .gi-hero-shave   { grid-column: 6 / 9;  grid-row: 1 / 2; }
+      .gi-team-action  { grid-column: 9 / 13; grid-row: 1 / 2; }
+      .gi-client-vibes { grid-column: 6 / 9;  grid-row: 2 / 3; }
+      .gi-shop-detail  { grid-column: 9 / 11; grid-row: 2 / 3; }
       .gi-barber-shave { grid-column: 11 / 13; grid-row: 2 / 3; }
     }
 
     /* ============================================================
-       LOCATION
+       FEATURE 6 — TESTIMONIAL CAROUSEL
+       Atmosphere: gradient dark with noise
+    ============================================================ */
+    #reviews {
+      background: linear-gradient(180deg, #0d0d0d 0%, #080808 100%);
+      position: relative;
+      padding: clamp(4rem, 8vw, 6rem) 0;
+      overflow: hidden;
+    }
+
+    /* Grain texture overlay */
+    #reviews::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .reviews-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .reviews-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      display: block;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .reviews-track {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding: 0.5rem clamp(2rem, 5vw, 6rem) 1rem;
+      scrollbar-width: none;
+    }
+
+    .reviews-track::-webkit-scrollbar { display: none; }
+
+    .review-card {
+      min-width: 320px;
+      max-width: 400px;
+      flex-shrink: 0;
+      scroll-snap-align: start;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .review-card:hover {
+      border-color: rgba(212,175,55,0.15);
+    }
+
+    .review-stars {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 1rem;
+    }
+
+    .review-stars-glyphs {
+      font-size: 13px;
+      color: var(--accent);
+      letter-spacing: 1px;
+    }
+
+    .review-stars-source {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+    }
+
+    .review-quote {
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--text);
+      font-style: italic;
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+
+    .review-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      letter-spacing: 0.02em;
+    }
+
+    /* ============================================================
+       LOCATION — Atmosphere: lifted surface
     ============================================================ */
     #location {
-      background: var(--bg);
+      background: var(--surface);
       padding: clamp(4rem, 10vw, 8rem) clamp(2rem, 5vw, 6rem);
     }
 
@@ -637,12 +837,7 @@
     }
 
     @media (max-width: 767px) {
-      .location-inner {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .location-text {
+      .location-inner { grid-template-columns: 1fr; }
     }
 
     .location-city {
@@ -664,9 +859,7 @@
       transition: opacity 0.2s ease;
     }
 
-    .location-phone:hover {
-      opacity: 0.7;
-    }
+    .location-phone:hover { opacity: 0.7; }
 
     .hours-list {
       margin-top: 1.5rem;
@@ -681,11 +874,9 @@
       color: var(--text-secondary);
     }
 
-    .hours-closed {
-      color: rgba(255,80,80,0.8);
-    }
+    .hours-closed { color: rgba(255,80,80,0.8); }
 
-    .location-cta {
+    .btn-ghost {
       display: inline-flex;
       align-items: center;
       margin-top: 2.5rem;
@@ -697,16 +888,16 @@
       letter-spacing: 0.15em;
       text-transform: uppercase;
       text-decoration: none;
-      border-radius: 0;
       min-height: 44px;
       transition: opacity 0.2s ease;
     }
 
-    .location-cta:hover {
-      opacity: 0.85;
-    }
+    .btn-ghost:hover { opacity: 0.85; }
 
-    .location-map {
+    /* Feature 5 — press state */
+    .btn-ghost:active {
+      transform: scale(0.96) !important;
+      transition: transform 0.08s ease !important;
     }
 
     .location-map iframe {
@@ -719,15 +910,14 @@
     }
 
     @media (max-width: 767px) {
-      .location-map iframe {
-        aspect-ratio: 4 / 3;
-      }
+      .location-map iframe { aspect-ratio: 4 / 3; }
     }
 
     /* ============================================================
        FOOTER
     ============================================================ */
     #footer {
+      background: var(--bg);
       border-top: 1px solid var(--border);
       padding: 3rem clamp(2rem, 5vw, 6rem);
       display: flex;
@@ -737,49 +927,41 @@
       gap: 1rem;
     }
 
-    .footer-copy {
-      font-size: 12px;
+    .footer-copy { font-size: 12px; color: var(--text-tertiary); }
+
+    .footer-social { font-size: 12px; color: var(--text-tertiary); }
+    .footer-social a {
       color: var(--text-tertiary);
+      text-decoration: none;
+      transition: color 0.2s ease;
     }
+    .footer-social a:hover { color: var(--text); }
 
     .footer-links {
       display: flex;
       align-items: center;
       gap: 1.25rem;
     }
-
     .footer-links a {
       font-size: 12px;
       color: var(--text-tertiary);
       text-decoration: none;
       transition: color 0.2s ease;
     }
-
-    .footer-links a:hover {
-      color: var(--text);
-    }
-
-    .footer-social {
-      font-size: 12px;
+    .footer-links a:hover { color: var(--text); }
+    .footer-crafted {
+      font-size: 11px;
       color: var(--text-tertiary);
+      letter-spacing: 0.05em;
     }
-
-    .footer-social a {
-      color: var(--text-tertiary);
+    .footer-crafted a {
+      color: var(--accent);
       text-decoration: none;
-      transition: color 0.2s ease;
-    }
-
-    .footer-social a:hover {
-      color: var(--text);
+      font-weight: 500;
     }
 
     @media (max-width: 767px) {
-      #footer {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-      }
+      #footer { flex-direction: column; align-items: center; text-align: center; }
     }
 
     /* ============================================================
@@ -789,8 +971,8 @@
       position: fixed;
       right: 1.5rem;
       bottom: 1.5rem;
-      width: 48px;
-      height: 48px;
+      width: 52px;
+      height: 52px;
       background: #25D366;
       border-radius: 50%;
       display: flex;
@@ -799,6 +981,17 @@
       z-index: 90;
       text-decoration: none;
       box-shadow: 0 4px 12px rgba(37,211,102,0.3);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    #wa-float:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(37,211,102,0.4);
+    }
+
+    #wa-float:active {
+      transform: scale(0.95) !important;
+      transition: transform 0.08s ease !important;
     }
 
     #wa-float::before {
@@ -811,38 +1004,29 @@
     }
 
     @keyframes wa-pulse {
-      0% { transform: scale(1); opacity: 0.8; }
-      70% { transform: scale(1.3); opacity: 0; }
+      0%   { transform: scale(1); opacity: 0.8; }
+      70%  { transform: scale(1.3); opacity: 0; }
       100% { transform: scale(1.3); opacity: 0; }
     }
 
-    #wa-float svg {
-      width: 22px;
-      height: 22px;
-    }
+    #wa-float svg { width: 22px; height: 22px; }
 
     @media (max-width: 767px) {
-      #wa-float {
-        right: 1rem;
-        bottom: 1rem;
-      }
+      #wa-float { right: 1rem; bottom: 1rem; }
     }
-
-    /* ============================================================
-       SCROLLBAR HIDE
-    ============================================================ */
-    html {
-      scrollbar-width: thin;
-      scrollbar-color: rgba(245,245,247,0.1) transparent;
-    }
-
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(245,245,247,0.1); border-radius: 2px; }
   </style>
 </head>
 
 <body>
+
+  <!-- Feature 1 — Custom Cursor Elements -->
+  <div id="cursor" class="cursor"></div>
+  <div id="cursor-follower" class="cursor-follower">
+    <span class="cursor-label">View</span>
+  </div>
+
+  <!-- Feature 2 — Scroll Progress Bar -->
+  <div id="scroll-progress"></div>
 
   <!-- ============================================================
        HEADER
@@ -904,7 +1088,7 @@
       </span>
       <a
         href="https://wa.me/573181326952?text=Hola%2C%20quiero%20reservar%20una%20cita"
-        class="hero-cta"
+        class="btn-primary"
         id="hero-cta-link"
         target="_blank"
         rel="noopener"
@@ -936,160 +1120,162 @@
   </section>
 
   <!-- ============================================================
-       SERVICES
+       SERVICES — Card Grid with 3D Tilt
   ============================================================ -->
   <section id="services">
-    <div class="services-list">
-      <span class="section-eyebrow">
-        <span data-es>Servicios</span>
-        <span data-en>Services</span>
-      </span>
+    <span class="section-eyebrow" style="text-align:center;display:block;margin-bottom:3rem;">
+      <span data-es>Servicios</span>
+      <span data-en>Services</span>
+    </span>
 
-      <!-- Row 1 -->
-      <a class="service-row"
+    <div class="services-grid">
+
+      <!-- Card 1 — Corte Clásico -->
+      <a class="service-card"
          href="https://wa.me/573181326952?text=Hola%2C%20quiero%20reservar%20un%20Corte%20Cl%C3%A1sico"
          target="_blank" rel="noopener"
          data-wa-es="https://wa.me/573181326952?text=Hola%2C%20quiero%20reservar%20un%20Corte%20Cl%C3%A1sico"
          data-wa-en="https://wa.me/573181326952?text=Hi%2C%20I%27d%20like%20to%20book%20a%20Classic%20Cut">
-        <div class="service-left">
-          <span class="service-name">
-            <span data-es>Corte Clásico</span>
-            <span data-en>Classic Cut</span>
-          </span>
-          <span class="service-desc">
-            <span data-es>El corte tradicional perfeccionado</span>
-            <span data-en>The perfected traditional cut</span>
-          </span>
-        </div>
-        <span class="service-price">$25.000</span>
+        <span class="service-card-icon">✂</span>
+        <span class="service-card-name">
+          <span data-es>Corte Clásico</span>
+          <span data-en>Classic Cut</span>
+        </span>
+        <span class="service-card-desc">
+          <span data-es>El corte tradicional perfeccionado</span>
+          <span data-en>The perfected traditional cut</span>
+        </span>
+        <span class="service-card-price">$25.000</span>
+        <svg class="service-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
       </a>
 
-      <!-- Row 2 -->
-      <a class="service-row"
+      <!-- Card 2 — Fade -->
+      <a class="service-card"
          href="https://wa.me/573181326952?text=Hola%2C%20quiero%20reservar%20un%20Fade"
          target="_blank" rel="noopener"
          data-wa-es="https://wa.me/573181326952?text=Hola%2C%20quiero%20reservar%20un%20Fade"
          data-wa-en="https://wa.me/573181326952?text=Hi%2C%20I%27d%20like%20to%20book%20a%20Fade">
-        <div class="service-left">
-          <span class="service-name">Fade</span>
-          <span class="service-desc">
-            <span data-es>Degradado suave y preciso</span>
-            <span data-en>Smooth and precise fade</span>
-          </span>
-        </div>
-        <span class="service-price">$30.000</span>
+        <span class="service-card-icon">〰</span>
+        <span class="service-card-name">Fade</span>
+        <span class="service-card-desc">
+          <span data-es>Degradado suave y preciso</span>
+          <span data-en>Smooth and precise fade</span>
+        </span>
+        <span class="service-card-price">$30.000</span>
+        <svg class="service-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
       </a>
 
-      <!-- Row 3 -->
-      <a class="service-row"
+      <!-- Card 3 — Barba -->
+      <a class="service-card"
          href="https://wa.me/573181326952?text=Hola%2C%20quiero%20reservar%20arreglo%20de%20Barba"
          target="_blank" rel="noopener"
          data-wa-es="https://wa.me/573181326952?text=Hola%2C%20quiero%20reservar%20arreglo%20de%20Barba"
          data-wa-en="https://wa.me/573181326952?text=Hi%2C%20I%27d%20like%20to%20book%20a%20Beard%20service">
-        <div class="service-left">
-          <span class="service-name">
-            <span data-es>Barba</span>
-            <span data-en>Beard</span>
-          </span>
-          <span class="service-desc">
-            <span data-es>Perfilado y tratamiento</span>
-            <span data-en>Shaping and treatment</span>
-          </span>
-        </div>
-        <span class="service-price">$15.000</span>
+        <span class="service-card-icon">◆</span>
+        <span class="service-card-name">
+          <span data-es>Barba</span>
+          <span data-en>Beard</span>
+        </span>
+        <span class="service-card-desc">
+          <span data-es>Perfilado y tratamiento</span>
+          <span data-en>Shaping and treatment</span>
+        </span>
+        <span class="service-card-price">$15.000</span>
+        <svg class="service-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
       </a>
 
-      <!-- Row 4 -->
-      <a class="service-row"
+      <!-- Card 4 — Combo -->
+      <a class="service-card"
          href="https://wa.me/573181326952?text=Hola%2C%20quiero%20reservar%20el%20Combo%20Corte%20%2B%20Barba"
          target="_blank" rel="noopener"
          data-wa-es="https://wa.me/573181326952?text=Hola%2C%20quiero%20reservar%20el%20Combo%20Corte%20%2B%20Barba"
          data-wa-en="https://wa.me/573181326952?text=Hi%2C%20I%27d%20like%20to%20book%20the%20Combo%20Cut%20%2B%20Beard">
-        <div class="service-left">
-          <span class="service-name">Combo</span>
-          <span class="service-desc">
-            <span data-es>Corte + Barba, el paquete completo</span>
-            <span data-en>Cut + Beard, the full package</span>
-          </span>
-        </div>
-        <span class="service-price">$35.000</span>
+        <span class="service-card-icon">★</span>
+        <span class="service-card-name">Combo</span>
+        <span class="service-card-desc">
+          <span data-es>Corte + Barba, el paquete completo</span>
+          <span data-en>Cut + Beard, the full package</span>
+        </span>
+        <span class="service-card-price">$35.000</span>
+        <svg class="service-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
       </a>
 
-      <!-- Row 5 -->
-      <a class="service-row"
+      <!-- Card 5 — Trenzas -->
+      <a class="service-card"
          href="https://wa.me/573181326952?text=Hola%2C%20quiero%20reservar%20Trenzas%20%2F%20Cornrows"
          target="_blank" rel="noopener"
          data-wa-es="https://wa.me/573181326952?text=Hola%2C%20quiero%20reservar%20Trenzas%20%2F%20Cornrows"
          data-wa-en="https://wa.me/573181326952?text=Hi%2C%20I%27d%20like%20to%20book%20Braids%20%2F%20Cornrows">
-        <div class="service-left">
-          <span class="service-name">
-            <span data-es>Trenzas</span>
-            <span data-en>Braids</span>
-          </span>
-          <span class="service-desc">
-            <span data-es>Cornrows con estilo</span>
-            <span data-en>Cornrows with style</span>
-          </span>
-        </div>
-        <span class="service-price">$40.000</span>
+        <span class="service-card-icon">≋</span>
+        <span class="service-card-name">
+          <span data-es>Trenzas</span>
+          <span data-en>Braids</span>
+        </span>
+        <span class="service-card-desc">
+          <span data-es>Cornrows con estilo</span>
+          <span data-en>Cornrows with style</span>
+        </span>
+        <span class="service-card-price">$40.000</span>
+        <svg class="service-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
       </a>
 
-      <!-- Row 6 -->
-      <a class="service-row"
+      <!-- Card 6 — Diseño -->
+      <a class="service-card"
          href="https://wa.me/573181326952?text=Hola%2C%20quiero%20reservar%20un%20Dise%C3%B1o"
          target="_blank" rel="noopener"
          data-wa-es="https://wa.me/573181326952?text=Hola%2C%20quiero%20reservar%20un%20Dise%C3%B1o"
          data-wa-en="https://wa.me/573181326952?text=Hi%2C%20I%27d%20like%20to%20book%20a%20Design">
-        <div class="service-left">
-          <span class="service-name">
-            <span data-es>Diseño</span>
-            <span data-en>Design</span>
-          </span>
-          <span class="service-desc">
-            <span data-es>Arte en tu corte</span>
-            <span data-en>Art in your cut</span>
-          </span>
-        </div>
-        <span class="service-price">$35.000</span>
+        <span class="service-card-icon">◈</span>
+        <span class="service-card-name">
+          <span data-es>Diseño</span>
+          <span data-en>Design</span>
+        </span>
+        <span class="service-card-desc">
+          <span data-es>Arte en tu corte</span>
+          <span data-en>Art in your cut</span>
+        </span>
+        <span class="service-card-price">$35.000</span>
+        <svg class="service-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
       </a>
 
-      <!-- Row 7 -->
-      <a class="service-row"
+      <!-- Card 7 — Afeitado Clásico -->
+      <a class="service-card"
          href="https://wa.me/573181326952?text=Hola%2C%20quiero%20reservar%20un%20Afeitado%20Cl%C3%A1sico"
          target="_blank" rel="noopener"
          data-wa-es="https://wa.me/573181326952?text=Hola%2C%20quiero%20reservar%20un%20Afeitado%20Cl%C3%A1sico"
          data-wa-en="https://wa.me/573181326952?text=Hi%2C%20I%27d%20like%20to%20book%20a%20Classic%20Shave">
-        <div class="service-left">
-          <span class="service-name">
-            <span data-es>Afeitado Clásico</span>
-            <span data-en>Classic Shave</span>
-          </span>
-          <span class="service-desc">
-            <span data-es>Navaja y toalla caliente</span>
-            <span data-en>Straight razor and hot towel</span>
-          </span>
-        </div>
-        <span class="service-price">$20.000</span>
+        <span class="service-card-icon">◇</span>
+        <span class="service-card-name">
+          <span data-es>Afeitado Clásico</span>
+          <span data-en>Classic Shave</span>
+        </span>
+        <span class="service-card-desc">
+          <span data-es>Navaja y toalla caliente</span>
+          <span data-en>Straight razor and hot towel</span>
+        </span>
+        <span class="service-card-price">$20.000</span>
+        <svg class="service-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
       </a>
 
-      <!-- Row 8 -->
-      <a class="service-row"
+      <!-- Card 8 — Corte Niño -->
+      <a class="service-card"
          href="https://wa.me/573181326952?text=Hola%2C%20quiero%20reservar%20un%20Corte%20de%20Ni%C3%B1o"
          target="_blank" rel="noopener"
          data-wa-es="https://wa.me/573181326952?text=Hola%2C%20quiero%20reservar%20un%20Corte%20de%20Ni%C3%B1o"
          data-wa-en="https://wa.me/573181326952?text=Hi%2C%20I%27d%20like%20to%20book%20a%20Kids%20Cut">
-        <div class="service-left">
-          <span class="service-name">
-            <span data-es>Corte Niño</span>
-            <span data-en>Kids Cut</span>
-          </span>
-          <span class="service-desc">
-            <span data-es>Para los pequeños</span>
-            <span data-en>For the little ones</span>
-          </span>
-        </div>
-        <span class="service-price">$20.000</span>
+        <span class="service-card-icon">○</span>
+        <span class="service-card-name">
+          <span data-es>Corte Niño</span>
+          <span data-en>Kids Cut</span>
+        </span>
+        <span class="service-card-desc">
+          <span data-es>Para los pequeños</span>
+          <span data-en>For the little ones</span>
+        </span>
+        <span class="service-card-price">$20.000</span>
+        <svg class="service-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
       </a>
+
     </div>
   </section>
 
@@ -1104,14 +1290,12 @@
 
     <!-- Desktop Grid -->
     <div class="videos-grid">
-      <!-- Left: haircut-1 -->
       <div class="video-cell" id="vid-left">
         <video autoplay muted loop playsinline preload="none">
           <source src="images/videos/haircut-1.mp4" type="video/mp4">
         </video>
       </div>
 
-      <!-- Center: highlight-reel (with audio) -->
       <div class="video-cell" id="vid-center">
         <video id="highlight-video" playsinline preload="none" poster="images/hero-shave.jpg">
           <source src="images/videos/highlight-reel.mp4" type="video/mp4">
@@ -1121,7 +1305,6 @@
         </div>
       </div>
 
-      <!-- Right: haircut-2 -->
       <div class="video-cell" id="vid-right">
         <video autoplay muted loop playsinline preload="none">
           <source src="images/videos/haircut-2.mp4" type="video/mp4">
@@ -1131,8 +1314,7 @@
 
     <!-- Mobile Scroll -->
     <div class="videos-scroll">
-      <!-- Center first (highlight-reel with audio) -->
-      <div class="video-scroll-cell video-scroll-center">
+      <div class="video-scroll-cell">
         <video id="highlight-video-mobile" playsinline preload="none" poster="images/hero-shave.jpg">
           <source src="images/videos/highlight-reel.mp4" type="video/mp4">
         </video>
@@ -1141,14 +1323,12 @@
         </div>
       </div>
 
-      <!-- haircut-1 -->
       <div class="video-scroll-cell">
         <video autoplay muted loop playsinline preload="none">
           <source src="images/videos/haircut-1.mp4" type="video/mp4">
         </video>
       </div>
 
-      <!-- haircut-2 -->
       <div class="video-scroll-cell">
         <video autoplay muted loop playsinline preload="none">
           <source src="images/videos/haircut-2.mp4" type="video/mp4">
@@ -1189,6 +1369,100 @@
   </section>
 
   <!-- ============================================================
+       FEATURE 6 — TESTIMONIAL CAROUSEL
+  ============================================================ -->
+  <section id="reviews">
+    <div class="reviews-inner">
+      <span class="reviews-label">
+        <span data-es>Lo que dicen nuestros clientes</span>
+        <span data-en>What our clients say</span>
+      </span>
+
+      <div class="reviews-track" id="reviews-track">
+
+        <!-- Review 1 -->
+        <div class="review-card">
+          <div class="review-stars">
+            <span class="review-stars-glyphs">★★★★★</span>
+            <span class="review-stars-source">Google</span>
+          </div>
+          <p class="review-quote">
+            <span data-es>El mejor fade que me han hecho en Cartagena. No voy a otra barbería.</span>
+            <span data-en>Best fade I've ever gotten in Cartagena. Not going anywhere else.</span>
+          </p>
+          <span class="review-name">Carlos M.</span>
+        </div>
+
+        <!-- Review 2 -->
+        <div class="review-card">
+          <div class="review-stars">
+            <span class="review-stars-glyphs">★★★★★</span>
+            <span class="review-stars-source">Google</span>
+          </div>
+          <p class="review-quote">
+            <span data-es>Ambiente brutal. Cerveza fría, partido en la pantalla, y un corte perfecto.</span>
+            <span data-en>Amazing atmosphere. Cold beer, game on the screen, and a perfect cut.</span>
+          </p>
+          <span class="review-name">Andrés R.</span>
+        </div>
+
+        <!-- Review 3 -->
+        <div class="review-card">
+          <div class="review-stars">
+            <span class="review-stars-glyphs">★★★★★</span>
+            <span class="review-stars-source">Google</span>
+          </div>
+          <p class="review-quote">
+            <span data-es>Jermaine y su equipo son artistas. Las trenzas quedaron impecables.</span>
+            <span data-en>Jermaine and his team are artists. The braids came out flawless.</span>
+          </p>
+          <span class="review-name">Luis F.</span>
+        </div>
+
+        <!-- Review 4 -->
+        <div class="review-card">
+          <div class="review-stars">
+            <span class="review-stars-glyphs">★★★★★</span>
+            <span class="review-stars-source">Google</span>
+          </div>
+          <p class="review-quote">
+            <span data-es>Vine por una recomendación y ahora soy cliente fijo. Walk-in y me atendieron al momento.</span>
+            <span data-en>Came on a recommendation and now I'm a regular. Walked in and got seen right away.</span>
+          </p>
+          <span class="review-name">Miguel A.</span>
+        </div>
+
+        <!-- Review 5 -->
+        <div class="review-card">
+          <div class="review-stars">
+            <span class="review-stars-glyphs">★★★★★</span>
+            <span class="review-stars-source">Google</span>
+          </div>
+          <p class="review-quote">
+            <span data-es>La única barbería donde el afeitado clásico realmente se siente premium.</span>
+            <span data-en>The only barbershop where the classic shave actually feels premium.</span>
+          </p>
+          <span class="review-name">Santiago P.</span>
+        </div>
+
+        <!-- Review 6 -->
+        <div class="review-card">
+          <div class="review-stars">
+            <span class="review-stars-glyphs">★★★★★</span>
+            <span class="review-stars-source">Google</span>
+          </div>
+          <p class="review-quote">
+            <span data-es>Llevo 3 años viniendo. El combo corte + barba es inmejorable por ese precio.</span>
+            <span data-en>Been coming for 3 years. The cut + beard combo is unbeatable at that price.</span>
+          </p>
+          <span class="review-name">David G.</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
        LOCATION
   ============================================================ -->
   <section id="location">
@@ -1222,7 +1496,7 @@
 
         <a
           href="https://wa.me/573181326952?text=Hola%2C%20quiero%20reservar%20una%20cita"
-          class="location-cta"
+          class="btn-ghost"
           id="location-cta-link"
           target="_blank"
           rel="noopener"
@@ -1259,7 +1533,7 @@
     </div>
 
     <div class="footer-links">
-      <a href="https://machinemind.co" target="_blank" rel="noopener" style="font-weight: 500;">MachineMind</a>
+      <span class="footer-crafted">Crafted by <a href="https://machinemind.co" target="_blank" rel="noopener">MachineMind</a></span>
     </div>
   </footer>
 
@@ -1287,40 +1561,18 @@
     /* ============================================================
        LANGUAGE SYSTEM
     ============================================================ */
-    const WA_LINKS = {
-      es: {
-        hero: 'https://wa.me/573181326952?text=Hola%2C%20quiero%20reservar%20una%20cita',
-        header: 'https://wa.me/573181326952?text=Hola%2C%20quiero%20reservar%20una%20cita',
-        location: 'https://wa.me/573181326952?text=Hola%2C%20quiero%20reservar%20una%20cita',
-        float: 'https://wa.me/573181326952?text=Hola%2C%20quiero%20reservar%20una%20cita'
-      },
-      en: {
-        hero: 'https://wa.me/573181326952?text=Hi%2C%20I%27d%20like%20to%20book%20an%20appointment',
-        header: 'https://wa.me/573181326952?text=Hi%2C%20I%27d%20like%20to%20book%20an%20appointment',
-        location: 'https://wa.me/573181326952?text=Hi%2C%20I%27d%20like%20to%20book%20an%20appointment',
-        float: 'https://wa.me/573181326952?text=Hi%2C%20I%27d%20like%20to%20book%20an%20appointment'
-      }
-    };
-
     function setLang(lang) {
       document.documentElement.setAttribute('data-lang', lang);
       document.documentElement.lang = lang;
       localStorage.setItem('jb-lang', lang);
 
-      // Update WA links
-      const links = document.querySelectorAll('[data-wa-' + lang + ']');
-      links.forEach(el => {
+      // Update all WA links that carry both variants
+      document.querySelectorAll('[data-wa-' + lang + ']').forEach(el => {
         const href = el.getAttribute('data-wa-' + lang);
         if (href) el.href = href;
       });
-
-      // Update service row WA links individually
-      document.querySelectorAll('.service-row[data-wa-' + lang + ']').forEach(el => {
-        el.href = el.getAttribute('data-wa-' + lang);
-      });
     }
 
-    // Init language
     const savedLang = localStorage.getItem('jb-lang') || 'es';
     setLang(savedLang);
 
@@ -1335,15 +1587,99 @@
     const header = document.getElementById('site-header');
 
     function updateHeader() {
-      if (window.scrollY > 20) {
-        header.classList.add('scrolled');
-      } else {
-        header.classList.remove('scrolled');
-      }
+      header.classList.toggle('scrolled', window.scrollY > 20);
     }
 
     window.addEventListener('scroll', updateHeader, { passive: true });
     updateHeader();
+
+    /* ============================================================
+       FEATURE 2 — SCROLL PROGRESS BAR
+    ============================================================ */
+    const progressBar = document.getElementById('scroll-progress');
+
+    window.addEventListener('scroll', () => {
+      const scrollTop = document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (docHeight <= 0) return;
+      const progress = scrollTop / docHeight;
+      progressBar.style.transform = 'scaleX(' + progress + ')';
+    }, { passive: true });
+
+    /* ============================================================
+       FEATURE 1 — CUSTOM CURSOR
+    ============================================================ */
+    (function initCursor() {
+      // Only activate on non-touch devices with pointer
+      if (window.matchMedia('(max-width: 1023px)').matches) return;
+      if ('ontouchstart' in window) return;
+
+      const cursor = document.getElementById('cursor');
+      const follower = document.getElementById('cursor-follower');
+
+      let mouseX = 0, mouseY = 0;
+      let followerX = 0, followerY = 0;
+      let rafRunning = false;
+
+      document.addEventListener('mousemove', e => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        cursor.style.transform = 'translate(' + (mouseX - 4) + 'px, ' + (mouseY - 4) + 'px)';
+
+        if (!rafRunning) {
+          rafRunning = true;
+          requestAnimationFrame(tick);
+        }
+      });
+
+      function tick() {
+        followerX += (mouseX - followerX) * 0.12;
+        followerY += (mouseY - followerY) * 0.12;
+        follower.style.transform = 'translate(' + (followerX - 16) + 'px, ' + (followerY - 16) + 'px)';
+
+        const dx = mouseX - followerX;
+        const dy = mouseY - followerY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist > 0.1) {
+          requestAnimationFrame(tick);
+        } else {
+          rafRunning = false;
+        }
+      }
+
+      // Hover states — interactive elements
+      document.querySelectorAll('a, button, .service-card').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          follower.classList.add('cursor-hover');
+          follower.classList.remove('cursor-view');
+        });
+        el.addEventListener('mouseleave', () => {
+          follower.classList.remove('cursor-hover');
+        });
+      });
+
+      // Hover states — media elements
+      document.querySelectorAll('.video-cell, .gallery-item, .video-scroll-cell').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          follower.classList.remove('cursor-hover');
+          follower.classList.add('cursor-view');
+        });
+        el.addEventListener('mouseleave', () => {
+          follower.classList.remove('cursor-view');
+        });
+      });
+
+      // Hide cursor when leaving window
+      document.addEventListener('mouseleave', () => {
+        cursor.style.opacity = '0';
+        follower.style.opacity = '0';
+      });
+      document.addEventListener('mouseenter', () => {
+        cursor.style.opacity = '1';
+        follower.style.opacity = '1';
+      });
+    })();
 
     /* ============================================================
        VIDEO PLAY BUTTONS
@@ -1353,34 +1689,59 @@
       const btn = document.getElementById(btnId);
       if (!video || !btn) return;
 
+      function showBtn() {
+        btn.style.opacity = '1';
+        btn.style.pointerEvents = 'auto';
+      }
+      function hideBtn() {
+        btn.style.opacity = '0';
+        btn.style.pointerEvents = 'none';
+      }
+
       btn.addEventListener('click', () => {
         if (video.paused) {
-          video.play();
-          btn.style.opacity = '0';
-          btn.style.pointerEvents = 'none';
+          video.play().then(hideBtn).catch(() => {});
         }
       });
 
-      btn.addEventListener('keydown', (e) => {
+      btn.addEventListener('keydown', e => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           btn.click();
         }
       });
 
-      video.addEventListener('ended', () => {
-        btn.style.opacity = '1';
-        btn.style.pointerEvents = 'auto';
-      });
-
-      video.addEventListener('pause', () => {
-        btn.style.opacity = '1';
-        btn.style.pointerEvents = 'auto';
-      });
+      video.addEventListener('ended', showBtn);
+      video.addEventListener('pause', showBtn);
     }
 
     setupPlayButton('highlight-video', 'desktop-play-btn');
     setupPlayButton('highlight-video-mobile', 'mobile-play-btn');
+
+    /* ============================================================
+       FEATURE 3 — 3D TILT CARDS
+    ============================================================ */
+    (function initTiltCards() {
+      // Only on devices with a fine pointer (mouse)
+      if (!window.matchMedia('(pointer: fine)').matches) return;
+
+      document.querySelectorAll('.service-card').forEach(card => {
+        card.addEventListener('mousemove', e => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -8;
+          const rotateY = ((x - centerX) / centerX) * 8;
+          card.style.transform = 'perspective(600px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) scale3d(1.02, 1.02, 1.02)';
+        });
+
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = 'perspective(600px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+        });
+      });
+    })();
 
     /* ============================================================
        GSAP ANIMATIONS
@@ -1388,73 +1749,105 @@
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (!prefersReduced && typeof gsap !== 'undefined') {
-      document.addEventListener('DOMContentLoaded', () => {
-        gsap.registerPlugin(ScrollTrigger);
+      gsap.registerPlugin(ScrollTrigger);
 
-        /* --- HERO --- */
-        gsap.set('#hero-content', { opacity: 0, y: 30 });
-        gsap.to('#hero-content', {
+      /* --- HERO --- */
+      gsap.set('#hero-content', { opacity: 0, y: 30 });
+      gsap.to('#hero-content', {
+        opacity: 1,
+        y: 0,
+        duration: 1.4,
+        delay: 0.5,
+        ease: 'power3.out',
+        clearProps: 'transform'
+      });
+
+      /* --- STATEMENT parallax --- */
+      gsap.to('#statement-bg', {
+        yPercent: -15,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#statement',
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: true
+        }
+      });
+
+      gsap.set('#statement-content', { opacity: 0, y: 20 });
+      gsap.to('#statement-content', {
+        opacity: 1,
+        y: 0,
+        duration: 1.2,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: '#statement', start: 'top 75%', once: true }
+      });
+
+      /* --- SERVICES cards stagger --- */
+      gsap.utils.toArray('.service-card').forEach((card, i) => {
+        gsap.set(card, { opacity: 0, y: 24 });
+        gsap.to(card, {
           opacity: 1,
           y: 0,
-          duration: 1.4,
-          delay: 0.6,
+          duration: 0.8,
+          delay: i * 0.06,
           ease: 'power3.out',
-          clearProps: 'transform'
-        });
-
-        /* --- STATEMENT --- */
-        gsap.to('#statement-bg', {
-          yPercent: -15,
-          ease: 'none',
-          scrollTrigger: { trigger: '#statement', start: 'top bottom', end: 'bottom top', scrub: true }
-        });
-        gsap.set('#statement-content', { opacity: 0 });
-        gsap.to('#statement-content', {
-          opacity: 1, duration: 1.2, ease: 'power3.out',
-          scrollTrigger: { trigger: '#statement', start: 'top 75%', once: true }
-        });
-
-        /* --- SERVICES --- */
-        gsap.utils.toArray('.service-row').forEach((row, i) => {
-          gsap.set(row, { opacity: 0, y: 16 });
-          gsap.to(row, {
-            opacity: 1, y: 0, duration: 0.8, delay: i * 0.06, ease: 'power3.out',
-            scrollTrigger: { trigger: row, start: 'top 88%', once: true }
-          });
-        });
-
-        /* --- VIDEOS --- */
-        gsap.utils.toArray('.video-cell').forEach((cell, i) => {
-          gsap.set(cell, { opacity: 0, scale: 0.95 });
-          gsap.to(cell, {
-            opacity: 1, scale: 1, duration: 0.9, delay: i * 0.1, ease: 'power3.out',
-            scrollTrigger: { trigger: '#videos', start: 'top 80%', once: true }
-          });
-        });
-
-        /* --- GALLERY --- */
-        gsap.utils.toArray('.gallery-item').forEach((item, i) => {
-          gsap.set(item, { opacity: 0, y: 20 });
-          gsap.to(item, {
-            opacity: 1, y: 0, duration: 0.9, delay: i * 0.08, ease: 'power3.out',
-            scrollTrigger: { trigger: '#gallery', start: 'top 85%', once: true }
-          });
-        });
-
-        /* --- LOCATION --- */
-        gsap.set('#location-text', { opacity: 0, y: 24 });
-        gsap.set('#location-map', { opacity: 0, y: 24 });
-        gsap.to('#location-text', {
-          opacity: 1, y: 0, duration: 1, ease: 'power3.out',
-          scrollTrigger: { trigger: '#location', start: 'top 80%', once: true }
-        });
-        gsap.to('#location-map', {
-          opacity: 1, y: 0, duration: 1, delay: 0.15, ease: 'power3.out',
-          scrollTrigger: { trigger: '#location', start: 'top 80%', once: true }
+          scrollTrigger: { trigger: '#services', start: 'top 80%', once: true }
         });
       });
+
+      /* --- VIDEO CELLS --- */
+      gsap.utils.toArray('.video-cell').forEach((cell, i) => {
+        gsap.set(cell, { opacity: 0, scale: 0.95 });
+        gsap.to(cell, {
+          opacity: 1,
+          scale: 1,
+          duration: 0.9,
+          delay: i * 0.1,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: '#videos', start: 'top 80%', once: true }
+        });
+      });
+
+      /* --- GALLERY items --- */
+      gsap.utils.toArray('.gallery-item').forEach((item, i) => {
+        gsap.set(item, { opacity: 0, y: 20 });
+        gsap.to(item, {
+          opacity: 1,
+          y: 0,
+          duration: 0.9,
+          delay: i * 0.08,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: '#gallery', start: 'top 85%', once: true }
+        });
+      });
+
+      /* --- REVIEW CARDS stagger --- */
+      gsap.utils.toArray('.review-card').forEach((card, i) => {
+        gsap.set(card, { opacity: 0, y: 20 });
+        gsap.to(card, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          delay: i * 0.1,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: '#reviews', start: 'top 85%', once: true }
+        });
+      });
+
+      /* --- LOCATION --- */
+      gsap.set('#location-text', { opacity: 0, y: 24 });
+      gsap.set('#location-map',  { opacity: 0, y: 24 });
+      gsap.to('#location-text', {
+        opacity: 1, y: 0, duration: 1, ease: 'power3.out',
+        scrollTrigger: { trigger: '#location', start: 'top 80%', once: true }
+      });
+      gsap.to('#location-map', {
+        opacity: 1, y: 0, duration: 1, delay: 0.15, ease: 'power3.out',
+        scrollTrigger: { trigger: '#location', start: 'top 80%', once: true }
+      });
     }
-    /* If GSAP fails or reduced motion — everything stays visible by default (no CSS opacity:0) */
+    /* If GSAP unavailable or reduced motion — everything is visible by default (no CSS opacity:0) */
   </script>
 
 </body>
